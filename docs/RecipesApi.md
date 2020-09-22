@@ -1,6 +1,6 @@
 # PollinationSDK.Api.RecipesApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://api.pollination.cloud*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -38,8 +38,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Compulsory Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: CompulsoryAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -77,7 +77,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Compulsory Auth](../README.md#Compulsory Auth)
+[CompulsoryAuth](../README.md#CompulsoryAuth)
 
 ### HTTP request headers
 
@@ -88,11 +88,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Success |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
-| **400** | Invalid request |  -  |
 | **202** | Accepted |  -  |
+| **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -123,8 +123,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Compulsory Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: CompulsoryAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -166,7 +166,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Compulsory Auth](../README.md#Compulsory Auth)
+[CompulsoryAuth](../README.md#CompulsoryAuth)
 
 ### HTTP request headers
 
@@ -177,11 +177,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Success |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -212,8 +212,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Compulsory Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: CompulsoryAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -250,7 +250,7 @@ void (empty response body)
 
 ### Authorization
 
-[Compulsory Auth](../README.md#Compulsory Auth)
+[CompulsoryAuth](../README.md#CompulsoryAuth)
 
 ### HTTP request headers
 
@@ -261,10 +261,10 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **204** | Accepted |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -295,8 +295,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Optional Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: OptionalAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -334,7 +334,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Optional Auth](../README.md#Optional Auth)
+[OptionalAuth](../README.md#OptionalAuth)
 
 ### HTTP request headers
 
@@ -345,11 +345,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -380,8 +380,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Optional Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: OptionalAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -421,7 +421,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Optional Auth](../README.md#Optional Auth)
+[OptionalAuth](../README.md#OptionalAuth)
 
 ### HTTP request headers
 
@@ -432,11 +432,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -467,8 +467,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Optional Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: OptionalAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -506,7 +506,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Optional Auth](../README.md#Optional Auth)
+[OptionalAuth](../README.md#OptionalAuth)
 
 ### HTTP request headers
 
@@ -517,11 +517,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -550,8 +550,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Optional Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: OptionalAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -597,7 +597,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Optional Auth](../README.md#Optional Auth)
+[OptionalAuth](../README.md#OptionalAuth)
 
 ### HTTP request headers
 
@@ -639,8 +639,8 @@ namespace Example
     {
         public static void Main()
         {
-            Configuration.Default.BasePath = "http://localhost";
-            // Configure OAuth2 access token for authorization: Compulsory Auth
+            Configuration.Default.BasePath = "https://api.pollination.cloud";
+            // Configure OAuth2 access token for authorization: CompulsoryAuth
             Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RecipesApi(Configuration.Default);
@@ -680,7 +680,7 @@ Name | Type | Description  | Notes
 
 ### Authorization
 
-[Compulsory Auth](../README.md#Compulsory Auth)
+[CompulsoryAuth](../README.md#CompulsoryAuth)
 
 ### HTTP request headers
 
@@ -691,11 +691,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **202** | Accepted |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

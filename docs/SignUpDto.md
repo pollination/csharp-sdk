@@ -5,10 +5,10 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Username** | **string** |  | 
 **Email** | **string** |  | 
-**Password** | **string** |  | 
 **Metadata** | [**UserMetadata**](UserMetadata.md) |  | 
+**Password** | **string** |  | 
+**Username** | **string** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
