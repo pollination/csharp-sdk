@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Type** | **ItemReference** |  | [optional] 
+**Type** | **string** |  | [optional] [default to TypeEnum.Item]
 **Variable** | **string** | The name of the looped item variable (use dot notation for nested json values) | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)

@@ -5,8 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Type** | **TaskReference** |  | [optional] 
 **Name** | **string** | The name of the task to pull output data from | 
+**Type** | **string** |  | [optional] [default to TypeEnum.Tasks]
 **Variable** | **string** | The name of the task output variable | 
 
 [[Back to Model list]](../README.md#documentation-for-models)

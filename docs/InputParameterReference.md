@@ -5,7 +5,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Type** | **InputReference** |  | [optional] 
+**Type** | **string** |  | [optional] [default to TypeEnum.Inputs]
 **Variable** | **string** | The name of the DAG input variable | 
 
 [[Back to Model list]](../README.md#documentation-for-models)

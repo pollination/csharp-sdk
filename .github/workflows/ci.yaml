@@ -1,0 +1,29 @@
+name: CD
+
+on: 
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: "Checkout Master Branch"
+        uses: actions/checkout@v2
+
+      - name: Build
+        run: |
+          dotnet restore
+          dotnet build --configuration Release /nowarn:CS0472
+          
+      - name: Run Unit Tests
+        working-directory: src/PollinationSDK.Test
+        run: |
+          dotnet test --configuration Release
+
+      - name: Deploy
+        working-directory: src/PollinationSDK
+        run: |
+          dotnet pack --configuration Release
+          dotnet nuget push bin\Release\PollinationSDK.*.nupkg -k $ -s https://api.nuget.org/v3/index.json
