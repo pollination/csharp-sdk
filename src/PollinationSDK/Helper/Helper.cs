@@ -217,14 +217,14 @@ namespace PollinationSDK
                 return simu;
 
             var artis = simu.Inputs.Artifacts;
-            var checkedArtis = new List<AppModulesProjectsDtoSimulationArgumentArtifact>();
+            var checkedArtis = new List<ArgumentArtifact>();
             foreach (var item in artis)
             {
                 // update artifact arguments
                 var newFileOrDirname = Path.GetFileName(item.Source.ToString());
-                checkedArtis.Add(new AppModulesProjectsDtoSimulationArgumentArtifact(item.Name, new ArtifaceSourcePath(newFileOrDirname)));
+                checkedArtis.Add(new ArgumentArtifact(item.Name, new ArtifaceSourcePath(newFileOrDirname)));
             }
-            var newArgs = new AppModulesProjectsDtoSimulationArguments(simu.Inputs.Parameters, checkedArtis);
+            var newArgs = new Arguments(simu.Inputs.Parameters, checkedArtis);
             var newSimu = new SubmitSimulationDto(simu.Recipe, newArgs);
 
             return newSimu;
