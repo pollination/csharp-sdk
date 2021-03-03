@@ -25,7 +25,7 @@ jobs:
         working-directory: src/PollinationSDK.Tests
         run: |
           $Env:PollinationApiKey = "${{secrets.POLLINATION_STAGING_APIKEY}}"
-          # dotnet test --configuration Release
+          dotnet test --configuration Release
 
       - name: Deploy
         working-directory: src/PollinationSDK
