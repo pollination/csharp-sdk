@@ -40,7 +40,7 @@ namespace PollinationSDK
             {
                 var d = api.GetProject(userName, projectName);
                 return d;
-            } 
+            }
             catch (ApiException e)
             {
                 // Project not found and person account, create a default demo project.
@@ -54,21 +54,47 @@ namespace PollinationSDK
                 Helper.Logger.Error(e, $"GetAProject: failed to get the project {userName}/{projectName}");
                 throw e;
             }
-           
-            
+
+
+        }
+
+        private static async Task<bool> WaitFor(int millis, bool retVal)
+        {
+            await Task.Delay(millis);
+            return retVal;
         }
 
         public static async Task<bool> UploadDirectoryAsync(Project project, string directory, Action<int> reportProgressAction = default, CancellationToken cancellationToken = default)
         {
+            Helper.Logger.Information($"Uploading a directory {directory}");
 
             var files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
-            var tasks = files.Select(_ => UploadArtifaceAsync(project, _, _.Replace(directory, ""))).ToList();
+            var api = new ArtifactsApi();
+            var tasks = files.Select(_ => UploadArtifaceAsync(api, project, _, _.Replace(directory, ""))).ToList();
             var total = files.Count();
 
             Helper.Logger.Information($"UploadDirectoryAsync: Uploading {total} assets for project {project.Name}");
 
+
             var finishedPercent = 0;
             reportProgressAction?.Invoke(finishedPercent);
+
+            // tasks.Insert(0, WaitFor(110_000, true));
+
+            // foreach (var t in tasks)
+            // {
+            //     Helper.Logger.Information($"Started waiting");
+            //     await t;
+            //     Helper.Logger.Information($"Finished waiting");
+
+            //     if (t.IsFaulted || t.Exception != null)
+            //     {
+            //         Helper.Logger.Error($"Upload exception: {t.Exception}");
+            //         throw t.Exception;
+            //     }
+            // }
+            // reportProgressAction.Invoke(100);
+
             while (tasks.Count() > 0)
             {
                 // canceled by user
@@ -79,8 +105,12 @@ namespace PollinationSDK
                 }
 
                 var finishedTask = await Task.WhenAny(tasks);
+
                 if (finishedTask.IsFaulted || finishedTask.Exception != null)
+                {
+                    Helper.Logger.Error($"Upload exception: {finishedTask.Exception}");
                     throw finishedTask.Exception;
+                }
 
                 tasks.Remove(finishedTask);
 
@@ -99,44 +129,44 @@ namespace PollinationSDK
 
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="fullPath">something like: "C:\Users\mingo\Downloads\Compressed\project_folder\project_folder\model\grid\room.pts"</param>
         /// <param name="relativePath">"model\grid\room.pts"</param>
-        public static async Task<bool> UploadArtifaceAsync(Project project, string fullPath, string relativePath)
+        public static async Task<bool> UploadArtifaceAsync(ArtifactsApi api, Project project, string fullPath, string relativePath)
         {
             var filePath = fullPath;
             var fileRelativePath = relativePath.Replace('\\', '/');
-            if (fileRelativePath.StartsWith("/")) 
+            if (fileRelativePath.StartsWith("/"))
                 fileRelativePath = fileRelativePath.Substring(1);
 
-            //fileRelativePath = "project_folder/" + fileRelativePath;
-            var api = new ArtifactsApi();
             var artf = await api.CreateArtifactAsync(project.Owner.Name, project.Name, new KeyRequest(fileRelativePath));
 
             var url = artf.Url;
 
-
             //Use RestSharp
             RestClient restClient = new RestClient(url);
-            RestRequest restRequest = new RestRequest();
-            restRequest.RequestFormat = DataFormat.Json;
-            restRequest.Method = Method.POST;
+            RestRequest restRequest = new RestRequest
+            {
+                RequestFormat = DataFormat.Json,
+                Method = Method.POST
+            };
             restRequest.AddHeader("Content-Type", "multipart/form-data");
-            restRequest.AddParameter("AWSAccessKeyId", artf.Fields["AWSAccessKeyId"]);
-            restRequest.AddParameter("policy", artf.Fields["policy"]);
-            restRequest.AddParameter("signature", artf.Fields["signature"]);
-            restRequest.AddParameter("key", artf.Fields["key"]);
+
+            artf.Fields.Keys.ToList().ForEach(f => restRequest.AddParameter(f, artf.Fields[f]));
+
             restRequest.AddFile("file", filePath);
-            var response = restClient.Execute(restRequest);
+
+            Helper.Logger.Information($"Started upload of {relativePath}");
+            var response = await restClient.ExecuteAsync(restRequest);
+            Helper.Logger.Information($"Finished upload of: {relativePath}");
+
             if (response.StatusCode == HttpStatusCode.NoContent)
             {
                 Helper.Logger.Information($"UploadArtifaceAsync: Done uploading {fileRelativePath}");
                 return true;
             }
             return false;
-
-
         }
 
 
@@ -178,10 +208,10 @@ namespace PollinationSDK
             return true;
         }
 
-      
 
-        
-    
+
+
+
         private static async Task<List<string>> Download(string url, string dir)
         {
 
@@ -228,7 +258,7 @@ namespace PollinationSDK
             {
                 throw;
             }
-           
+
         }
         public static async Task<List<string>> DownloadSimulationInputAssets(RunInfo runInfo, string saveAsDir = default, Action<int> reportProgressAction = default)
         {
@@ -265,7 +295,7 @@ namespace PollinationSDK
                 Helper.Logger.Error(e, $"DownloadFromUrlAsync: Unable to download file {url}");
                 throw e;
             }
-                
+
 
             // prep file path
             var fileName = Path.GetFileName(url).Split(new[] { '?' })[0];
@@ -276,11 +306,12 @@ namespace PollinationSDK
             var b = response.RawBytes;
             File.WriteAllBytes(file, b);
 
-            if (!File.Exists(file)) {
-                var e=  new ArgumentException($"Failed to download {fileName}");
+            if (!File.Exists(file))
+            {
+                var e = new ArgumentException($"Failed to download {fileName}");
                 Helper.Logger.Error(e, $"DownloadFromUrlAsync: error");
                 throw e;
-            } 
+            }
             outputDirOrFile = file;
 
             // unzip
@@ -298,7 +329,7 @@ namespace PollinationSDK
             return outputDirOrFile;
 
         }
-        
+
         /// <summary>
         /// Download an artifact(file/folder) items independently.
         /// </summary>
@@ -333,7 +364,7 @@ namespace PollinationSDK
             }
 
             // loop through files in folder
-            void ListFilesFromFolder(ref List<Task<string>> ts, string saveDir, string owner, string projName, string simuID,  FileMeta artfact, RunsApi RunsApi )
+            void ListFilesFromFolder(ref List<Task<string>> ts, string saveDir, string owner, string projName, string simuID, FileMeta artfact, RunsApi RunsApi)
             {
                 var dir = saveDir;
                 var api = RunsApi;
@@ -391,7 +422,7 @@ namespace PollinationSDK
                 if (removeZip)
                     File.Delete(zipFilePath);
                 CopyDirectory(tempDir.FullName, saveAsDir);
-                
+
             }
             catch (Exception e)
             {
