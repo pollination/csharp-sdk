@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **Recipe** | [**RecipeInterface**](RecipeInterface.md) | The recipe used to generate this  | [optional] 
 **Generation** | **double** | The generation of this run | [optional] 
 **Status** | [**RunStatus**](RunStatus.md) | The status of the run | [optional] 
+**Meta** | [**RunMeta**](RunMeta.md) | Extra metadata about the run | [optional] 
 **Type** | **string** |  | [optional] [readonly] [default to "Run"]
 
 [[Back to Model list]](../README.md#documentation-for-models)
