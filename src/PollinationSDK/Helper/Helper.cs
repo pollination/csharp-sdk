@@ -58,18 +58,14 @@ namespace PollinationSDK
 
         }
 
-        private static async Task<bool> WaitFor(int millis, bool retVal)
-        {
-            await Task.Delay(millis);
-            return retVal;
-        }
-
         public static async Task<bool> UploadDirectoryAsync(Project project, string directory, Action<int> reportProgressAction = default, CancellationToken cancellationToken = default)
         {
             Helper.Logger.Information($"Uploading a directory {directory}");
+            Helper.Logger.Information($"Timeout: {Configuration.Default.Timeout}");
 
             var files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
             var api = new ArtifactsApi();
+
             var tasks = files.Select(_ => UploadArtifaceAsync(api, project, _, _.Replace(directory, ""))).ToList();
             var total = files.Count();
 
@@ -78,22 +74,6 @@ namespace PollinationSDK
 
             var finishedPercent = 0;
             reportProgressAction?.Invoke(finishedPercent);
-
-            // tasks.Insert(0, WaitFor(110_000, true));
-
-            // foreach (var t in tasks)
-            // {
-            //     Helper.Logger.Information($"Started waiting");
-            //     await t;
-            //     Helper.Logger.Information($"Finished waiting");
-
-            //     if (t.IsFaulted || t.Exception != null)
-            //     {
-            //         Helper.Logger.Error($"Upload exception: {t.Exception}");
-            //         throw t.Exception;
-            //     }
-            // }
-            // reportProgressAction.Invoke(100);
 
             while (tasks.Count() > 0)
             {
@@ -142,10 +122,13 @@ namespace PollinationSDK
 
             var artf = await api.CreateArtifactAsync(project.Owner.Name, project.Name, new KeyRequest(fileRelativePath));
 
-            var url = artf.Url;
-
             //Use RestSharp
-            RestClient restClient = new RestClient(url);
+            RestClient restClient = new RestClient
+            {
+                BaseUrl = new Uri(artf.Url),
+                Timeout = Configuration.Default.Timeout
+            };
+
             RestRequest restRequest = new RestRequest
             {
                 RequestFormat = DataFormat.Json,
@@ -159,12 +142,16 @@ namespace PollinationSDK
 
             Helper.Logger.Information($"Started upload of {relativePath}");
             var response = await restClient.ExecuteAsync(restRequest);
-            Helper.Logger.Information($"Finished upload of: {relativePath}");
 
             if (response.StatusCode == HttpStatusCode.NoContent)
             {
                 Helper.Logger.Information($"UploadArtifaceAsync: Done uploading {fileRelativePath}");
                 return true;
+            }
+            else
+            {
+                Helper.Logger.Information($"UploadArtifaceAsync: Received response code: {response.StatusCode}");
+                Helper.Logger.Information($"{response.Content}");
             }
             return false;
         }
