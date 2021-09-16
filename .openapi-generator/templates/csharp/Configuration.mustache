@@ -191,7 +191,7 @@ namespace {{packageName}}.Client
             ApiKeyPrefix = new {{^net35}}Concurrent{{/net35}}Dictionary<string, string>();
 
             // Setting Timeout has side effects (forces ApiClient creation).
-            Timeout = 100000;
+            Timeout = Env.HTTPTimeout;
         }
 
         /// <summary>
