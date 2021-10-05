@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**GetAccount**](AccountsApi.md#getaccount) | **GET** /accounts/{name} | Get an account by name
 [**ListAccounts**](AccountsApi.md#listaccounts) | **GET** /accounts | List Accounts on the Pollination platform
+[**ListQuotas**](AccountsApi.md#listquotas) | **GET** /accounts/{name}/quotas | List Quotas
 
 
 
@@ -109,12 +110,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new AccountsApi(Configuration.Default);
             var search = search_example;  // string | Search string to find accounts (optional) 
@@ -169,6 +168,98 @@ Name | Type | Description  | Notes
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
 | **422** | Validation Error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## ListQuotas
+
+> QuotaList ListQuotas (string name, List<QuotaType> type = null, bool? exceeded = null, bool? enforced = null, int? page = null, int? perPage = null)
+
+List Quotas
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using PollinationSDK.Api;
+using PollinationSDK.Client;
+using PollinationSDK.Model;
+
+namespace Example
+{
+    public class ListQuotasExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+
+            var apiInstance = new AccountsApi(Configuration.Default);
+            var name = name_example;  // string | 
+            var type = new List<QuotaType>(); // List<QuotaType> | The types of quotas to get (optional) 
+            var exceeded = true;  // bool? | Whether to return only quotas which are exceeded (optional) 
+            var enforced = true;  // bool? | Whether to return only quotas which are enforced (optional) 
+            var page = 56;  // int? | Page number starting from 1 (optional)  (default to 1)
+            var perPage = 56;  // int? | Number of items per page (optional)  (default to 25)
+
+            try
+            {
+                // List Quotas
+                QuotaList result = apiInstance.ListQuotas(name, type, exceeded, enforced, page, perPage);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling AccountsApi.ListQuotas: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **string**|  | 
+ **type** | [**List&lt;QuotaType&gt;**](QuotaType.md)| The types of quotas to get | [optional] 
+ **exceeded** | **bool?**| Whether to return only quotas which are exceeded | [optional] 
+ **enforced** | **bool?**| Whether to return only quotas which are enforced | [optional] 
+ **page** | **int?**| Page number starting from 1 | [optional] [default to 1]
+ **perPage** | **int?**| Number of items per page | [optional] [default to 25]
+
+### Return type
+
+[**QuotaList**](QuotaList.md)
+
+### Authorization
+
+[APIKeyAuth](../README.md#APIKeyAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Retrieved |  -  |
+| **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
+| **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
