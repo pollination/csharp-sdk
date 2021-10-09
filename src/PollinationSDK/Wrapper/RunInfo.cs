@@ -260,6 +260,9 @@ namespace PollinationSDK.Wrapper
                 if (!args.TryGetValue(input.Name, out var value))
                     value = input.GetDefaultValue();
 
+                if (input.Required == false && value == null)
+                    continue;
+
                 var sinput =  input.ToStepInput(value);
                 stepInputs.Add(sinput);
             }
