@@ -155,11 +155,11 @@ namespace PollinationSDK.Test
         public void AnnualEnergyUseTest()
         {
             var rec = this.annualEnergyUse;
-            var filterInput = rec.Inputs.OfType<DAGStringInput>().First(_ => _.Name == "filter-des-days");
-            var alias = filterInput.Alias.OfType<DAGGenericInputAlias>().First();
+            var filterInput = rec.Inputs.OfType<DAGStringInput>().First(_ => _.Name == "additional-string");
+            var alias = filterInput.Alias.OfType<DAGArrayInputAlias>().First();
 
 
-            Assert.IsTrue(alias.Default == true.ToString());
+            Assert.IsTrue(alias.Required == false);
         }
 
 
