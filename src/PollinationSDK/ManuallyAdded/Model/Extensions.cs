@@ -24,7 +24,7 @@ namespace PollinationSDK
         public static Interface.Io.Inputs.IStep ToStepInput(this Interface.Io.Inputs.IDag dag, object value)
         {
             if (value == null)
-                throw new System.ArgumentNullException("Input value cannot be null for step input");
+                throw new System.ArgumentNullException($"Required input {dag.Name}'s value cannot be null for step input");
             Interface.Io.Inputs.IStep step = null;
             //AnyOf<DAGGenericInput,DAGStringInput,DAGIntegerInput,DAGNumberInput,DAGBooleanInput,DAGFolderInput,DAGFileInput,DAGPathInput,DAGArrayInput,DAGJSONObjectInput>
             switch (dag)
