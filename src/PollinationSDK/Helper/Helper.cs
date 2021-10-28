@@ -197,7 +197,16 @@ namespace PollinationSDK
 
 
 
+        public static async Task<string> DownloadArtifact(Project proj, FileMeta file, string saveAsFolder)
+        {
+            var api = new ArtifactsApi();
+            var task = api.DownloadArtifactAsync(proj.Owner.Name, proj.Name, file.Key);
+            var result = await task;
 
+            var downlaodTask = DownloadFromUrlAsync(result.ToString(), saveAsFolder);
+            var saved = await downlaodTask;
+            return saved;
+        }
 
         private static async Task<List<string>> Download(string url, string dir)
         {
@@ -268,6 +277,7 @@ namespace PollinationSDK
         }
 
 
+
         public static async Task<string> DownloadFromUrlAsync(string url, string saveAsDir)
         {
             var file = string.Empty;
@@ -278,7 +288,7 @@ namespace PollinationSDK
             var response = await client.ExecuteAsync(request);
             if (response.StatusCode != HttpStatusCode.OK)
             {
-                var e = new ArgumentException($"Unable to download file");
+                var e = new ArgumentException($"Unable to download file. Code {response.StatusCode}: { response.StatusDescription}");
                 Helper.Logger.Error(e, $"DownloadFromUrlAsync: Unable to download file {url}");
                 throw e;
             }
