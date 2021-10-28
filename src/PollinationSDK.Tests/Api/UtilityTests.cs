@@ -85,7 +85,20 @@ namespace PollinationSDK.Test
 
         //}
 
+        //[Test]
+        //public void LoadLocalResultTest()
+        //{
 
+        //    var proj = Helper.GetAProject("mingbo", "demo");
+        //    var path = "pzlolgsa.ume.hbjson";
+        //    var file = new FileMeta(path, "file", "test.hbjson");
+
+        //    var saveAs = Path.GetTempPath();
+        //    var task = Helper.DownloadArtifact(proj, file, saveAs);
+        //    var saved = task.GetAwaiter().GetResult();
+        //    Assert.IsTrue(File.Exists(saved));
+
+        //}
     }
 
 }

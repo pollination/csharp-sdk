@@ -325,6 +325,28 @@ namespace PollinationSDK.Test
        
 
         }
+
+
+        // [Test]
+        // public void WatchJobTest2()
+        // {
+        //     //mostapha/demo/afbfc048-3739-41e2-a1c2-a08f10ada793
+        //     var owner = "mostapha";
+        //     var projName = "demo";
+        //     var jobID = "afbfc048-3739-41e2-a1c2-a08f10ada793";
+
+        //     var instance = new ProjectsApi();
+        //     var proj = instance.GetProject(owner, projName);
+        //     var job = new ScheduledJobInfo(proj, jobID);
+
+
+        //     // watch status
+        //     var watchTask = job.WatchJobStatusAsync((s) => Console.WriteLine(s));
+        //     watchTask.Wait();
+        //     var result = watchTask.Result;
+
+        //     Assert.IsTrue(result.Contains("Completed"));
+        // }
     }
 
 }
