@@ -217,15 +217,15 @@ namespace PollinationSDK.Wrapper
                 throw new ArgumentException(msg);
             }
 
-            return CheckRecipeInProject(recOwner, recName, project);
+            return CheckRecipeInProject(recOwner, recName, project, recVersion);
 
         }
 
-        public static string CheckRecipeInProject(string recOwner, string recName, Project project)
+        public static string CheckRecipeInProject(string recOwner, string recName, Project project, string recTag = default)
         {
             //// Check if recipe can be used in this project
             var projAPi = new ProjectsApi();
-            var recipeFilter = new ProjectRecipeFilter(recOwner, recName);
+            var recipeFilter = new ProjectRecipeFilter(recOwner, recName, recTag);
             var result = projAPi.CreateProjectRecipeFilter(project.Owner.Name, project.Name, recipeFilter);
             return result.Name;
 
