@@ -4,86 +4,9 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**CheckUsername**](UsersApi.md#checkusername) | **GET** /users/check_username/{username} | Check if a username is already taken
 [**GetOneUser**](UsersApi.md#getoneuser) | **GET** /users/{name} | Get a specific user profile
 [**ListUsers**](UsersApi.md#listusers) | **GET** /users | List Users
 
-
-
-## CheckUsername
-
-> AnyType CheckUsername (string username)
-
-Check if a username is already taken
-
-Check if a username is already taken by a user or an org
-
-### Example
-
-```csharp
-using System.Collections.Generic;
-using System.Diagnostics;
-using PollinationSDK.Api;
-using PollinationSDK.Client;
-using PollinationSDK.Model;
-
-namespace Example
-{
-    public class CheckUsernameExample
-    {
-        public static void Main()
-        {
-            Configuration.Default.BasePath = "http://localhost";
-            var apiInstance = new UsersApi(Configuration.Default);
-            var username = username_example;  // string | 
-
-            try
-            {
-                // Check if a username is already taken
-                AnyType result = apiInstance.CheckUsername(username);
-                Debug.WriteLine(result);
-            }
-            catch (ApiException e)
-            {
-                Debug.Print("Exception when calling UsersApi.CheckUsername: " + e.Message );
-                Debug.Print("Status Code: "+ e.ErrorCode);
-                Debug.Print(e.StackTrace);
-            }
-        }
-    }
-}
-```
-
-### Parameters
-
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **username** | **string**|  | 
-
-### Return type
-
-[**AnyType**](AnyType.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-### HTTP response details
-| Status code | Description | Response headers |
-|-------------|-------------|------------------|
-| **200** | Username not taken |  -  |
-| **422** | Validation Error |  -  |
-
-[[Back to top]](#)
-[[Back to API list]](../README.md#documentation-for-api-endpoints)
-[[Back to Model list]](../README.md#documentation-for-models)
-[[Back to README]](../README.md)
 
 
 ## GetOneUser
