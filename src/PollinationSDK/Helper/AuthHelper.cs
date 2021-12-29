@@ -180,7 +180,7 @@ namespace PollinationSDK
             }
 
             //sends an HTTP response to the browser.
-            string responseString = string.Format($"<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\">Succesfully Logged in! You can close this browser window.</body></html>");
+            string responseString = string.Format("<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\"><img src=\"https://app.pollination.cloud/logo.svg\"><h1>Successfully Logged in!</h1><h4>You can close this browser window.</h4></body></html>");
             var buffer = Encoding.UTF8.GetBytes(responseString);
             response.ContentLength64 = buffer.Length;
             var responseOutput = response.OutputStream;
