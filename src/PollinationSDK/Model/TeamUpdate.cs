@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// TeamUpdate
     /// </summary>
     [DataContract(Name = "TeamUpdate")]
-    public partial class TeamUpdate : TeamCreate, IEquatable<TeamUpdate>, IValidatableObject
+    public partial class TeamUpdate : IEquatable<TeamUpdate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TeamUpdate" /> class.
@@ -36,32 +36,37 @@ namespace PollinationSDK
         protected TeamUpdate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "TeamUpdate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="TeamUpdate" /> class.
         /// </summary>
-        /// <param name="name">name (required).</param>
         /// <param name="description">description.</param>
+        /// <param name="name">name (required).</param>
         public TeamUpdate
         (
-            string name, // Required parameters
-            string description= default // Optional parameters
-        ) : base(name: name, description: description)// BaseClass
+           string name, // Required parameters
+           string description= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for TeamUpdate and cannot be null");
+            this.Description = description;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "TeamUpdate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "TeamUpdate";
 
+        /// <summary>
+        /// Gets or Sets Description
+        /// </summary>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -83,9 +88,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("TeamUpdate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             return sb.ToString();
         }
   
@@ -119,14 +123,6 @@ namespace PollinationSDK
             return DuplicateTeamUpdate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override TeamCreate DuplicateTeamCreate()
-        {
-            return DuplicateTeamUpdate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -148,11 +144,16 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
                 );
         }
 
@@ -164,9 +165,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 return hashCode;
             }
         }
@@ -178,26 +181,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^TeamUpdate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

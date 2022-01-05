@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// ProjectRecipeFilter
     /// </summary>
     [DataContract(Name = "ProjectRecipeFilter")]
-    public partial class ProjectRecipeFilter : OpenAPIGenBaseModel, IEquatable<ProjectRecipeFilter>, IValidatableObject
+    public partial class ProjectRecipeFilter : IEquatable<ProjectRecipeFilter>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectRecipeFilter" /> class.
@@ -36,50 +36,42 @@ namespace PollinationSDK
         protected ProjectRecipeFilter() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "ProjectRecipeFilter";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectRecipeFilter" /> class.
         /// </summary>
-        /// <param name="owner">The name of the account the recipe belongs to (required).</param>
         /// <param name="name">The name of the recipe (required).</param>
+        /// <param name="owner">The name of the account the recipe belongs to (required).</param>
         /// <param name="tag">The specific recipe tag.</param>
         public ProjectRecipeFilter
         (
-           string owner, string name, // Required parameters
-           string tag= default // Optional parameters
-        ) : base()// BaseClass
+           string name, string owner, // Required parameters
+           string tag= default// Optional parameters
+        )// BaseClass
         {
-            // to ensure "owner" is required (not null)
-            this.Owner = owner ?? throw new ArgumentNullException("owner is a required property for ProjectRecipeFilter and cannot be null");
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for ProjectRecipeFilter and cannot be null");
+            // to ensure "owner" is required (not null)
+            this.Owner = owner ?? throw new ArgumentNullException("owner is a required property for ProjectRecipeFilter and cannot be null");
             this.Tag = tag;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "ProjectRecipeFilter";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ProjectRecipeFilter";
 
-        /// <summary>
-        /// The name of the account the recipe belongs to
-        /// </summary>
-        /// <value>The name of the account the recipe belongs to</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
-        public string Owner { get; set; } 
         /// <summary>
         /// The name of the recipe
         /// </summary>
         /// <value>The name of the recipe</value>
         [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
         public string Name { get; set; } 
+        /// <summary>
+        /// The name of the account the recipe belongs to
+        /// </summary>
+        /// <value>The name of the account the recipe belongs to</value>
+        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        public string Owner { get; set; } 
         /// <summary>
         /// The specific recipe tag
         /// </summary>
@@ -107,9 +99,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ProjectRecipeFilter:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Owner: ").Append(Owner).Append("\n");
             sb.Append("  Tag: ").Append(Tag).Append("\n");
             return sb.ToString();
         }
@@ -144,14 +135,6 @@ namespace PollinationSDK
             return DuplicateProjectRecipeFilter();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateProjectRecipeFilter();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -173,26 +156,21 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Owner == input.Owner ||
+                    (this.Owner != null &&
+                    this.Owner.Equals(input.Owner))
+                ) && 
                 (
                     this.Tag == input.Tag ||
                     (this.Tag != null &&
                     this.Tag.Equals(input.Tag))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -204,15 +182,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Owner != null)
-                    hashCode = hashCode * 59 + this.Owner.GetHashCode();
+                int hashCode = 41;
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Owner != null)
+                    hashCode = hashCode * 59 + this.Owner.GetHashCode();
                 if (this.Tag != null)
                     hashCode = hashCode * 59 + this.Tag.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -224,16 +200,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^ProjectRecipeFilter$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

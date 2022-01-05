@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// RecipePackage
     /// </summary>
     [DataContract(Name = "RecipePackage")]
-    public partial class RecipePackage : RepositoryPackage, IEquatable<RecipePackage>, IValidatableObject
+    public partial class RecipePackage : IEquatable<RecipePackage>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RecipePackage" /> class.
@@ -36,45 +36,88 @@ namespace PollinationSDK
         protected RecipePackage() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RecipePackage";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="RecipePackage" /> class.
         /// </summary>
-        /// <param name="manifest">manifest (required).</param>
-        /// <param name="digest">The new package digest (required).</param>
-        /// <param name="tag">The new package tag (required).</param>
-        /// <param name="keywords">keywords.</param>
-        /// <param name="description">description.</param>
-        /// <param name="icon">icon.</param>
         /// <param name="createdAt">Creation Timestamp.</param>
+        /// <param name="description">description.</param>
+        /// <param name="digest">The new package digest (required).</param>
+        /// <param name="icon">icon.</param>
+        /// <param name="keywords">keywords.</param>
+        /// <param name="manifest">manifest (required).</param>
         /// <param name="readme">The Repository Readme.</param>
+        /// <param name="tag">The new package tag (required).</param>
         public RecipePackage
         (
-            string digest, string tag, RecipeInterface manifest, // Required parameters
-            List<string> keywords= default, string description= default, string icon= default, DateTime createdAt= default, string readme= default // Optional parameters
-        ) : base(digest: digest, tag: tag, keywords: keywords, description: description, icon: icon, createdAt: createdAt, readme: readme)// BaseClass
+           string digest, RecipeInterface manifest, string tag, // Required parameters
+           DateTime createdAt= default, string description= default, string icon= default, List<string> keywords= default, string readme= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "digest" is required (not null)
+            this.Digest = digest ?? throw new ArgumentNullException("digest is a required property for RecipePackage and cannot be null");
             // to ensure "manifest" is required (not null)
             this.Manifest = manifest ?? throw new ArgumentNullException("manifest is a required property for RecipePackage and cannot be null");
+            // to ensure "tag" is required (not null)
+            this.Tag = tag ?? throw new ArgumentNullException("tag is a required property for RecipePackage and cannot be null");
+            this.CreatedAt = createdAt;
+            this.Description = description;
+            this.Icon = icon;
+            this.Keywords = keywords;
+            this.Readme = readme;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RecipePackage";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RecipePackage";
 
+        /// <summary>
+        /// Creation Timestamp
+        /// </summary>
+        /// <value>Creation Timestamp</value>
+        [DataMember(Name = "created_at", EmitDefaultValue = false)]
+        public DateTime CreatedAt { get; set; } 
+        /// <summary>
+        /// description
+        /// </summary>
+        /// <value>description</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// The new package digest
+        /// </summary>
+        /// <value>The new package digest</value>
+        [DataMember(Name = "digest", IsRequired = true, EmitDefaultValue = false)]
+        public string Digest { get; set; } 
+        /// <summary>
+        /// icon
+        /// </summary>
+        /// <value>icon</value>
+        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        public string Icon { get; set; } 
+        /// <summary>
+        /// keywords
+        /// </summary>
+        /// <value>keywords</value>
+        [DataMember(Name = "keywords", EmitDefaultValue = false)]
+        public List<string> Keywords { get; set; } 
         /// <summary>
         /// Gets or Sets Manifest
         /// </summary>
         [DataMember(Name = "manifest", IsRequired = true, EmitDefaultValue = false)]
         public RecipeInterface Manifest { get; set; } 
+        /// <summary>
+        /// The Repository Readme
+        /// </summary>
+        /// <value>The Repository Readme</value>
+        [DataMember(Name = "readme", EmitDefaultValue = false)]
+        public string Readme { get; set; } 
+        /// <summary>
+        /// The new package tag
+        /// </summary>
+        /// <value>The new package tag</value>
+        [DataMember(Name = "tag", IsRequired = true, EmitDefaultValue = false)]
+        public string Tag { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -96,15 +139,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RecipePackage:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Digest: ").Append(Digest).Append("\n");
-            sb.Append("  Tag: ").Append(Tag).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Icon: ").Append(Icon).Append("\n");
             sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
-            sb.Append("  Readme: ").Append(Readme).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Digest: ").Append(Digest).Append("\n");
+            sb.Append("  Icon: ").Append(Icon).Append("\n");
+            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
             sb.Append("  Manifest: ").Append(Manifest).Append("\n");
+            sb.Append("  Readme: ").Append(Readme).Append("\n");
+            sb.Append("  Tag: ").Append(Tag).Append("\n");
             return sb.ToString();
         }
   
@@ -138,14 +180,6 @@ namespace PollinationSDK
             return DuplicateRecipePackage();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override RepositoryPackage DuplicateRepositoryPackage()
-        {
-            return DuplicateRecipePackage();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -167,16 +201,47 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.CreatedAt == input.CreatedAt ||
+                    (this.CreatedAt != null &&
+                    this.CreatedAt.Equals(input.CreatedAt))
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Digest == input.Digest ||
+                    (this.Digest != null &&
+                    this.Digest.Equals(input.Digest))
+                ) && 
+                (
+                    this.Icon == input.Icon ||
+                    (this.Icon != null &&
+                    this.Icon.Equals(input.Icon))
+                ) && 
+                (
+                    this.Keywords == input.Keywords ||
+                    this.Keywords != null &&
+                    input.Keywords != null &&
+                    this.Keywords.SequenceEqual(input.Keywords)
+                ) && 
                 (
                     this.Manifest == input.Manifest ||
                     (this.Manifest != null &&
                     this.Manifest.Equals(input.Manifest))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Readme == input.Readme ||
+                    (this.Readme != null &&
+                    this.Readme.Equals(input.Readme))
+                ) && 
+                (
+                    this.Tag == input.Tag ||
+                    (this.Tag != null &&
+                    this.Tag.Equals(input.Tag))
                 );
         }
 
@@ -188,11 +253,23 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.CreatedAt != null)
+                    hashCode = hashCode * 59 + this.CreatedAt.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Digest != null)
+                    hashCode = hashCode * 59 + this.Digest.GetHashCode();
+                if (this.Icon != null)
+                    hashCode = hashCode * 59 + this.Icon.GetHashCode();
+                if (this.Keywords != null)
+                    hashCode = hashCode * 59 + this.Keywords.GetHashCode();
                 if (this.Manifest != null)
                     hashCode = hashCode * 59 + this.Manifest.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Readme != null)
+                    hashCode = hashCode * 59 + this.Readme.GetHashCode();
+                if (this.Tag != null)
+                    hashCode = hashCode * 59 + this.Tag.GetHashCode();
                 return hashCode;
             }
         }
@@ -204,16 +281,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^RecipePackage$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

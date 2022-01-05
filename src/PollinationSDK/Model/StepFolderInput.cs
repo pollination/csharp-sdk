@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A folder input.
     /// </summary>
     [DataContract(Name = "StepFolderInput")]
-    public partial class StepFolderInput : GenericInput, IEquatable<StepFolderInput>, IValidatableObject
+    public partial class StepFolderInput : IEquatable<StepFolderInput>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StepFolderInput" /> class.
@@ -42,28 +42,32 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="StepFolderInput" /> class.
         /// </summary>
-        /// <param name="source">The path to source the file from. (required).</param>
-        /// <param name="_default">The default source for file if the value is not provided..</param>
         /// <param name="alias">A list of aliases for this input in different platforms..</param>
-        /// <param name="required">A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided. (default to false).</param>
-        /// <param name="spec">An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec..</param>
-        /// <param name="path">Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed..</param>
-        /// <param name="name">Input name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="_default">The default source for file if the value is not provided..</param>
         /// <param name="description">Optional description for input..</param>
+        /// <param name="name">Input name. (required).</param>
+        /// <param name="path">Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed..</param>
+        /// <param name="required">A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided. (default to false).</param>
+        /// <param name="source">The path to source the file from. (required).</param>
+        /// <param name="spec">An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec..</param>
         public StepFolderInput
         (
-            string name, AnyOf<HTTP,S3,ProjectFolder> source, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default, AnyOf<HTTP,S3,ProjectFolder> _default= default, List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> alias= default, bool required = false, Object spec= default, string path= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+           string name, AnyOf<HTTP,S3,ProjectFolder> source, // Required parameters
+           List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> alias= default, Dictionary<string, string> annotations= default, AnyOf<HTTP,S3,ProjectFolder> _default= default, string description= default, string path= default, bool required = false, Object spec= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for StepFolderInput and cannot be null");
             // to ensure "source" is required (not null)
             this.Source = source ?? throw new ArgumentNullException("source is a required property for StepFolderInput and cannot be null");
-            this.Default = _default;
             this.Alias = alias;
+            this.Annotations = annotations;
+            this.Default = _default;
+            this.Description = description;
+            this.Path = path;
             this.Required = required;
             this.Spec = spec;
-            this.Path = path;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "StepFolderInput";
@@ -77,11 +81,17 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "StepFolderInput";
 
         /// <summary>
-        /// The path to source the file from.
+        /// A list of aliases for this input in different platforms.
         /// </summary>
-        /// <value>The path to source the file from.</value>
-        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
-        public AnyOf<HTTP,S3,ProjectFolder> Source { get; set; } 
+        /// <value>A list of aliases for this input in different platforms.</value>
+        [DataMember(Name = "alias", EmitDefaultValue = false)]
+        public List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> Alias { get; set; } 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The default source for file if the value is not provided.
         /// </summary>
@@ -89,11 +99,23 @@ namespace PollinationSDK
         [DataMember(Name = "default", EmitDefaultValue = false)]
         public AnyOf<HTTP,S3,ProjectFolder> Default { get; set; } 
         /// <summary>
-        /// A list of aliases for this input in different platforms.
+        /// Optional description for input.
         /// </summary>
-        /// <value>A list of aliases for this input in different platforms.</value>
-        [DataMember(Name = "alias", EmitDefaultValue = false)]
-        public List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> Alias { get; set; } 
+        /// <value>Optional description for input.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// Input name.
+        /// </summary>
+        /// <value>Input name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed.
+        /// </summary>
+        /// <value>Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed.</value>
+        [DataMember(Name = "path", EmitDefaultValue = false)]
+        public string Path { get; set; } 
         /// <summary>
         /// A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.
         /// </summary>
@@ -101,17 +123,17 @@ namespace PollinationSDK
         [DataMember(Name = "required", EmitDefaultValue = true)]
         public bool Required { get; set; }  = false;
         /// <summary>
+        /// The path to source the file from.
+        /// </summary>
+        /// <value>The path to source the file from.</value>
+        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
+        public AnyOf<HTTP,S3,ProjectFolder> Source { get; set; } 
+        /// <summary>
         /// An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.
         /// </summary>
         /// <value>An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.</value>
         [DataMember(Name = "spec", EmitDefaultValue = false)]
         public Object Spec { get; set; } 
-        /// <summary>
-        /// Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed.
-        /// </summary>
-        /// <value>Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed.</value>
-        [DataMember(Name = "path", EmitDefaultValue = false)]
-        public string Path { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -133,16 +155,16 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("StepFolderInput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  Default: ").Append(Default).Append("\n");
             sb.Append("  Alias: ").Append(Alias).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
-            sb.Append("  Spec: ").Append(Spec).Append("\n");
+            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Default: ").Append(Default).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
+            sb.Append("  Required: ").Append(Required).Append("\n");
+            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Spec: ").Append(Spec).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -176,14 +198,6 @@ namespace PollinationSDK
             return DuplicateStepFolderInput();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override GenericInput DuplicateGenericInput()
-        {
-            return DuplicateStepFolderInput();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -205,33 +219,54 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Default == input.Default ||
-                    (this.Default != null &&
-                    this.Default.Equals(input.Default))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Alias == input.Alias ||
                     this.Alias != null &&
                     input.Alias != null &&
                     this.Alias.SequenceEqual(input.Alias)
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Required == input.Required ||
-                    (this.Required != null &&
-                    this.Required.Equals(input.Required))
-                ) && base.Equals(input) && 
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Default == input.Default ||
+                    (this.Default != null &&
+                    this.Default.Equals(input.Default))
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Path == input.Path ||
                     (this.Path != null &&
                     this.Path.Equals(input.Path))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Required == input.Required ||
+                    (this.Required != null &&
+                    this.Required.Equals(input.Required))
+                ) && 
+                (
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
+                ) && 
+                (
+                    this.Spec == input.Spec ||
+                    (this.Spec != null &&
+                    this.Spec.Equals(input.Spec))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -247,19 +282,25 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Source != null)
-                    hashCode = hashCode * 59 + this.Source.GetHashCode();
-                if (this.Default != null)
-                    hashCode = hashCode * 59 + this.Default.GetHashCode();
+                int hashCode = 41;
                 if (this.Alias != null)
                     hashCode = hashCode * 59 + this.Alias.GetHashCode();
-                if (this.Required != null)
-                    hashCode = hashCode * 59 + this.Required.GetHashCode();
-                if (this.Spec != null)
-                    hashCode = hashCode * 59 + this.Spec.GetHashCode();
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Default != null)
+                    hashCode = hashCode * 59 + this.Default.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Path != null)
                     hashCode = hashCode * 59 + this.Path.GetHashCode();
+                if (this.Required != null)
+                    hashCode = hashCode * 59 + this.Required.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.Spec != null)
+                    hashCode = hashCode * 59 + this.Spec.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -273,7 +314,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// RepositoryCreate
     /// </summary>
     [DataContract(Name = "RepositoryCreate")]
-    public partial class RepositoryCreate : RepositoryUpdate, IEquatable<RepositoryCreate>, IValidatableObject
+    public partial class RepositoryCreate : IEquatable<RepositoryCreate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryCreate" /> class.
@@ -36,43 +36,63 @@ namespace PollinationSDK
         protected RepositoryCreate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RepositoryCreate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryCreate" /> class.
         /// </summary>
-        /// <param name="name">The name of the repository (required).</param>
-        /// <param name="_public">Whether or not a repository is publicly viewable.</param>
-        /// <param name="keywords">A list of keywords to index the repository by.</param>
         /// <param name="description">A description of the repository.</param>
         /// <param name="icon">An icon to represent this repository.</param>
+        /// <param name="keywords">A list of keywords to index the repository by.</param>
+        /// <param name="name">The name of the repository (required).</param>
+        /// <param name="_public">Whether or not a repository is publicly viewable.</param>
         public RepositoryCreate
         (
            string name, // Required parameters
-            bool _public= default, List<string> keywords= default, string description= default, string icon= default // Optional parameters
-        ) : base(_public: _public, keywords: keywords, description: description, icon: icon)// BaseClass
+           string description= default, string icon= default, List<string> keywords= default, bool _public= default// Optional parameters
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for RepositoryCreate and cannot be null");
+            this.Description = description;
+            this.Icon = icon;
+            this.Keywords = keywords;
+            this.Public = _public;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RepositoryCreate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RepositoryCreate";
 
+        /// <summary>
+        /// A description of the repository
+        /// </summary>
+        /// <value>A description of the repository</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// An icon to represent this repository
+        /// </summary>
+        /// <value>An icon to represent this repository</value>
+        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        public string Icon { get; set; } 
+        /// <summary>
+        /// A list of keywords to index the repository by
+        /// </summary>
+        /// <value>A list of keywords to index the repository by</value>
+        [DataMember(Name = "keywords", EmitDefaultValue = false)]
+        public List<string> Keywords { get; set; } 
         /// <summary>
         /// The name of the repository
         /// </summary>
         /// <value>The name of the repository</value>
         [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
         public string Name { get; set; } 
+        /// <summary>
+        /// Whether or not a repository is publicly viewable
+        /// </summary>
+        /// <value>Whether or not a repository is publicly viewable</value>
+        [DataMember(Name = "public", EmitDefaultValue = false)]
+        public bool Public { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -94,12 +114,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Icon: ").Append(Icon).Append("\n");
+            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Public: ").Append(Public).Append("\n");
             return sb.ToString();
         }
   
@@ -133,14 +152,6 @@ namespace PollinationSDK
             return DuplicateRepositoryCreate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override RepositoryUpdate DuplicateRepositoryUpdate()
-        {
-            return DuplicateRepositoryCreate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -162,16 +173,32 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Icon == input.Icon ||
+                    (this.Icon != null &&
+                    this.Icon.Equals(input.Icon))
+                ) && 
+                (
+                    this.Keywords == input.Keywords ||
+                    this.Keywords != null &&
+                    input.Keywords != null &&
+                    this.Keywords.SequenceEqual(input.Keywords)
+                ) && 
                 (
                     this.Name == input.Name ||
                     (this.Name != null &&
                     this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Public == input.Public ||
+                    (this.Public != null &&
+                    this.Public.Equals(input.Public))
                 );
         }
 
@@ -183,11 +210,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Icon != null)
+                    hashCode = hashCode * 59 + this.Icon.GetHashCode();
+                if (this.Keywords != null)
+                    hashCode = hashCode * 59 + this.Keywords.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Public != null)
+                    hashCode = hashCode * 59 + this.Public.GetHashCode();
                 return hashCode;
             }
         }
@@ -199,26 +232,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^RepositoryCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

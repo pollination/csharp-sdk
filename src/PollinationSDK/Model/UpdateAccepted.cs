@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Accepted request response for existing resource
     /// </summary>
     [DataContract(Name = "UpdateAccepted")]
-    public partial class UpdateAccepted : OpenAPIGenBaseModel, IEquatable<UpdateAccepted>, IValidatableObject
+    public partial class UpdateAccepted : IEquatable<UpdateAccepted>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UpdateAccepted" /> class.
@@ -36,22 +36,15 @@ namespace PollinationSDK
         public UpdateAccepted
         (
            // Required parameters
-           string status = "accepted" // Optional parameters
-        ) : base()// BaseClass
+           string status = "accepted"// Optional parameters
+        )// BaseClass
         {
             // use default value if no "status" provided
             this.Status = status ?? "accepted";
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UpdateAccepted";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UpdateAccepted";
 
         /// <summary>
         /// Gets or Sets Status
@@ -79,7 +72,6 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UpdateAccepted:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
             return sb.ToString();
         }
@@ -114,14 +106,6 @@ namespace PollinationSDK
             return DuplicateUpdateAccepted();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateUpdateAccepted();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -143,16 +127,11 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Status == input.Status ||
                     (this.Status != null &&
                     this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -164,11 +143,9 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Status != null)
                     hashCode = hashCode * 59 + this.Status.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -180,16 +157,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^UpdateAccepted$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

@@ -95,11 +95,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | Success |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
-| **400** | Invalid request |  -  |
 | **202** | Accepted |  -  |
+| **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -186,11 +186,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Success |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -274,10 +274,10 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **204** | Accepted |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -363,10 +363,10 @@ void (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **204** | Accepted |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -451,11 +451,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -548,10 +548,10 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -638,11 +638,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -652,7 +652,7 @@ Name | Type | Description  | Notes
 
 ## ListRecipeTags
 
-> RecipePackageList ListRecipeTags (string owner, string name, PackageSortKey sortBy = null, SortEnum? sortOrder = null, int? page = null, int? perPage = null)
+> RecipePackageList ListRecipeTags (string owner, string name, PackageSortKey? sortBy = null, SortEnum? sortOrder = null, int? page = null, int? perPage = null)
 
 Get a recipe tags
 
@@ -684,7 +684,7 @@ namespace Example
             var apiInstance = new RecipesApi(Configuration.Default);
             var owner = owner_example;  // string | 
             var name = name_example;  // string | 
-            var sortBy = new PackageSortKey(); // PackageSortKey | Key to sort the list by (optional) 
+            var sortBy = ;  // PackageSortKey? | Key to sort the list by (optional) 
             var sortOrder = ;  // SortEnum? | The order to sort the list (optional) 
             var page = 56;  // int? | Page number starting from 1 (optional)  (default to 1)
             var perPage = 56;  // int? | Number of items per page (optional)  (default to 25)
@@ -713,7 +713,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **owner** | **string**|  | 
  **name** | **string**|  | 
- **sortBy** | [**PackageSortKey**](PackageSortKey.md)| Key to sort the list by | [optional] 
+ **sortBy** | **PackageSortKey?**| Key to sort the list by | [optional] 
  **sortOrder** | **SortEnum?**| The order to sort the list | [optional] 
  **page** | **int?**| Page number starting from 1 | [optional] [default to 1]
  **perPage** | **int?**| Number of items per page | [optional] [default to 25]
@@ -735,11 +735,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -749,7 +749,7 @@ Name | Type | Description  | Notes
 
 ## ListRecipes
 
-> RepositoryList ListRecipes (List<string> search = null, List<string> name = null, List<string> owner = null, bool? _public = null, List<string> keyword = null, List<string> permission = null, RepositorySortKey sortBy = null, SortEnum? sortOrder = null, int? page = null, int? perPage = null)
+> RepositoryList ListRecipes (List<string> search = null, List<string> name = null, List<string> owner = null, bool? _public = null, List<string> keyword = null, List<string> permission = null, RepositorySortKey? sortBy = null, SortEnum? sortOrder = null, int? page = null, int? perPage = null)
 
 List recipes
 
@@ -783,7 +783,7 @@ namespace Example
             var _public = true;  // bool? | Boolean check for public/private projects (optional) 
             var keyword = new List<string>(); // List<string> | A keyword to index the repository by (optional) 
             var permission = new List<string>(); // List<string> | Filter by permission on given resource (optional) 
-            var sortBy = new RepositorySortKey(); // RepositorySortKey | Key to sort the list by (optional) 
+            var sortBy = ;  // RepositorySortKey? | Key to sort the list by (optional) 
             var sortOrder = ;  // SortEnum? | The order to sort the list (optional) 
             var page = 56;  // int? | Page number starting from 1 (optional)  (default to 1)
             var perPage = 56;  // int? | Number of items per page (optional)  (default to 25)
@@ -816,7 +816,7 @@ Name | Type | Description  | Notes
  **_public** | **bool?**| Boolean check for public/private projects | [optional] 
  **keyword** | [**List&lt;string&gt;**](string.md)| A keyword to index the repository by | [optional] 
  **permission** | [**List&lt;string&gt;**](string.md)| Filter by permission on given resource | [optional] 
- **sortBy** | [**RepositorySortKey**](RepositorySortKey.md)| Key to sort the list by | [optional] 
+ **sortBy** | **RepositorySortKey?**| Key to sort the list by | [optional] 
  **sortOrder** | **SortEnum?**| The order to sort the list | [optional] 
  **page** | **int?**| Page number starting from 1 | [optional] [default to 1]
  **perPage** | **int?**| Number of items per page | [optional] [default to 25]
@@ -925,11 +925,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **202** | Accepted |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -1016,11 +1016,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **202** | Accepted |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

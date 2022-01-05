@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A single task in a DAG flow.
     /// </summary>
     [DataContract(Name = "DAGTask")]
-    public partial class DAGTask : OpenAPIGenBaseModel, IEquatable<DAGTask>, IValidatableObject
+    public partial class DAGTask : IEquatable<DAGTask>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGTask" /> class.
@@ -42,30 +42,30 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGTask" /> class.
         /// </summary>
-        /// <param name="name">Name for this task. It must be unique in a DAG. (required).</param>
-        /// <param name="template">Template name. A template is a Function or a DAG. This template must be available in the dependencies. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="needs">List of DAG tasks that this task depends on and needs to be executed before this task..</param>
         /// <param name="arguments">The input arguments for this task..</param>
         /// <param name="loop">Loop configuration for this task..</param>
-        /// <param name="subFolder">A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder..</param>
+        /// <param name="name">Name for this task. It must be unique in a DAG. (required).</param>
+        /// <param name="needs">List of DAG tasks that this task depends on and needs to be executed before this task..</param>
         /// <param name="returns">List of task returns..</param>
+        /// <param name="subFolder">A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder..</param>
+        /// <param name="template">Template name. A template is a Function or a DAG. This template must be available in the dependencies. (required).</param>
         public DAGTask
         (
            string name, string template, // Required parameters
-           Dictionary<string, string> annotations= default, List<string> needs= default, List<AnyOf<TaskArgument,TaskPathArgument>> arguments= default, DAGTaskLoop loop= default, string subFolder= default, List<AnyOf<TaskReturn,TaskPathReturn>> returns= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, List<AnyOf<TaskArgument,TaskPathArgument>> arguments= default, DAGTaskLoop loop= default, List<string> needs= default, List<AnyOf<TaskReturn,TaskPathReturn>> returns= default, string subFolder= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for DAGTask and cannot be null");
             // to ensure "template" is required (not null)
             this.Template = template ?? throw new ArgumentNullException("template is a required property for DAGTask and cannot be null");
             this.Annotations = annotations;
-            this.Needs = needs;
             this.Arguments = arguments;
             this.Loop = loop;
-            this.SubFolder = subFolder;
+            this.Needs = needs;
             this.Returns = returns;
+            this.SubFolder = subFolder;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "DAGTask";
@@ -79,29 +79,11 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "DAGTask";
 
         /// <summary>
-        /// Name for this task. It must be unique in a DAG.
-        /// </summary>
-        /// <value>Name for this task. It must be unique in a DAG.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
-        /// <summary>
-        /// Template name. A template is a Function or a DAG. This template must be available in the dependencies.
-        /// </summary>
-        /// <value>Template name. A template is a Function or a DAG. This template must be available in the dependencies.</value>
-        [DataMember(Name = "template", IsRequired = true, EmitDefaultValue = false)]
-        public string Template { get; set; } 
-        /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
-        /// <summary>
-        /// List of DAG tasks that this task depends on and needs to be executed before this task.
-        /// </summary>
-        /// <value>List of DAG tasks that this task depends on and needs to be executed before this task.</value>
-        [DataMember(Name = "needs", EmitDefaultValue = false)]
-        public List<string> Needs { get; set; } 
         /// <summary>
         /// The input arguments for this task.
         /// </summary>
@@ -115,17 +97,35 @@ namespace PollinationSDK
         [DataMember(Name = "loop", EmitDefaultValue = false)]
         public DAGTaskLoop Loop { get; set; } 
         /// <summary>
-        /// A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder.
+        /// Name for this task. It must be unique in a DAG.
         /// </summary>
-        /// <value>A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder.</value>
-        [DataMember(Name = "sub_folder", EmitDefaultValue = false)]
-        public string SubFolder { get; set; } 
+        /// <value>Name for this task. It must be unique in a DAG.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// List of DAG tasks that this task depends on and needs to be executed before this task.
+        /// </summary>
+        /// <value>List of DAG tasks that this task depends on and needs to be executed before this task.</value>
+        [DataMember(Name = "needs", EmitDefaultValue = false)]
+        public List<string> Needs { get; set; } 
         /// <summary>
         /// List of task returns.
         /// </summary>
         /// <value>List of task returns.</value>
         [DataMember(Name = "returns", EmitDefaultValue = false)]
         public List<AnyOf<TaskReturn,TaskPathReturn>> Returns { get; set; } 
+        /// <summary>
+        /// A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder.
+        /// </summary>
+        /// <value>A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder.</value>
+        [DataMember(Name = "sub_folder", EmitDefaultValue = false)]
+        public string SubFolder { get; set; } 
+        /// <summary>
+        /// Template name. A template is a Function or a DAG. This template must be available in the dependencies.
+        /// </summary>
+        /// <value>Template name. A template is a Function or a DAG. This template must be available in the dependencies.</value>
+        [DataMember(Name = "template", IsRequired = true, EmitDefaultValue = false)]
+        public string Template { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -147,15 +147,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGTask:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Template: ").Append(Template).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Needs: ").Append(Needs).Append("\n");
             sb.Append("  Arguments: ").Append(Arguments).Append("\n");
             sb.Append("  Loop: ").Append(Loop).Append("\n");
-            sb.Append("  SubFolder: ").Append(SubFolder).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Needs: ").Append(Needs).Append("\n");
             sb.Append("  Returns: ").Append(Returns).Append("\n");
+            sb.Append("  SubFolder: ").Append(SubFolder).Append("\n");
+            sb.Append("  Template: ").Append(Template).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -189,14 +189,6 @@ namespace PollinationSDK
             return DuplicateDAGTask();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateDAGTask();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -218,55 +210,55 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Template == input.Template ||
-                    (this.Template != null &&
-                    this.Template.Equals(input.Template))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Needs == input.Needs ||
-                    this.Needs != null &&
-                    input.Needs != null &&
-                    this.Needs.SequenceEqual(input.Needs)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Arguments == input.Arguments ||
                     this.Arguments != null &&
                     input.Arguments != null &&
                     this.Arguments.SequenceEqual(input.Arguments)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Loop == input.Loop ||
                     (this.Loop != null &&
                     this.Loop.Equals(input.Loop))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.SubFolder == input.SubFolder ||
-                    (this.SubFolder != null &&
-                    this.SubFolder.Equals(input.SubFolder))
-                ) && base.Equals(input) && 
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Needs == input.Needs ||
+                    this.Needs != null &&
+                    input.Needs != null &&
+                    this.Needs.SequenceEqual(input.Needs)
+                ) && 
                 (
                     this.Returns == input.Returns ||
                     this.Returns != null &&
                     input.Returns != null &&
                     this.Returns.SequenceEqual(input.Returns)
+                ) && 
+                (
+                    this.SubFolder == input.SubFolder ||
+                    (this.SubFolder != null &&
+                    this.SubFolder.Equals(input.SubFolder))
+                ) && 
+                (
+                    this.Template == input.Template ||
+                    (this.Template != null &&
+                    this.Template.Equals(input.Template))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -278,25 +270,25 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Template != null)
-                    hashCode = hashCode * 59 + this.Template.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
-                if (this.Needs != null)
-                    hashCode = hashCode * 59 + this.Needs.GetHashCode();
                 if (this.Arguments != null)
                     hashCode = hashCode * 59 + this.Arguments.GetHashCode();
                 if (this.Loop != null)
                     hashCode = hashCode * 59 + this.Loop.GetHashCode();
-                if (this.SubFolder != null)
-                    hashCode = hashCode * 59 + this.SubFolder.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Needs != null)
+                    hashCode = hashCode * 59 + this.Needs.GetHashCode();
                 if (this.Returns != null)
                     hashCode = hashCode * 59 + this.Returns.GetHashCode();
+                if (this.SubFolder != null)
+                    hashCode = hashCode * 59 + this.SubFolder.GetHashCode();
+                if (this.Template != null)
+                    hashCode = hashCode * 59 + this.Template.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -308,7 +300,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

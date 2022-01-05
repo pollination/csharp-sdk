@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// UserCreate
     /// </summary>
     [DataContract(Name = "UserCreate")]
-    public partial class UserCreate : UserUpdate, IEquatable<UserCreate>, IValidatableObject
+    public partial class UserCreate : IEquatable<UserCreate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserCreate" /> class.
@@ -36,36 +36,52 @@ namespace PollinationSDK
         protected UserCreate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserCreate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="UserCreate" /> class.
         /// </summary>
-        /// <param name="username">The unique name of the user in small case without spaces (required).</param>
+        /// <param name="description">A description of the user (default to &quot;&quot;).</param>
         /// <param name="name">The display name for this user (required).</param>
         /// <param name="pictureUrl">URL to the picture associated with this user (required).</param>
-        /// <param name="description">A description of the user (default to &quot;&quot;).</param>
+        /// <param name="username">The unique name of the user in small case without spaces (required).</param>
         public UserCreate
         (
-            string name, string pictureUrl, string username, // Required parameters
-            string description = "" // Optional parameters
-        ) : base(name: name, pictureUrl: pictureUrl, description: description)// BaseClass
+           string name, string pictureUrl, string username, // Required parameters
+           string description = "" // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for UserCreate and cannot be null");
+            // to ensure "pictureUrl" is required (not null)
+            this.PictureUrl = pictureUrl ?? throw new ArgumentNullException("pictureUrl is a required property for UserCreate and cannot be null");
             // to ensure "username" is required (not null)
             this.Username = username ?? throw new ArgumentNullException("username is a required property for UserCreate and cannot be null");
+            // use default value if no "description" provided
+            this.Description = description ?? "";
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserCreate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UserCreate";
 
+        /// <summary>
+        /// A description of the user
+        /// </summary>
+        /// <value>A description of the user</value>
+        [DataMember(Name = "description", EmitDefaultValue = true)]
+        public string Description { get; set; }  = "";
+        /// <summary>
+        /// The display name for this user
+        /// </summary>
+        /// <value>The display name for this user</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// URL to the picture associated with this user
+        /// </summary>
+        /// <value>URL to the picture associated with this user</value>
+        [DataMember(Name = "picture_url", IsRequired = true, EmitDefaultValue = false)]
+        public string PictureUrl { get; set; } 
         /// <summary>
         /// The unique name of the user in small case without spaces
         /// </summary>
@@ -93,10 +109,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UserCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Username: ").Append(Username).Append("\n");
             return sb.ToString();
         }
@@ -131,14 +146,6 @@ namespace PollinationSDK
             return DuplicateUserCreate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override UserUpdate DuplicateUserUpdate()
-        {
-            return DuplicateUserCreate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -160,16 +167,26 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.PictureUrl == input.PictureUrl ||
+                    (this.PictureUrl != null &&
+                    this.PictureUrl.Equals(input.PictureUrl))
+                ) && 
                 (
                     this.Username == input.Username ||
                     (this.Username != null &&
                     this.Username.Equals(input.Username))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -181,11 +198,15 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.PictureUrl != null)
+                    hashCode = hashCode * 59 + this.PictureUrl.GetHashCode();
                 if (this.Username != null)
                     hashCode = hashCode * 59 + this.Username.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -197,16 +218,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^UserCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

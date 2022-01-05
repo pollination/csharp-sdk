@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Plugin configuration.  The config is used to schedule functions on a desktop or in other contexts (ie: Docker).
     /// </summary>
     [DataContract(Name = "PluginConfig")]
-    public partial class PluginConfig : OpenAPIGenBaseModel, IEquatable<PluginConfig>, IValidatableObject
+    public partial class PluginConfig : IEquatable<PluginConfig>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginConfig" /> class.
@@ -42,14 +42,14 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="PluginConfig" /> class.
         /// </summary>
-        /// <param name="docker">The configuration to use this plugin in a docker container (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="docker">The configuration to use this plugin in a docker container (required).</param>
         /// <param name="local">The configuration to use this plugin locally.</param>
         public PluginConfig
         (
            DockerConfig docker, // Required parameters
-           Dictionary<string, string> annotations= default, LocalConfig local= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, LocalConfig local= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "docker" is required (not null)
             this.Docker = docker ?? throw new ArgumentNullException("docker is a required property for PluginConfig and cannot be null");
@@ -68,17 +68,17 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "PluginConfig";
 
         /// <summary>
-        /// The configuration to use this plugin in a docker container
-        /// </summary>
-        /// <value>The configuration to use this plugin in a docker container</value>
-        [DataMember(Name = "docker", IsRequired = true, EmitDefaultValue = false)]
-        public DockerConfig Docker { get; set; } 
-        /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// The configuration to use this plugin in a docker container
+        /// </summary>
+        /// <value>The configuration to use this plugin in a docker container</value>
+        [DataMember(Name = "docker", IsRequired = true, EmitDefaultValue = false)]
+        public DockerConfig Docker { get; set; } 
         /// <summary>
         /// The configuration to use this plugin locally
         /// </summary>
@@ -106,10 +106,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("PluginConfig:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Docker: ").Append(Docker).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Docker: ").Append(Docker).Append("\n");
             sb.Append("  Local: ").Append(Local).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -143,14 +143,6 @@ namespace PollinationSDK
             return DuplicatePluginConfig();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicatePluginConfig();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -172,27 +164,27 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Docker == input.Docker ||
-                    (this.Docker != null &&
-                    this.Docker.Equals(input.Docker))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Docker == input.Docker ||
+                    (this.Docker != null &&
+                    this.Docker.Equals(input.Docker))
+                ) && 
                 (
                     this.Local == input.Local ||
                     (this.Local != null &&
                     this.Local.Equals(input.Local))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -204,15 +196,15 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Docker != null)
-                    hashCode = hashCode * 59 + this.Docker.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Docker != null)
+                    hashCode = hashCode * 59 + this.Docker.GetHashCode();
                 if (this.Local != null)
                     hashCode = hashCode * 59 + this.Local.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -224,7 +216,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

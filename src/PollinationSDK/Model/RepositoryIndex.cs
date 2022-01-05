@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A searchable index for a Queenbee Plugin and Recipe repository
     /// </summary>
     [DataContract(Name = "RepositoryIndex")]
-    public partial class RepositoryIndex : OpenAPIGenBaseModel, IEquatable<RepositoryIndex>, IValidatableObject
+    public partial class RepositoryIndex : IEquatable<RepositoryIndex>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryIndex" /> class.
@@ -40,8 +40,8 @@ namespace PollinationSDK
         public RepositoryIndex
         (
            // Required parameters
-           Dictionary<string, string> annotations= default, DateTime generated= default, RepositoryMetadata metadata= default, Dictionary<string, List<PackageVersion>> plugin= default, Dictionary<string, List<PackageVersion>> recipe= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, DateTime generated= default, RepositoryMetadata metadata= default, Dictionary<string, List<PackageVersion>> plugin= default, Dictionary<string, List<PackageVersion>> recipe= default // Optional parameters
+        )// BaseClass
         {
             this.Annotations = annotations;
             this.Generated = generated;
@@ -50,22 +50,22 @@ namespace PollinationSDK
             this.Recipe = recipe;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RepositoryIndex";
             this.ApiVersion = "v1beta1";
+            this.Type = "RepositoryIndex";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RepositoryIndex";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
         [DataMember(Name = "api_version", EmitDefaultValue = true)]
         public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        //============================================== is ReadOnly 
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = true)]
+        public string Type { get; protected internal set; }  = "RepositoryIndex";
 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
@@ -118,13 +118,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryIndex:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
             sb.Append("  Generated: ").Append(Generated).Append("\n");
             sb.Append("  Metadata: ").Append(Metadata).Append("\n");
             sb.Append("  Plugin: ").Append(Plugin).Append("\n");
             sb.Append("  Recipe: ").Append(Recipe).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -158,14 +158,6 @@ namespace PollinationSDK
             return DuplicateRepositoryIndex();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateRepositoryIndex();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -187,44 +179,44 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.ApiVersion == input.ApiVersion ||
                     (this.ApiVersion != null &&
                     this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Generated == input.Generated ||
                     (this.Generated != null &&
                     this.Generated.Equals(input.Generated))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Metadata == input.Metadata ||
                     (this.Metadata != null &&
                     this.Metadata.Equals(input.Metadata))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Plugin == input.Plugin ||
                     this.Plugin != null &&
                     input.Plugin != null &&
                     this.Plugin.SequenceEqual(input.Plugin)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Recipe == input.Recipe ||
                     this.Recipe != null &&
                     input.Recipe != null &&
                     this.Recipe.SequenceEqual(input.Recipe)
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -236,9 +228,7 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.ApiVersion != null)
@@ -251,6 +241,8 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.Plugin.GetHashCode();
                 if (this.Recipe != null)
                     hashCode = hashCode * 59 + this.Recipe.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -262,16 +254,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^RepositoryIndex$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
 
             
             // ApiVersion (string) pattern
@@ -279,6 +261,15 @@ namespace PollinationSDK
             if (false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
+            }
+
+
+            
+            // Type (string) pattern
+            Regex regexType = new Regex(@"^RepositoryIndex$", RegexOptions.CultureInvariant);
+            if (false == regexType.Match(this.Type).Success)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
 
             yield break;

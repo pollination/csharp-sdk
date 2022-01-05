@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// APITokenCreate
     /// </summary>
     [DataContract(Name = "APITokenCreate")]
-    public partial class APITokenCreate : APIToken, IEquatable<APITokenCreate>, IValidatableObject
+    public partial class APITokenCreate : IEquatable<APITokenCreate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="APITokenCreate" /> class.
@@ -36,33 +36,48 @@ namespace PollinationSDK
         protected APITokenCreate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "APITokenCreate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="APITokenCreate" /> class.
         /// </summary>
-        /// <param name="tokenId">The unique ID of this API token (required).</param>
-        /// <param name="name">The user friendly name of the API token (required).</param>
         /// <param name="claims">Key value pairs of auth claims the API token is entitled to.</param>
+        /// <param name="name">The user friendly name of the API token (required).</param>
+        /// <param name="tokenId">The unique ID of this API token (required).</param>
         public APITokenCreate
         (
-            string tokenId, string name, // Required parameters
-            Dictionary<string, string> claims= default // Optional parameters
-        ) : base(tokenId: tokenId, name: name, claims: claims)// BaseClass
+           string name, string tokenId, // Required parameters
+           Dictionary<string, string> claims= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for APITokenCreate and cannot be null");
+            // to ensure "tokenId" is required (not null)
+            this.TokenId = tokenId ?? throw new ArgumentNullException("tokenId is a required property for APITokenCreate and cannot be null");
+            this.Claims = claims;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "APITokenCreate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "APITokenCreate";
 
+        /// <summary>
+        /// Key value pairs of auth claims the API token is entitled to
+        /// </summary>
+        /// <value>Key value pairs of auth claims the API token is entitled to</value>
+        [DataMember(Name = "claims", EmitDefaultValue = false)]
+        public Dictionary<string, string> Claims { get; set; } 
+        /// <summary>
+        /// The user friendly name of the API token
+        /// </summary>
+        /// <value>The user friendly name of the API token</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// The unique ID of this API token
+        /// </summary>
+        /// <value>The unique ID of this API token</value>
+        [DataMember(Name = "token_id", IsRequired = true, EmitDefaultValue = false)]
+        public string TokenId { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -84,10 +99,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("APITokenCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  TokenId: ").Append(TokenId).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Claims: ").Append(Claims).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  TokenId: ").Append(TokenId).Append("\n");
             return sb.ToString();
         }
   
@@ -121,14 +135,6 @@ namespace PollinationSDK
             return DuplicateAPITokenCreate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override APIToken DuplicateAPIToken()
-        {
-            return DuplicateAPITokenCreate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -150,11 +156,22 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Claims == input.Claims ||
+                    this.Claims != null &&
+                    input.Claims != null &&
+                    this.Claims.SequenceEqual(input.Claims)
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.TokenId == input.TokenId ||
+                    (this.TokenId != null &&
+                    this.TokenId.Equals(input.TokenId))
                 );
         }
 
@@ -166,9 +183,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
+                if (this.Claims != null)
+                    hashCode = hashCode * 59 + this.Claims.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.TokenId != null)
+                    hashCode = hashCode * 59 + this.TokenId.GetHashCode();
                 return hashCode;
             }
         }
@@ -180,26 +201,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^APITokenCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A list response from a pagination request
     /// </summary>
     [DataContract(Name = "RunList")]
-    public partial class RunList : OpenAPIGenBaseModel, IEquatable<RunList>, IValidatableObject
+    public partial class RunList : IEquatable<RunList>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RunList" /> class.
@@ -36,43 +36,41 @@ namespace PollinationSDK
         protected RunList() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RunList";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="RunList" /> class.
         /// </summary>
-        /// <param name="page">The current page the pagination request is on (required).</param>
-        /// <param name="perPage">The number of pages per pagination request (required).</param>
-        /// <param name="pageCount">The total number of pages (required).</param>
-        /// <param name="totalCount">The total number of resources matching the list request (required).</param>
-        /// <param name="resources">resources (required).</param>
         /// <param name="nextPage">The next page, if this on is not the last.</param>
+        /// <param name="page">The current page the pagination request is on (required).</param>
+        /// <param name="pageCount">The total number of pages (required).</param>
+        /// <param name="perPage">The number of pages per pagination request (required).</param>
+        /// <param name="resources">resources (required).</param>
+        /// <param name="totalCount">The total number of resources matching the list request (required).</param>
         public RunList
         (
-           int page, int perPage, int pageCount, int totalCount, List<Run> resources, // Required parameters
+           int page, int pageCount, int perPage, List<Run> resources, int totalCount, // Required parameters
            int nextPage= default // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
             this.Page = page;
-            this.PerPage = perPage;
             this.PageCount = pageCount;
-            this.TotalCount = totalCount;
+            this.PerPage = perPage;
             // to ensure "resources" is required (not null)
             this.Resources = resources ?? throw new ArgumentNullException("resources is a required property for RunList and cannot be null");
+            this.TotalCount = totalCount;
             this.NextPage = nextPage;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RunList";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RunList";
 
+        /// <summary>
+        /// The next page, if this on is not the last
+        /// </summary>
+        /// <value>The next page, if this on is not the last</value>
+        [DataMember(Name = "next_page", EmitDefaultValue = false)]
+        public int NextPage { get; set; } 
         /// <summary>
         /// The current page the pagination request is on
         /// </summary>
@@ -80,34 +78,28 @@ namespace PollinationSDK
         [DataMember(Name = "page", IsRequired = true, EmitDefaultValue = false)]
         public int Page { get; set; } 
         /// <summary>
-        /// The number of pages per pagination request
-        /// </summary>
-        /// <value>The number of pages per pagination request</value>
-        [DataMember(Name = "per_page", IsRequired = true, EmitDefaultValue = false)]
-        public int PerPage { get; set; } 
-        /// <summary>
         /// The total number of pages
         /// </summary>
         /// <value>The total number of pages</value>
         [DataMember(Name = "page_count", IsRequired = true, EmitDefaultValue = false)]
         public int PageCount { get; set; } 
         /// <summary>
-        /// The total number of resources matching the list request
+        /// The number of pages per pagination request
         /// </summary>
-        /// <value>The total number of resources matching the list request</value>
-        [DataMember(Name = "total_count", IsRequired = true, EmitDefaultValue = false)]
-        public int TotalCount { get; set; } 
+        /// <value>The number of pages per pagination request</value>
+        [DataMember(Name = "per_page", IsRequired = true, EmitDefaultValue = false)]
+        public int PerPage { get; set; } 
         /// <summary>
         /// Gets or Sets Resources
         /// </summary>
         [DataMember(Name = "resources", IsRequired = true, EmitDefaultValue = false)]
         public List<Run> Resources { get; set; } 
         /// <summary>
-        /// The next page, if this on is not the last
+        /// The total number of resources matching the list request
         /// </summary>
-        /// <value>The next page, if this on is not the last</value>
-        [DataMember(Name = "next_page", EmitDefaultValue = false)]
-        public int NextPage { get; set; } 
+        /// <value>The total number of resources matching the list request</value>
+        [DataMember(Name = "total_count", IsRequired = true, EmitDefaultValue = false)]
+        public int TotalCount { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -129,13 +121,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RunList:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Page: ").Append(Page).Append("\n");
-            sb.Append("  PerPage: ").Append(PerPage).Append("\n");
-            sb.Append("  PageCount: ").Append(PageCount).Append("\n");
-            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
-            sb.Append("  Resources: ").Append(Resources).Append("\n");
             sb.Append("  NextPage: ").Append(NextPage).Append("\n");
+            sb.Append("  Page: ").Append(Page).Append("\n");
+            sb.Append("  PageCount: ").Append(PageCount).Append("\n");
+            sb.Append("  PerPage: ").Append(PerPage).Append("\n");
+            sb.Append("  Resources: ").Append(Resources).Append("\n");
+            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
             return sb.ToString();
         }
   
@@ -169,14 +160,6 @@ namespace PollinationSDK
             return DuplicateRunList();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateRunList();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -198,42 +181,37 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.NextPage == input.NextPage ||
+                    (this.NextPage != null &&
+                    this.NextPage.Equals(input.NextPage))
+                ) && 
                 (
                     this.Page == input.Page ||
                     (this.Page != null &&
                     this.Page.Equals(input.Page))
-                ) && base.Equals(input) && 
-                (
-                    this.PerPage == input.PerPage ||
-                    (this.PerPage != null &&
-                    this.PerPage.Equals(input.PerPage))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.PageCount == input.PageCount ||
                     (this.PageCount != null &&
                     this.PageCount.Equals(input.PageCount))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.TotalCount == input.TotalCount ||
-                    (this.TotalCount != null &&
-                    this.TotalCount.Equals(input.TotalCount))
-                ) && base.Equals(input) && 
+                    this.PerPage == input.PerPage ||
+                    (this.PerPage != null &&
+                    this.PerPage.Equals(input.PerPage))
+                ) && 
                 (
                     this.Resources == input.Resources ||
                     this.Resources != null &&
                     input.Resources != null &&
                     this.Resources.SequenceEqual(input.Resources)
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.NextPage == input.NextPage ||
-                    (this.NextPage != null &&
-                    this.NextPage.Equals(input.NextPage))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.TotalCount == input.TotalCount ||
+                    (this.TotalCount != null &&
+                    this.TotalCount.Equals(input.TotalCount))
                 );
         }
 
@@ -245,21 +223,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Page != null)
-                    hashCode = hashCode * 59 + this.Page.GetHashCode();
-                if (this.PerPage != null)
-                    hashCode = hashCode * 59 + this.PerPage.GetHashCode();
-                if (this.PageCount != null)
-                    hashCode = hashCode * 59 + this.PageCount.GetHashCode();
-                if (this.TotalCount != null)
-                    hashCode = hashCode * 59 + this.TotalCount.GetHashCode();
-                if (this.Resources != null)
-                    hashCode = hashCode * 59 + this.Resources.GetHashCode();
+                int hashCode = 41;
                 if (this.NextPage != null)
                     hashCode = hashCode * 59 + this.NextPage.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Page != null)
+                    hashCode = hashCode * 59 + this.Page.GetHashCode();
+                if (this.PageCount != null)
+                    hashCode = hashCode * 59 + this.PageCount.GetHashCode();
+                if (this.PerPage != null)
+                    hashCode = hashCode * 59 + this.PerPage.GetHashCode();
+                if (this.Resources != null)
+                    hashCode = hashCode * 59 + this.Resources.GetHashCode();
+                if (this.TotalCount != null)
+                    hashCode = hashCode * 59 + this.TotalCount.GetHashCode();
                 return hashCode;
             }
         }
@@ -271,16 +247,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^RunList$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

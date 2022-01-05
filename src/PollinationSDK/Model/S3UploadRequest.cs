@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// S3UploadRequest
     /// </summary>
     [DataContract(Name = "S3UploadRequest")]
-    public partial class S3UploadRequest : OpenAPIGenBaseModel, IEquatable<S3UploadRequest>, IValidatableObject
+    public partial class S3UploadRequest : IEquatable<S3UploadRequest>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="S3UploadRequest" /> class.
@@ -36,46 +36,38 @@ namespace PollinationSDK
         protected S3UploadRequest() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "S3UploadRequest";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="S3UploadRequest" /> class.
         /// </summary>
-        /// <param name="url">url (required).</param>
         /// <param name="fields">fields (required).</param>
+        /// <param name="url">url (required).</param>
         public S3UploadRequest
         (
-           string url, Dictionary<string, string> fields// Required parameters
+           Dictionary<string, string> fields, string url// Required parameters
            // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
-            // to ensure "url" is required (not null)
-            this.Url = url ?? throw new ArgumentNullException("url is a required property for S3UploadRequest and cannot be null");
             // to ensure "fields" is required (not null)
             this.Fields = fields ?? throw new ArgumentNullException("fields is a required property for S3UploadRequest and cannot be null");
+            // to ensure "url" is required (not null)
+            this.Url = url ?? throw new ArgumentNullException("url is a required property for S3UploadRequest and cannot be null");
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "S3UploadRequest";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "S3UploadRequest";
 
-        /// <summary>
-        /// Gets or Sets Url
-        /// </summary>
-        [DataMember(Name = "url", IsRequired = true, EmitDefaultValue = false)]
-        public string Url { get; set; } 
         /// <summary>
         /// Gets or Sets Fields
         /// </summary>
         [DataMember(Name = "fields", IsRequired = true, EmitDefaultValue = false)]
         public Dictionary<string, string> Fields { get; set; } 
+        /// <summary>
+        /// Gets or Sets Url
+        /// </summary>
+        [DataMember(Name = "url", IsRequired = true, EmitDefaultValue = false)]
+        public string Url { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -97,9 +89,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("S3UploadRequest:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Url: ").Append(Url).Append("\n");
             sb.Append("  Fields: ").Append(Fields).Append("\n");
+            sb.Append("  Url: ").Append(Url).Append("\n");
             return sb.ToString();
         }
   
@@ -133,14 +124,6 @@ namespace PollinationSDK
             return DuplicateS3UploadRequest();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateS3UploadRequest();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -162,22 +145,17 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Url == input.Url ||
-                    (this.Url != null &&
-                    this.Url.Equals(input.Url))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Fields == input.Fields ||
                     this.Fields != null &&
                     input.Fields != null &&
                     this.Fields.SequenceEqual(input.Fields)
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Url == input.Url ||
+                    (this.Url != null &&
+                    this.Url.Equals(input.Url))
                 );
         }
 
@@ -189,13 +167,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Url != null)
-                    hashCode = hashCode * 59 + this.Url.GetHashCode();
+                int hashCode = 41;
                 if (this.Fields != null)
                     hashCode = hashCode * 59 + this.Fields.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Url != null)
+                    hashCode = hashCode * 59 + this.Url.GetHashCode();
                 return hashCode;
             }
         }
@@ -207,16 +183,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^S3UploadRequest$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

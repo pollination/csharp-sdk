@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Function boolean output.  This output loads the content from a file as a boolean.
     /// </summary>
     [DataContract(Name = "FunctionBooleanOutput")]
-    public partial class FunctionBooleanOutput : FunctionStringOutput, IEquatable<FunctionBooleanOutput>, IValidatableObject
+    public partial class FunctionBooleanOutput : IEquatable<FunctionBooleanOutput>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionBooleanOutput" /> class.
@@ -42,17 +42,24 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="FunctionBooleanOutput" /> class.
         /// </summary>
-        /// <param name="name">Output name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="description">Optional description for output..</param>
-        /// <param name="path">Path to the output artifact relative to where the function command is executed. (required).</param>
+        /// <param name="name">Output name. (required).</param>
+        /// <param name="path">Path to the output file relative to where the function command is executed. (required).</param>
         /// <param name="required">A boolean to indicate if an artifact output is required. A False value makes the artifact optional. (default to true).</param>
         public FunctionBooleanOutput
         (
-            string name, string path, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default, bool required = true // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, path: path, required: required)// BaseClass
+           string name, string path, // Required parameters
+           Dictionary<string, string> annotations= default, string description= default, bool required = true // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for FunctionBooleanOutput and cannot be null");
+            // to ensure "path" is required (not null)
+            this.Path = path ?? throw new ArgumentNullException("path is a required property for FunctionBooleanOutput and cannot be null");
+            this.Annotations = annotations;
+            this.Description = description;
+            this.Required = required;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "FunctionBooleanOutput";
@@ -65,6 +72,36 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "FunctionBooleanOutput";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Optional description for output.
+        /// </summary>
+        /// <value>Optional description for output.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// Output name.
+        /// </summary>
+        /// <value>Output name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// Path to the output file relative to where the function command is executed.
+        /// </summary>
+        /// <value>Path to the output file relative to where the function command is executed.</value>
+        [DataMember(Name = "path", IsRequired = true, EmitDefaultValue = false)]
+        public string Path { get; set; } 
+        /// <summary>
+        /// A boolean to indicate if an artifact output is required. A False value makes the artifact optional.
+        /// </summary>
+        /// <value>A boolean to indicate if an artifact output is required. A False value makes the artifact optional.</value>
+        [DataMember(Name = "required", EmitDefaultValue = true)]
+        public bool Required { get; set; }  = true;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -86,12 +123,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("FunctionBooleanOutput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
             sb.Append("  Required: ").Append(Required).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -125,14 +162,6 @@ namespace PollinationSDK
             return DuplicateFunctionBooleanOutput();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override FunctionStringOutput DuplicateFunctionStringOutput()
-        {
-            return DuplicateFunctionBooleanOutput();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -154,7 +183,33 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Path == input.Path ||
+                    (this.Path != null &&
+                    this.Path.Equals(input.Path))
+                ) && 
+                (
+                    this.Required == input.Required ||
+                    (this.Required != null &&
+                    this.Required.Equals(input.Required))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -170,7 +225,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Path != null)
+                    hashCode = hashCode * 59 + this.Path.GetHashCode();
+                if (this.Required != null)
+                    hashCode = hashCode * 59 + this.Required.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -184,17 +249,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

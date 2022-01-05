@@ -27,30 +27,30 @@ namespace PollinationSDK
     /// BaseModel with functionality to return the object as a yaml string.
     /// </summary>
     [DataContract(Name = "RepositoryMetadata")]
-    public partial class RepositoryMetadata : OpenAPIGenBaseModel, IEquatable<RepositoryMetadata>, IValidatableObject
+    public partial class RepositoryMetadata : IEquatable<RepositoryMetadata>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryMetadata" /> class.
         /// </summary>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="name">The name of the repository.</param>
         /// <param name="description">A short description of the repository (default to &quot;A Queenbee package repository&quot;).</param>
-        /// <param name="source">The source path (url or local) to the repository.</param>
+        /// <param name="name">The name of the repository.</param>
         /// <param name="pluginCount">The number of plugins hosted by the repository (default to 0).</param>
         /// <param name="recipeCount">The number of recipes hosted by the repository (default to 0).</param>
+        /// <param name="source">The source path (url or local) to the repository.</param>
         public RepositoryMetadata
         (
            // Required parameters
-           Dictionary<string, string> annotations= default, string name= default, string description = "A Queenbee package repository", string source= default, int pluginCount = 0, int recipeCount = 0// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, string description = "A Queenbee package repository", string name= default, int pluginCount = 0, int recipeCount = 0, string source= default // Optional parameters
+        )// BaseClass
         {
             this.Annotations = annotations;
-            this.Name = name;
             // use default value if no "description" provided
             this.Description = description ?? "A Queenbee package repository";
-            this.Source = source;
+            this.Name = name;
             this.PluginCount = pluginCount;
             this.RecipeCount = recipeCount;
+            this.Source = source;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "RepositoryMetadata";
@@ -70,23 +70,17 @@ namespace PollinationSDK
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
-        /// The name of the repository
-        /// </summary>
-        /// <value>The name of the repository</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; } 
-        /// <summary>
         /// A short description of the repository
         /// </summary>
         /// <value>A short description of the repository</value>
         [DataMember(Name = "description", EmitDefaultValue = true)]
         public string Description { get; set; }  = "A Queenbee package repository";
         /// <summary>
-        /// The source path (url or local) to the repository
+        /// The name of the repository
         /// </summary>
-        /// <value>The source path (url or local) to the repository</value>
-        [DataMember(Name = "source", EmitDefaultValue = false)]
-        public string Source { get; set; } 
+        /// <value>The name of the repository</value>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// The number of plugins hosted by the repository
         /// </summary>
@@ -99,6 +93,12 @@ namespace PollinationSDK
         /// <value>The number of recipes hosted by the repository</value>
         [DataMember(Name = "recipe_count", EmitDefaultValue = true)]
         public int RecipeCount { get; set; }  = 0;
+        /// <summary>
+        /// The source path (url or local) to the repository
+        /// </summary>
+        /// <value>The source path (url or local) to the repository</value>
+        [DataMember(Name = "source", EmitDefaultValue = false)]
+        public string Source { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -120,13 +120,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryMetadata:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  PluginCount: ").Append(PluginCount).Append("\n");
             sb.Append("  RecipeCount: ").Append(RecipeCount).Append("\n");
+            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -160,14 +160,6 @@ namespace PollinationSDK
             return DuplicateRepositoryMetadata();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateRepositoryMetadata();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -189,42 +181,42 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.PluginCount == input.PluginCount ||
                     (this.PluginCount != null &&
                     this.PluginCount.Equals(input.PluginCount))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.RecipeCount == input.RecipeCount ||
                     (this.RecipeCount != null &&
                     this.RecipeCount.Equals(input.RecipeCount))
+                ) && 
+                (
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -236,21 +228,21 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
-                if (this.Source != null)
-                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.PluginCount != null)
                     hashCode = hashCode * 59 + this.PluginCount.GetHashCode();
                 if (this.RecipeCount != null)
                     hashCode = hashCode * 59 + this.RecipeCount.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -262,7 +254,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

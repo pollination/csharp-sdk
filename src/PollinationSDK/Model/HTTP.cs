@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// HTTP Source  A web HTTP to an FTP server or an API for example.
     /// </summary>
     [DataContract(Name = "HTTP")]
-    public partial class HTTP : ArtifactSource, IEquatable<HTTP>, IValidatableObject
+    public partial class HTTP : IEquatable<HTTP>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HTTP" /> class.
@@ -42,16 +42,17 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="HTTP" /> class.
         /// </summary>
-        /// <param name="url">For a HTTP endpoint this can be http://climate.onebuilding.org. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="url">For a HTTP endpoint this can be http://climate.onebuilding.org. (required).</param>
         public HTTP
         (
            string url, // Required parameters
-            Dictionary<string, string> annotations= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+           Dictionary<string, string> annotations= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "url" is required (not null)
             this.Url = url ?? throw new ArgumentNullException("url is a required property for HTTP and cannot be null");
+            this.Annotations = annotations;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "HTTP";
@@ -64,6 +65,12 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "HTTP";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// For a HTTP endpoint this can be http://climate.onebuilding.org.
         /// </summary>
@@ -91,8 +98,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("HTTP:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Url: ").Append(Url).Append("\n");
             return sb.ToString();
         }
@@ -127,14 +134,6 @@ namespace PollinationSDK
             return DuplicateHTTP();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override ArtifactSource DuplicateArtifactSource()
-        {
-            return DuplicateHTTP();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -156,16 +155,22 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Url == input.Url ||
-                    (this.Url != null &&
-                    this.Url.Equals(input.Url))
-                ) && base.Equals(input) && 
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
+                ) && 
+                (
+                    this.Url == input.Url ||
+                    (this.Url != null &&
+                    this.Url.Equals(input.Url))
                 );
         }
 
@@ -177,11 +182,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Url != null)
-                    hashCode = hashCode * 59 + this.Url.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Url != null)
+                    hashCode = hashCode * 59 + this.Url.GetHashCode();
                 return hashCode;
             }
         }
@@ -193,7 +200,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

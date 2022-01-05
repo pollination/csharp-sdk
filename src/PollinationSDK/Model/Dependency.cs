@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Configuration to fetch a Recipe or Plugin that another Recipe depends on.
     /// </summary>
     [DataContract(Name = "Dependency")]
-    public partial class Dependency : OpenAPIGenBaseModel, IEquatable<Dependency>, IValidatableObject
+    public partial class Dependency : IEquatable<Dependency>, IValidatableObject
     {
         /// <summary>
         /// The kind of dependency. It can be a recipe or an plugin.
@@ -48,29 +48,29 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="Dependency" /> class.
         /// </summary>
-        /// <param name="kind">The kind of dependency. It can be a recipe or an plugin. (required).</param>
-        /// <param name="name">Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case. (required).</param>
-        /// <param name="tag">Tag of the resource. (required).</param>
-        /// <param name="source">URL to a repository where this resource can be found. (required).</param>
+        /// <param name="alias">An optional alias to refer to this dependency. Useful if the name is already used somewhere else..</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="hash">The digest hash of the dependency when retrieved from its source. This is locked when the resource dependencies are downloaded..</param>
-        /// <param name="alias">An optional alias to refer to this dependency. Useful if the name is already used somewhere else..</param>
+        /// <param name="kind">The kind of dependency. It can be a recipe or an plugin. (required).</param>
+        /// <param name="name">Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case. (required).</param>
+        /// <param name="source">URL to a repository where this resource can be found. (required).</param>
+        /// <param name="tag">Tag of the resource. (required).</param>
         public Dependency
         (
-           DependencyKind kind, string name, string tag, string source, // Required parameters
-           Dictionary<string, string> annotations= default, string hash= default, string alias= default// Optional parameters
-        ) : base()// BaseClass
+           DependencyKind kind, string name, string source, string tag, // Required parameters
+           string alias= default, Dictionary<string, string> annotations= default, string hash= default // Optional parameters
+        )// BaseClass
         {
             this.Kind = kind;
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for Dependency and cannot be null");
-            // to ensure "tag" is required (not null)
-            this.Tag = tag ?? throw new ArgumentNullException("tag is a required property for Dependency and cannot be null");
             // to ensure "source" is required (not null)
             this.Source = source ?? throw new ArgumentNullException("source is a required property for Dependency and cannot be null");
+            // to ensure "tag" is required (not null)
+            this.Tag = tag ?? throw new ArgumentNullException("tag is a required property for Dependency and cannot be null");
+            this.Alias = alias;
             this.Annotations = annotations;
             this.Hash = hash;
-            this.Alias = alias;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "Dependency";
@@ -84,23 +84,11 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "Dependency";
 
         /// <summary>
-        /// Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.
+        /// An optional alias to refer to this dependency. Useful if the name is already used somewhere else.
         /// </summary>
-        /// <value>Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
-        /// <summary>
-        /// Tag of the resource.
-        /// </summary>
-        /// <value>Tag of the resource.</value>
-        [DataMember(Name = "tag", IsRequired = true, EmitDefaultValue = false)]
-        public string Tag { get; set; } 
-        /// <summary>
-        /// URL to a repository where this resource can be found.
-        /// </summary>
-        /// <value>URL to a repository where this resource can be found.</value>
-        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
-        public string Source { get; set; } 
+        /// <value>An optional alias to refer to this dependency. Useful if the name is already used somewhere else.</value>
+        [DataMember(Name = "alias", EmitDefaultValue = false)]
+        public string Alias { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
@@ -114,11 +102,23 @@ namespace PollinationSDK
         [DataMember(Name = "hash", EmitDefaultValue = false)]
         public string Hash { get; set; } 
         /// <summary>
-        /// An optional alias to refer to this dependency. Useful if the name is already used somewhere else.
+        /// Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.
         /// </summary>
-        /// <value>An optional alias to refer to this dependency. Useful if the name is already used somewhere else.</value>
-        [DataMember(Name = "alias", EmitDefaultValue = false)]
-        public string Alias { get; set; } 
+        /// <value>Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// URL to a repository where this resource can be found.
+        /// </summary>
+        /// <value>URL to a repository where this resource can be found.</value>
+        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
+        public string Source { get; set; } 
+        /// <summary>
+        /// Tag of the resource.
+        /// </summary>
+        /// <value>Tag of the resource.</value>
+        [DataMember(Name = "tag", IsRequired = true, EmitDefaultValue = false)]
+        public string Tag { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -140,14 +140,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Dependency:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Kind: ").Append(Kind).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Tag: ").Append(Tag).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Alias: ").Append(Alias).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Hash: ").Append(Hash).Append("\n");
-            sb.Append("  Alias: ").Append(Alias).Append("\n");
+            sb.Append("  Kind: ").Append(Kind).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Tag: ").Append(Tag).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -181,14 +181,6 @@ namespace PollinationSDK
             return DuplicateDependency();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateDependency();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -210,47 +202,47 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Kind == input.Kind ||
-                    (this.Kind != null &&
-                    this.Kind.Equals(input.Kind))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Tag == input.Tag ||
-                    (this.Tag != null &&
-                    this.Tag.Equals(input.Tag))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    this.Alias == input.Alias ||
+                    (this.Alias != null &&
+                    this.Alias.Equals(input.Alias))
+                ) && 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Hash == input.Hash ||
                     (this.Hash != null &&
                     this.Hash.Equals(input.Hash))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Alias == input.Alias ||
-                    (this.Alias != null &&
-                    this.Alias.Equals(input.Alias))
+                    this.Kind == input.Kind ||
+                    (this.Kind != null &&
+                    this.Kind.Equals(input.Kind))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
+                ) && 
+                (
+                    this.Tag == input.Tag ||
+                    (this.Tag != null &&
+                    this.Tag.Equals(input.Tag))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -262,23 +254,23 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Kind != null)
-                    hashCode = hashCode * 59 + this.Kind.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Tag != null)
-                    hashCode = hashCode * 59 + this.Tag.GetHashCode();
-                if (this.Source != null)
-                    hashCode = hashCode * 59 + this.Source.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
+                if (this.Alias != null)
+                    hashCode = hashCode * 59 + this.Alias.GetHashCode();
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.Hash != null)
                     hashCode = hashCode * 59 + this.Hash.GetHashCode();
-                if (this.Alias != null)
-                    hashCode = hashCode * 59 + this.Alias.GetHashCode();
+                if (this.Kind != null)
+                    hashCode = hashCode * 59 + this.Kind.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.Tag != null)
+                    hashCode = hashCode * 59 + this.Tag.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -290,7 +282,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

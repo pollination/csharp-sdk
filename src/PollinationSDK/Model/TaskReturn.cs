@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A Task return output that exposes the values from a function or a DAG.
     /// </summary>
     [DataContract(Name = "TaskReturn")]
-    public partial class TaskReturn : GenericOutput, IEquatable<TaskReturn>, IValidatableObject
+    public partial class TaskReturn : IEquatable<TaskReturn>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskReturn" /> class.
@@ -42,15 +42,19 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskReturn" /> class.
         /// </summary>
-        /// <param name="name">Output name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="description">Optional description for output..</param>
+        /// <param name="name">Output name. (required).</param>
         public TaskReturn
         (
-            string name, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+           string name, // Required parameters
+           Dictionary<string, string> annotations= default, string description= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for TaskReturn and cannot be null");
+            this.Annotations = annotations;
+            this.Description = description;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "TaskReturn";
@@ -63,6 +67,24 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "TaskReturn";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Optional description for output.
+        /// </summary>
+        /// <value>Optional description for output.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// Output name.
+        /// </summary>
+        /// <value>Output name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -84,10 +106,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("TaskReturn:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -121,14 +143,6 @@ namespace PollinationSDK
             return DuplicateTaskReturn();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override GenericOutput DuplicateGenericOutput()
-        {
-            return DuplicateTaskReturn();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -150,7 +164,23 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -166,7 +196,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -180,7 +216,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

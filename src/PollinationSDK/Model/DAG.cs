@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A Directed Acyclic Graph containing a list of tasks.
     /// </summary>
     [DataContract(Name = "DAG")]
-    public partial class DAG : OpenAPIGenBaseModel, IEquatable<DAG>, IValidatableObject
+    public partial class DAG : IEquatable<DAG>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DAG" /> class.
@@ -42,26 +42,26 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="DAG" /> class.
         /// </summary>
-        /// <param name="name">A unique name for this dag. (required).</param>
-        /// <param name="tasks">Tasks are a list of DAG steps (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="inputs">Inputs for the DAG..</param>
-        /// <param name="outputs">Outputs of the DAG that can be used by other DAGs..</param>
         /// <param name="failFast">Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True. (default to true).</param>
+        /// <param name="inputs">Inputs for the DAG..</param>
+        /// <param name="name">A unique name for this dag. (required).</param>
+        /// <param name="outputs">Outputs of the DAG that can be used by other DAGs..</param>
+        /// <param name="tasks">Tasks are a list of DAG steps (required).</param>
         public DAG
         (
            string name, List<DAGTask> tasks, // Required parameters
-           Dictionary<string, string> annotations= default, List<AnyOf<DAGGenericInput,DAGStringInput,DAGIntegerInput,DAGNumberInput,DAGBooleanInput,DAGFolderInput,DAGFileInput,DAGPathInput,DAGArrayInput,DAGJSONObjectInput>> inputs= default, List<AnyOf<DAGGenericOutput,DAGStringOutput,DAGIntegerOutput,DAGNumberOutput,DAGBooleanOutput,DAGFolderOutput,DAGFileOutput,DAGPathOutput,DAGArrayOutput,DAGJSONObjectOutput>> outputs= default, bool failFast = true // Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, bool failFast = true, List<AnyOf<DAGGenericInput,DAGStringInput,DAGIntegerInput,DAGNumberInput,DAGBooleanInput,DAGFolderInput,DAGFileInput,DAGPathInput,DAGArrayInput,DAGJSONObjectInput>> inputs= default, List<AnyOf<DAGGenericOutput,DAGStringOutput,DAGIntegerOutput,DAGNumberOutput,DAGBooleanOutput,DAGFolderOutput,DAGFileOutput,DAGPathOutput,DAGArrayOutput,DAGJSONObjectOutput>> outputs= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for DAG and cannot be null");
             // to ensure "tasks" is required (not null)
             this.Tasks = tasks ?? throw new ArgumentNullException("tasks is a required property for DAG and cannot be null");
             this.Annotations = annotations;
+            this.FailFast = failFast;
             this.Inputs = inputs;
             this.Outputs = outputs;
-            this.FailFast = failFast;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "DAG";
@@ -75,23 +75,17 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "DAG";
 
         /// <summary>
-        /// A unique name for this dag.
-        /// </summary>
-        /// <value>A unique name for this dag.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
-        /// <summary>
-        /// Tasks are a list of DAG steps
-        /// </summary>
-        /// <value>Tasks are a list of DAG steps</value>
-        [DataMember(Name = "tasks", IsRequired = true, EmitDefaultValue = false)]
-        public List<DAGTask> Tasks { get; set; } 
-        /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True.
+        /// </summary>
+        /// <value>Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True.</value>
+        [DataMember(Name = "fail_fast", EmitDefaultValue = true)]
+        public bool FailFast { get; set; }  = true;
         /// <summary>
         /// Inputs for the DAG.
         /// </summary>
@@ -99,17 +93,23 @@ namespace PollinationSDK
         [DataMember(Name = "inputs", EmitDefaultValue = false)]
         public List<AnyOf<DAGGenericInput,DAGStringInput,DAGIntegerInput,DAGNumberInput,DAGBooleanInput,DAGFolderInput,DAGFileInput,DAGPathInput,DAGArrayInput,DAGJSONObjectInput>> Inputs { get; set; } 
         /// <summary>
+        /// A unique name for this dag.
+        /// </summary>
+        /// <value>A unique name for this dag.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
         /// Outputs of the DAG that can be used by other DAGs.
         /// </summary>
         /// <value>Outputs of the DAG that can be used by other DAGs.</value>
         [DataMember(Name = "outputs", EmitDefaultValue = false)]
         public List<AnyOf<DAGGenericOutput,DAGStringOutput,DAGIntegerOutput,DAGNumberOutput,DAGBooleanOutput,DAGFolderOutput,DAGFileOutput,DAGPathOutput,DAGArrayOutput,DAGJSONObjectOutput>> Outputs { get; set; } 
         /// <summary>
-        /// Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True.
+        /// Tasks are a list of DAG steps
         /// </summary>
-        /// <value>Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True.</value>
-        [DataMember(Name = "fail_fast", EmitDefaultValue = true)]
-        public bool FailFast { get; set; }  = true;
+        /// <value>Tasks are a list of DAG steps</value>
+        [DataMember(Name = "tasks", IsRequired = true, EmitDefaultValue = false)]
+        public List<DAGTask> Tasks { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -131,13 +131,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAG:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Tasks: ").Append(Tasks).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
             sb.Append("  FailFast: ").Append(FailFast).Append("\n");
+            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
+            sb.Append("  Tasks: ").Append(Tasks).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -171,14 +171,6 @@ namespace PollinationSDK
             return DuplicateDAG();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateDAG();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -200,41 +192,41 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Tasks == input.Tasks ||
-                    this.Tasks != null &&
-                    input.Tasks != null &&
-                    this.Tasks.SequenceEqual(input.Tasks)
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.FailFast == input.FailFast ||
+                    (this.FailFast != null &&
+                    this.FailFast.Equals(input.FailFast))
+                ) && 
                 (
                     this.Inputs == input.Inputs ||
                     this.Inputs != null &&
                     input.Inputs != null &&
                     this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
                     this.Outputs != null &&
                     input.Outputs != null &&
                     this.Outputs.SequenceEqual(input.Outputs)
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.FailFast == input.FailFast ||
-                    (this.FailFast != null &&
-                    this.FailFast.Equals(input.FailFast))
-                ) && base.Equals(input) && 
+                    this.Tasks == input.Tasks ||
+                    this.Tasks != null &&
+                    input.Tasks != null &&
+                    this.Tasks.SequenceEqual(input.Tasks)
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -250,19 +242,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Tasks != null)
-                    hashCode = hashCode * 59 + this.Tasks.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
-                if (this.Inputs != null)
-                    hashCode = hashCode * 59 + this.Inputs.GetHashCode();
-                if (this.Outputs != null)
-                    hashCode = hashCode * 59 + this.Outputs.GetHashCode();
                 if (this.FailFast != null)
                     hashCode = hashCode * 59 + this.FailFast.GetHashCode();
+                if (this.Inputs != null)
+                    hashCode = hashCode * 59 + this.Inputs.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Outputs != null)
+                    hashCode = hashCode * 59 + this.Outputs.GetHashCode();
+                if (this.Tasks != null)
+                    hashCode = hashCode * 59 + this.Tasks.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -276,7 +268,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

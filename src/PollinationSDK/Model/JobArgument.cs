@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Job argument is an argument input for arguments which are not files or folders.
     /// </summary>
     [DataContract(Name = "JobArgument")]
-    public partial class JobArgument : OpenAPIGenBaseModel, IEquatable<JobArgument>, IValidatableObject
+    public partial class JobArgument : IEquatable<JobArgument>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JobArgument" /> class.
@@ -42,14 +42,14 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="JobArgument" /> class.
         /// </summary>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="name">Argument name. The name must match one of the input names from Job&#39;s DAG template. (required).</param>
         /// <param name="value">The value of the job argument. (required).</param>
-        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         public JobArgument
         (
            string name, object value, // Required parameters
-           Dictionary<string, string> annotations= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for JobArgument and cannot be null");
@@ -69,6 +69,12 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "JobArgument";
 
         /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
         /// Argument name. The name must match one of the input names from Job&#39;s DAG template.
         /// </summary>
         /// <value>Argument name. The name must match one of the input names from Job&#39;s DAG template.</value>
@@ -80,12 +86,6 @@ namespace PollinationSDK
         /// <value>The value of the job argument.</value>
         [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = true)]
         public object Value { get; set; } 
-        /// <summary>
-        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
-        /// </summary>
-        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
-        public Dictionary<string, string> Annotations { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -107,10 +107,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("JobArgument:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             return sb.ToString();
         }
   
@@ -144,14 +144,6 @@ namespace PollinationSDK
             return DuplicateJobArgument();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateJobArgument();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -173,27 +165,27 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Value == input.Value ||
-                    (this.Value != null &&
-                    this.Value.Equals(input.Value))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
+                ) && 
+                (
+                    this.Value == input.Value ||
+                    (this.Value != null &&
+                    this.Value.Equals(input.Value))
                 );
         }
 
@@ -205,15 +197,15 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Value != null)
-                    hashCode = hashCode * 59 + this.Value.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Value != null)
+                    hashCode = hashCode * 59 + this.Value.GetHashCode();
                 return hashCode;
             }
         }
@@ -225,7 +217,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

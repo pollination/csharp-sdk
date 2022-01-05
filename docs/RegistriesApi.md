@@ -101,7 +101,7 @@ Name | Type | Description  | Notes
 
 ## GetPackageJson
 
-> AnyOfRecipePlugin GetPackageJson (string owner, string type, string name, string digest)
+> AnyOfRecipePluginBakedRecipe GetPackageJson (string owner, string type, string name, string digest, bool? baked = null)
 
 Get Package in JSON format
 
@@ -133,11 +133,12 @@ namespace Example
             var type = type_example;  // string | 
             var name = name_example;  // string | 
             var digest = digest_example;  // string | 
+            var baked = true;  // bool? |  (optional)  (default to false)
 
             try
             {
                 // Get Package in JSON format
-                AnyOfRecipePlugin result = apiInstance.GetPackageJson(owner, type, name, digest);
+                AnyOfRecipePluginBakedRecipe result = apiInstance.GetPackageJson(owner, type, name, digest, baked);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -160,10 +161,11 @@ Name | Type | Description  | Notes
  **type** | **string**|  | 
  **name** | **string**|  | 
  **digest** | **string**|  | 
+ **baked** | **bool?**|  | [optional] [default to false]
 
 ### Return type
 
-[**AnyOfRecipePlugin**](AnyOfRecipePlugin.md)
+[**AnyOfRecipePluginBakedRecipe**](AnyOfRecipePluginBakedRecipe.md)
 
 ### Authorization
 
@@ -269,7 +271,7 @@ Name | Type | Description  | Notes
 
 ## PostPlugin
 
-> AnyType PostPlugin (string owner, string type = null, System.IO.Stream package = null)
+> AnyType PostPlugin (string owner, System.IO.Stream package)
 
 Push a plugin to the registry
 
@@ -298,13 +300,12 @@ namespace Example
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
-            var type = type_example;  // string |  (optional)  (default to "Body_post_plugin__owner__plugins_post")
-            var package = BINARY_DATA_HERE;  // System.IO.Stream |  (optional) 
+            var package = BINARY_DATA_HERE;  // System.IO.Stream | 
 
             try
             {
                 // Push a plugin to the registry
-                AnyType result = apiInstance.PostPlugin(owner, type, package);
+                AnyType result = apiInstance.PostPlugin(owner, package);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -324,8 +325,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **owner** | **string**|  | 
- **type** | **string**|  | [optional] [default to &quot;Body_post_plugin__owner__plugins_post&quot;]
- **package** | **System.IO.Stream**|  | [optional] 
+ **package** | **System.IO.Stream**|  | 
 
 ### Return type
 
@@ -354,7 +354,7 @@ Name | Type | Description  | Notes
 
 ## PostRecipe
 
-> AnyType PostRecipe (string owner, string type = null, System.IO.Stream package = null)
+> AnyType PostRecipe (string owner, System.IO.Stream package)
 
 Push an Recipe to the registry
 
@@ -383,13 +383,12 @@ namespace Example
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
-            var type = type_example;  // string |  (optional)  (default to "Body_post_recipe__owner__recipes_post")
-            var package = BINARY_DATA_HERE;  // System.IO.Stream |  (optional) 
+            var package = BINARY_DATA_HERE;  // System.IO.Stream | 
 
             try
             {
                 // Push an Recipe to the registry
-                AnyType result = apiInstance.PostRecipe(owner, type, package);
+                AnyType result = apiInstance.PostRecipe(owner, package);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -409,8 +408,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **owner** | **string**|  | 
- **type** | **string**|  | [optional] [default to &quot;Body_post_recipe__owner__recipes_post&quot;]
- **package** | **System.IO.Stream**|  | [optional] 
+ **package** | **System.IO.Stream**|  | 
 
 ### Return type
 

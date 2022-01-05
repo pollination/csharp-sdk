@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A JSON array input.
     /// </summary>
     [DataContract(Name = "StepArrayInput")]
-    public partial class StepArrayInput : GenericInput, IEquatable<StepArrayInput>, IValidatableObject
+    public partial class StepArrayInput : IEquatable<StepArrayInput>, IValidatableObject
     {
         /// <summary>
         /// Type of items in an array. All the items in an array must be from the same type.
@@ -48,28 +48,32 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="StepArrayInput" /> class.
         /// </summary>
-        /// <param name="value">value (required).</param>
-        /// <param name="_default">Default value to use for an input if a value was not supplied..</param>
         /// <param name="alias">A list of aliases for this input in different platforms..</param>
-        /// <param name="required">A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided. (default to false).</param>
-        /// <param name="spec">An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec..</param>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="_default">Default value to use for an input if a value was not supplied..</param>
+        /// <param name="description">Optional description for input..</param>
         /// <param name="itemsType">Type of items in an array. All the items in an array must be from the same type..</param>
         /// <param name="name">Input name. (required).</param>
-        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="description">Optional description for input..</param>
+        /// <param name="required">A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided. (default to false).</param>
+        /// <param name="spec">An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec..</param>
+        /// <param name="value">value (required).</param>
         public StepArrayInput
         (
-            string name, List<object> value, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default, List<object> _default= default, List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> alias= default, bool required = false, Object spec= default, ItemType itemsType= ItemType.String // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+           string name, List<object> value, // Required parameters
+           List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> alias= default, Dictionary<string, string> annotations= default, List<object> _default= default, string description= default, ItemType itemsType= ItemType.String, bool required = false, Object spec= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for StepArrayInput and cannot be null");
             // to ensure "value" is required (not null)
             this.Value = value ?? throw new ArgumentNullException("value is a required property for StepArrayInput and cannot be null");
-            this.Default = _default;
             this.Alias = alias;
+            this.Annotations = annotations;
+            this.Default = _default;
+            this.Description = description;
+            this.ItemsType = itemsType;
             this.Required = required;
             this.Spec = spec;
-            this.ItemsType = itemsType;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "StepArrayInput";
@@ -83,10 +87,17 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "StepArrayInput";
 
         /// <summary>
-        /// Gets or Sets Value
+        /// A list of aliases for this input in different platforms.
         /// </summary>
-        [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = false)]
-        public List<object> Value { get; set; } 
+        /// <value>A list of aliases for this input in different platforms.</value>
+        [DataMember(Name = "alias", EmitDefaultValue = false)]
+        public List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> Alias { get; set; } 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Default value to use for an input if a value was not supplied.
         /// </summary>
@@ -94,11 +105,17 @@ namespace PollinationSDK
         [DataMember(Name = "default", EmitDefaultValue = false)]
         public List<object> Default { get; set; } 
         /// <summary>
-        /// A list of aliases for this input in different platforms.
+        /// Optional description for input.
         /// </summary>
-        /// <value>A list of aliases for this input in different platforms.</value>
-        [DataMember(Name = "alias", EmitDefaultValue = false)]
-        public List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> Alias { get; set; } 
+        /// <value>Optional description for input.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// Input name.
+        /// </summary>
+        /// <value>Input name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.
         /// </summary>
@@ -111,6 +128,11 @@ namespace PollinationSDK
         /// <value>An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.</value>
         [DataMember(Name = "spec", EmitDefaultValue = false)]
         public Object Spec { get; set; } 
+        /// <summary>
+        /// Gets or Sets Value
+        /// </summary>
+        [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = false)]
+        public List<object> Value { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -132,16 +154,16 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("StepArrayInput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
-            sb.Append("  Default: ").Append(Default).Append("\n");
             sb.Append("  Alias: ").Append(Alias).Append("\n");
+            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Default: ").Append(Default).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  ItemsType: ").Append(ItemsType).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Required: ").Append(Required).Append("\n");
             sb.Append("  Spec: ").Append(Spec).Append("\n");
-            sb.Append("  ItemsType: ").Append(ItemsType).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Value: ").Append(Value).Append("\n");
             return sb.ToString();
         }
   
@@ -175,14 +197,6 @@ namespace PollinationSDK
             return DuplicateStepArrayInput();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override GenericInput DuplicateGenericInput()
-        {
-            return DuplicateStepArrayInput();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -204,39 +218,60 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Value == input.Value ||
-                    this.Value != null &&
-                    input.Value != null &&
-                    this.Value.SequenceEqual(input.Value)
-                ) && base.Equals(input) && 
-                (
-                    this.Default == input.Default ||
-                    this.Default != null &&
-                    input.Default != null &&
-                    this.Default.SequenceEqual(input.Default)
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Alias == input.Alias ||
                     this.Alias != null &&
                     input.Alias != null &&
                     this.Alias.SequenceEqual(input.Alias)
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Required == input.Required ||
-                    (this.Required != null &&
-                    this.Required.Equals(input.Required))
-                ) && base.Equals(input) && 
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Default == input.Default ||
+                    this.Default != null &&
+                    input.Default != null &&
+                    this.Default.SequenceEqual(input.Default)
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.ItemsType == input.ItemsType ||
                     (this.ItemsType != null &&
                     this.ItemsType.Equals(input.ItemsType))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Required == input.Required ||
+                    (this.Required != null &&
+                    this.Required.Equals(input.Required))
+                ) && 
+                (
+                    this.Spec == input.Spec ||
+                    (this.Spec != null &&
+                    this.Spec.Equals(input.Spec))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
+                ) && 
+                (
+                    this.Value == input.Value ||
+                    this.Value != null &&
+                    input.Value != null &&
+                    this.Value.SequenceEqual(input.Value)
                 );
         }
 
@@ -248,21 +283,27 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Value != null)
-                    hashCode = hashCode * 59 + this.Value.GetHashCode();
-                if (this.Default != null)
-                    hashCode = hashCode * 59 + this.Default.GetHashCode();
+                int hashCode = 41;
                 if (this.Alias != null)
                     hashCode = hashCode * 59 + this.Alias.GetHashCode();
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Default != null)
+                    hashCode = hashCode * 59 + this.Default.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.ItemsType != null)
+                    hashCode = hashCode * 59 + this.ItemsType.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Required != null)
                     hashCode = hashCode * 59 + this.Required.GetHashCode();
                 if (this.Spec != null)
                     hashCode = hashCode * 59 + this.Spec.GetHashCode();
-                if (this.ItemsType != null)
-                    hashCode = hashCode * 59 + this.ItemsType.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Value != null)
+                    hashCode = hashCode * 59 + this.Value.GetHashCode();
                 return hashCode;
             }
         }
@@ -274,7 +315,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

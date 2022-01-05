@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// DAG generic alias output.  In most cases, you should not be using the generic output unless you need a dynamic output that changes its type in different platforms because of returning different objects in handler.
     /// </summary>
     [DataContract(Name = "DAGGenericOutputAlias")]
-    public partial class DAGGenericOutputAlias : GenericOutput, IEquatable<DAGGenericOutputAlias>, IValidatableObject
+    public partial class DAGGenericOutputAlias : IEquatable<DAGGenericOutputAlias>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGGenericOutputAlias" /> class.
@@ -42,21 +42,25 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGGenericOutputAlias" /> class.
         /// </summary>
-        /// <param name="platform">Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe. (required).</param>
-        /// <param name="handler">List of process actions to process the input or output value. (required).</param>
-        /// <param name="name">Output name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="description">Optional description for output..</param>
+        /// <param name="handler">List of process actions to process the input or output value. (required).</param>
+        /// <param name="name">Output name. (required).</param>
+        /// <param name="platform">Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe. (required).</param>
         public DAGGenericOutputAlias
         (
-            string name, List<string> platform, List<IOAliasHandler> handler, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+           List<IOAliasHandler> handler, string name, List<string> platform, // Required parameters
+           Dictionary<string, string> annotations= default, string description= default // Optional parameters
+        )// BaseClass
         {
-            // to ensure "platform" is required (not null)
-            this.Platform = platform ?? throw new ArgumentNullException("platform is a required property for DAGGenericOutputAlias and cannot be null");
             // to ensure "handler" is required (not null)
             this.Handler = handler ?? throw new ArgumentNullException("handler is a required property for DAGGenericOutputAlias and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for DAGGenericOutputAlias and cannot be null");
+            // to ensure "platform" is required (not null)
+            this.Platform = platform ?? throw new ArgumentNullException("platform is a required property for DAGGenericOutputAlias and cannot be null");
+            this.Annotations = annotations;
+            this.Description = description;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "DAGGenericOutputAlias";
@@ -70,17 +74,35 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "DAGGenericOutputAlias";
 
         /// <summary>
-        /// Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
-        /// <value>Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.</value>
-        [DataMember(Name = "platform", IsRequired = true, EmitDefaultValue = false)]
-        public List<string> Platform { get; set; } 
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Optional description for output.
+        /// </summary>
+        /// <value>Optional description for output.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
         /// <summary>
         /// List of process actions to process the input or output value.
         /// </summary>
         /// <value>List of process actions to process the input or output value.</value>
         [DataMember(Name = "handler", IsRequired = true, EmitDefaultValue = false)]
         public List<IOAliasHandler> Handler { get; set; } 
+        /// <summary>
+        /// Output name.
+        /// </summary>
+        /// <value>Output name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.
+        /// </summary>
+        /// <value>Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.</value>
+        [DataMember(Name = "platform", IsRequired = true, EmitDefaultValue = false)]
+        public List<string> Platform { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -102,12 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGGenericOutputAlias:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Platform: ").Append(Platform).Append("\n");
             sb.Append("  Handler: ").Append(Handler).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Platform: ").Append(Platform).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -141,14 +163,6 @@ namespace PollinationSDK
             return DuplicateDAGGenericOutputAlias();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override GenericOutput DuplicateGenericOutput()
-        {
-            return DuplicateDAGGenericOutputAlias();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -170,19 +184,35 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Platform == input.Platform ||
-                    this.Platform != null &&
-                    input.Platform != null &&
-                    this.Platform.SequenceEqual(input.Platform)
-                ) && base.Equals(input) && 
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.Handler == input.Handler ||
                     this.Handler != null &&
                     input.Handler != null &&
                     this.Handler.SequenceEqual(input.Handler)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Platform == input.Platform ||
+                    this.Platform != null &&
+                    input.Platform != null &&
+                    this.Platform.SequenceEqual(input.Platform)
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -198,11 +228,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Platform != null)
-                    hashCode = hashCode * 59 + this.Platform.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.Handler != null)
                     hashCode = hashCode * 59 + this.Handler.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Platform != null)
+                    hashCode = hashCode * 59 + this.Platform.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -216,17 +252,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

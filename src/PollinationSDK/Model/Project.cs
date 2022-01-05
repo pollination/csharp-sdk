@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Project
     /// </summary>
     [DataContract(Name = "Project")]
-    public partial class Project : ProjectCreate, IEquatable<Project>, IValidatableObject
+    public partial class Project : IEquatable<Project>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Project" /> class.
@@ -36,53 +36,62 @@ namespace PollinationSDK
         protected Project() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Project";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Project" /> class.
         /// </summary>
+        /// <param name="description">A description of the project (default to &quot;&quot;).</param>
         /// <param name="id">The project ID (required).</param>
+        /// <param name="name">The name of the project. Must be unique to a given owner (required).</param>
         /// <param name="owner">The project owner (required).</param>
         /// <param name="permissions">permissions (required).</param>
+        /// <param name="_public">Whether or not a project is publicly viewable (default to true).</param>
         /// <param name="slug">The project name in slug format (required).</param>
         /// <param name="usage">The resource consumption of this project.</param>
-        /// <param name="name">The name of the project. Must be unique to a given owner (required).</param>
-        /// <param name="description">A description of the project (default to &quot;&quot;).</param>
-        /// <param name="_public">Whether or not a project is publicly viewable (default to true).</param>
         public Project
         (
-            string name, string id, AccountPublic owner, UserPermission permissions, string slug, // Required parameters
-            string description = "", bool _public = true, Usage usage= default // Optional parameters
-        ) : base(name: name, description: description, _public: _public)// BaseClass
+           string id, string name, AccountPublic owner, UserPermission permissions, string slug, // Required parameters
+           string description = "", bool _public = true, Usage usage= default// Optional parameters
+        )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Project and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for Project and cannot be null");
             // to ensure "owner" is required (not null)
             this.Owner = owner ?? throw new ArgumentNullException("owner is a required property for Project and cannot be null");
             // to ensure "permissions" is required (not null)
             this.Permissions = permissions ?? throw new ArgumentNullException("permissions is a required property for Project and cannot be null");
             // to ensure "slug" is required (not null)
             this.Slug = slug ?? throw new ArgumentNullException("slug is a required property for Project and cannot be null");
+            // use default value if no "description" provided
+            this.Description = description ?? "";
+            this.Public = _public;
             this.Usage = usage;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Project";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Project";
 
+        /// <summary>
+        /// A description of the project
+        /// </summary>
+        /// <value>A description of the project</value>
+        [DataMember(Name = "description", EmitDefaultValue = true)]
+        public string Description { get; set; }  = "";
         /// <summary>
         /// The project ID
         /// </summary>
         /// <value>The project ID</value>
         [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
         public string Id { get; set; } 
+        /// <summary>
+        /// The name of the project. Must be unique to a given owner
+        /// </summary>
+        /// <value>The name of the project. Must be unique to a given owner</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// The project owner
         /// </summary>
@@ -94,6 +103,12 @@ namespace PollinationSDK
         /// </summary>
         [DataMember(Name = "permissions", IsRequired = true, EmitDefaultValue = false)]
         public UserPermission Permissions { get; set; } 
+        /// <summary>
+        /// Whether or not a project is publicly viewable
+        /// </summary>
+        /// <value>Whether or not a project is publicly viewable</value>
+        [DataMember(Name = "public", EmitDefaultValue = true)]
+        public bool Public { get; set; }  = true;
         /// <summary>
         /// The project name in slug format
         /// </summary>
@@ -127,13 +142,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Project:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Owner: ").Append(Owner).Append("\n");
             sb.Append("  Permissions: ").Append(Permissions).Append("\n");
+            sb.Append("  Public: ").Append(Public).Append("\n");
             sb.Append("  Slug: ").Append(Slug).Append("\n");
             sb.Append("  Usage: ").Append(Usage).Append("\n");
             return sb.ToString();
@@ -169,14 +183,6 @@ namespace PollinationSDK
             return DuplicateProject();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override ProjectCreate DuplicateProjectCreate()
-        {
-            return DuplicateProject();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -198,36 +204,46 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Owner == input.Owner ||
                     (this.Owner != null &&
                     this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Permissions == input.Permissions ||
                     (this.Permissions != null &&
                     this.Permissions.Equals(input.Permissions))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Public == input.Public ||
+                    (this.Public != null &&
+                    this.Public.Equals(input.Public))
+                ) && 
                 (
                     this.Slug == input.Slug ||
                     (this.Slug != null &&
                     this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Usage == input.Usage ||
                     (this.Usage != null &&
                     this.Usage.Equals(input.Usage))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -239,19 +255,23 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Owner != null)
                     hashCode = hashCode * 59 + this.Owner.GetHashCode();
                 if (this.Permissions != null)
                     hashCode = hashCode * 59 + this.Permissions.GetHashCode();
+                if (this.Public != null)
+                    hashCode = hashCode * 59 + this.Public.GetHashCode();
                 if (this.Slug != null)
                     hashCode = hashCode * 59 + this.Slug.GetHashCode();
                 if (this.Usage != null)
                     hashCode = hashCode * 59 + this.Usage.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -263,16 +283,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Project$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }
