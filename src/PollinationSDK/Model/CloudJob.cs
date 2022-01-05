@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// CloudJob
     /// </summary>
     [DataContract(Name = "CloudJob")]
-    public partial class CloudJob : OpenAPIGenBaseModel, IEquatable<CloudJob>, IValidatableObject
+    public partial class CloudJob : IEquatable<CloudJob>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudJob" /> class.
@@ -36,23 +36,22 @@ namespace PollinationSDK
         protected CloudJob() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "CloudJob";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="CloudJob" /> class.
         /// </summary>
-        /// <param name="id">The unique ID for this run (required).</param>
-        /// <param name="spec">The job specification (required).</param>
         /// <param name="author">author.</param>
+        /// <param name="id">The unique ID for this run (required).</param>
         /// <param name="owner">owner.</param>
         /// <param name="recipe">The recipe used to generate this .</param>
+        /// <param name="spec">The job specification (required).</param>
         /// <param name="status">The status of the job.</param>
         public CloudJob
         (
            string id, Job spec, // Required parameters
-           AccountPublic author= default, AccountPublic owner= default, RecipeInterface recipe= default, JobStatus status= default // Optional parameters
-        ) : base()// BaseClass
+           AccountPublic author= default, AccountPublic owner= default, RecipeInterface recipe= default, JobStatus status= default// Optional parameters
+        )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for CloudJob and cannot be null");
@@ -64,34 +63,21 @@ namespace PollinationSDK
             this.Status = status;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "CloudJob";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "CloudJob";
 
-        /// <summary>
-        /// The unique ID for this run
-        /// </summary>
-        /// <value>The unique ID for this run</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
-        public string Id { get; set; } 
-        /// <summary>
-        /// The job specification
-        /// </summary>
-        /// <value>The job specification</value>
-        [DataMember(Name = "spec", IsRequired = true, EmitDefaultValue = false)]
-        public Job Spec { get; set; } 
         /// <summary>
         /// author
         /// </summary>
         /// <value>author</value>
         [DataMember(Name = "author", EmitDefaultValue = false)]
         public AccountPublic Author { get; set; } 
+        /// <summary>
+        /// The unique ID for this run
+        /// </summary>
+        /// <value>The unique ID for this run</value>
+        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        public string Id { get; set; } 
         /// <summary>
         /// owner
         /// </summary>
@@ -104,6 +90,12 @@ namespace PollinationSDK
         /// <value>The recipe used to generate this </value>
         [DataMember(Name = "recipe", EmitDefaultValue = false)]
         public RecipeInterface Recipe { get; set; } 
+        /// <summary>
+        /// The job specification
+        /// </summary>
+        /// <value>The job specification</value>
+        [DataMember(Name = "spec", IsRequired = true, EmitDefaultValue = false)]
+        public Job Spec { get; set; } 
         /// <summary>
         /// The status of the job
         /// </summary>
@@ -131,12 +123,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("CloudJob:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Spec: ").Append(Spec).Append("\n");
             sb.Append("  Author: ").Append(Author).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Owner: ").Append(Owner).Append("\n");
             sb.Append("  Recipe: ").Append(Recipe).Append("\n");
+            sb.Append("  Spec: ").Append(Spec).Append("\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
             return sb.ToString();
         }
@@ -171,14 +162,6 @@ namespace PollinationSDK
             return DuplicateCloudJob();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateCloudJob();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -200,36 +183,36 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Author == input.Author ||
                     (this.Author != null &&
                     this.Author.Equals(input.Author))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
                 (
                     this.Owner == input.Owner ||
                     (this.Owner != null &&
                     this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Recipe == input.Recipe ||
                     (this.Recipe != null &&
                     this.Recipe.Equals(input.Recipe))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Spec == input.Spec ||
+                    (this.Spec != null &&
+                    this.Spec.Equals(input.Spec))
+                ) && 
                 (
                     this.Status == input.Status ||
                     (this.Status != null &&
                     this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -241,21 +224,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.Spec != null)
-                    hashCode = hashCode * 59 + this.Spec.GetHashCode();
+                int hashCode = 41;
                 if (this.Author != null)
                     hashCode = hashCode * 59 + this.Author.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Owner != null)
                     hashCode = hashCode * 59 + this.Owner.GetHashCode();
                 if (this.Recipe != null)
                     hashCode = hashCode * 59 + this.Recipe.GetHashCode();
+                if (this.Spec != null)
+                    hashCode = hashCode * 59 + this.Spec.GetHashCode();
                 if (this.Status != null)
                     hashCode = hashCode * 59 + this.Status.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -267,16 +248,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^CloudJob$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

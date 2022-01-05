@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Organization
     /// </summary>
     [DataContract(Name = "Organization")]
-    public partial class Organization : OrganizationUpdate, IEquatable<Organization>, IValidatableObject
+    public partial class Organization : IEquatable<Organization>, IValidatableObject
     {
         /// <summary>
         /// The role the user has within the organization
@@ -42,47 +42,62 @@ namespace PollinationSDK
         protected Organization() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Organization";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Organization" /> class.
         /// </summary>
-        /// <param name="id">The org ID (required).</param>
-        /// <param name="owner">The account the organization represents (required).</param>
-        /// <param name="role">The role the user has within the organization.</param>
-        /// <param name="memberCount">The number of members that are part of this org (default to 0).</param>
-        /// <param name="teamCount">The number of teams that are part of this org (default to 0).</param>
         /// <param name="accountName">The unique name of the org in small case without spaces.</param>
-        /// <param name="name">The display name for this org.</param>
-        /// <param name="pictureUrl">URL to the picture associated with this org.</param>
         /// <param name="contactEmail">The contact email for the Organization.</param>
         /// <param name="description">A description of the org.</param>
+        /// <param name="id">The org ID (required).</param>
+        /// <param name="memberCount">The number of members that are part of this org (default to 0).</param>
+        /// <param name="name">The display name for this org.</param>
+        /// <param name="owner">The account the organization represents (required).</param>
+        /// <param name="pictureUrl">URL to the picture associated with this org.</param>
+        /// <param name="role">The role the user has within the organization.</param>
+        /// <param name="teamCount">The number of teams that are part of this org (default to 0).</param>
         public Organization
         (
            string id, AccountPublic owner, // Required parameters
-            string accountName= default, string name= default, string pictureUrl= default, string contactEmail= default, string description= default, OrganizationRoleEnum role= default, int memberCount = 0, int teamCount = 0 // Optional parameters
-        ) : base(accountName: accountName, name: name, pictureUrl: pictureUrl, contactEmail: contactEmail, description: description)// BaseClass
+           string accountName= default, string contactEmail= default, string description= default, int memberCount = 0, string name= default, string pictureUrl= default, OrganizationRoleEnum role= default, int teamCount = 0// Optional parameters
+        )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Organization and cannot be null");
             // to ensure "owner" is required (not null)
             this.Owner = owner ?? throw new ArgumentNullException("owner is a required property for Organization and cannot be null");
-            this.Role = role;
+            this.AccountName = accountName;
+            this.ContactEmail = contactEmail;
+            this.Description = description;
             this.MemberCount = memberCount;
+            this.Name = name;
+            this.PictureUrl = pictureUrl;
+            this.Role = role;
             this.TeamCount = teamCount;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Organization";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Organization";
 
+        /// <summary>
+        /// The unique name of the org in small case without spaces
+        /// </summary>
+        /// <value>The unique name of the org in small case without spaces</value>
+        [DataMember(Name = "account_name", EmitDefaultValue = false)]
+        public string AccountName { get; set; } 
+        /// <summary>
+        /// The contact email for the Organization
+        /// </summary>
+        /// <value>The contact email for the Organization</value>
+        [DataMember(Name = "contact_email", EmitDefaultValue = false)]
+        public string ContactEmail { get; set; } 
+        /// <summary>
+        /// A description of the org
+        /// </summary>
+        /// <value>A description of the org</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
         /// <summary>
         /// The org ID
         /// </summary>
@@ -90,17 +105,29 @@ namespace PollinationSDK
         [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
         public string Id { get; set; } 
         /// <summary>
+        /// The number of members that are part of this org
+        /// </summary>
+        /// <value>The number of members that are part of this org</value>
+        [DataMember(Name = "member_count", EmitDefaultValue = true)]
+        public int MemberCount { get; set; }  = 0;
+        /// <summary>
+        /// The display name for this org
+        /// </summary>
+        /// <value>The display name for this org</value>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
         /// The account the organization represents
         /// </summary>
         /// <value>The account the organization represents</value>
         [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
         public AccountPublic Owner { get; set; } 
         /// <summary>
-        /// The number of members that are part of this org
+        /// URL to the picture associated with this org
         /// </summary>
-        /// <value>The number of members that are part of this org</value>
-        [DataMember(Name = "member_count", EmitDefaultValue = true)]
-        public int MemberCount { get; set; }  = 0;
+        /// <value>URL to the picture associated with this org</value>
+        [DataMember(Name = "picture_url", EmitDefaultValue = false)]
+        public string PictureUrl { get; set; } 
         /// <summary>
         /// The number of teams that are part of this org
         /// </summary>
@@ -128,16 +155,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Organization:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  AccountName: ").Append(AccountName).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
             sb.Append("  ContactEmail: ").Append(ContactEmail).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Role: ").Append(Role).Append("\n");
             sb.Append("  MemberCount: ").Append(MemberCount).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Owner: ").Append(Owner).Append("\n");
+            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
+            sb.Append("  Role: ").Append(Role).Append("\n");
             sb.Append("  TeamCount: ").Append(TeamCount).Append("\n");
             return sb.ToString();
         }
@@ -172,14 +198,6 @@ namespace PollinationSDK
             return DuplicateOrganization();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OrganizationUpdate DuplicateOrganizationUpdate()
-        {
-            return DuplicateOrganization();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -201,36 +219,56 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.AccountName == input.AccountName ||
+                    (this.AccountName != null &&
+                    this.AccountName.Equals(input.AccountName))
+                ) && 
+                (
+                    this.ContactEmail == input.ContactEmail ||
+                    (this.ContactEmail != null &&
+                    this.ContactEmail.Equals(input.ContactEmail))
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Role == input.Role ||
-                    (this.Role != null &&
-                    this.Role.Equals(input.Role))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.MemberCount == input.MemberCount ||
                     (this.MemberCount != null &&
                     this.MemberCount.Equals(input.MemberCount))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Owner == input.Owner ||
+                    (this.Owner != null &&
+                    this.Owner.Equals(input.Owner))
+                ) && 
+                (
+                    this.PictureUrl == input.PictureUrl ||
+                    (this.PictureUrl != null &&
+                    this.PictureUrl.Equals(input.PictureUrl))
+                ) && 
+                (
+                    this.Role == input.Role ||
+                    (this.Role != null &&
+                    this.Role.Equals(input.Role))
+                ) && 
                 (
                     this.TeamCount == input.TeamCount ||
                     (this.TeamCount != null &&
                     this.TeamCount.Equals(input.TeamCount))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -242,19 +280,27 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.AccountName != null)
+                    hashCode = hashCode * 59 + this.AccountName.GetHashCode();
+                if (this.ContactEmail != null)
+                    hashCode = hashCode * 59 + this.ContactEmail.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.Owner != null)
-                    hashCode = hashCode * 59 + this.Owner.GetHashCode();
-                if (this.Role != null)
-                    hashCode = hashCode * 59 + this.Role.GetHashCode();
                 if (this.MemberCount != null)
                     hashCode = hashCode * 59 + this.MemberCount.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Owner != null)
+                    hashCode = hashCode * 59 + this.Owner.GetHashCode();
+                if (this.PictureUrl != null)
+                    hashCode = hashCode * 59 + this.PictureUrl.GetHashCode();
+                if (this.Role != null)
+                    hashCode = hashCode * 59 + this.Role.GetHashCode();
                 if (this.TeamCount != null)
                     hashCode = hashCode * 59 + this.TeamCount.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -266,16 +312,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Organization$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

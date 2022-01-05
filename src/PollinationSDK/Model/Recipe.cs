@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A Queenbee Recipe
     /// </summary>
     [DataContract(Name = "Recipe")]
-    public partial class Recipe : OpenAPIGenBaseModel, IEquatable<Recipe>, IValidatableObject
+    public partial class Recipe : IEquatable<Recipe>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Recipe" /> class.
@@ -36,53 +36,47 @@ namespace PollinationSDK
         protected Recipe() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Recipe";
             this.ApiVersion = "v1beta1";
+            this.Type = "Recipe";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Recipe" /> class.
         /// </summary>
-        /// <param name="flow">A list of tasks to create a DAG recipe. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="metadata">Recipe metadata information..</param>
         /// <param name="dependencies">A list of plugins and other recipes this recipe depends on..</param>
+        /// <param name="flow">A list of tasks to create a DAG recipe. (required).</param>
+        /// <param name="metadata">Recipe metadata information..</param>
         public Recipe
         (
            List<DAG> flow, // Required parameters
-           Dictionary<string, string> annotations= default, MetaData metadata= default, List<Dependency> dependencies= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, List<Dependency> dependencies= default, MetaData metadata= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "flow" is required (not null)
             this.Flow = flow ?? throw new ArgumentNullException("flow is a required property for Recipe and cannot be null");
             this.Annotations = annotations;
-            this.Metadata = metadata;
             this.Dependencies = dependencies;
+            this.Metadata = metadata;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Recipe";
             this.ApiVersion = "v1beta1";
+            this.Type = "Recipe";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Recipe";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
         [DataMember(Name = "api_version", EmitDefaultValue = true)]
         public string ApiVersion { get; protected internal set; }  = "v1beta1";
-
+        //============================================== is ReadOnly 
         /// <summary>
-        /// A list of tasks to create a DAG recipe.
+        /// Gets or Sets Type
         /// </summary>
-        /// <value>A list of tasks to create a DAG recipe.</value>
-        [DataMember(Name = "flow", IsRequired = true, EmitDefaultValue = false)]
-        public List<DAG> Flow { get; set; } 
+        [DataMember(Name = "type", EmitDefaultValue = true)]
+        public string Type { get; protected internal set; }  = "Recipe";
+
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
@@ -90,17 +84,23 @@ namespace PollinationSDK
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
-        /// Recipe metadata information.
-        /// </summary>
-        /// <value>Recipe metadata information.</value>
-        [DataMember(Name = "metadata", EmitDefaultValue = false)]
-        public MetaData Metadata { get; set; } 
-        /// <summary>
         /// A list of plugins and other recipes this recipe depends on.
         /// </summary>
         /// <value>A list of plugins and other recipes this recipe depends on.</value>
         [DataMember(Name = "dependencies", EmitDefaultValue = false)]
         public List<Dependency> Dependencies { get; set; } 
+        /// <summary>
+        /// A list of tasks to create a DAG recipe.
+        /// </summary>
+        /// <value>A list of tasks to create a DAG recipe.</value>
+        [DataMember(Name = "flow", IsRequired = true, EmitDefaultValue = false)]
+        public List<DAG> Flow { get; set; } 
+        /// <summary>
+        /// Recipe metadata information.
+        /// </summary>
+        /// <value>Recipe metadata information.</value>
+        [DataMember(Name = "metadata", EmitDefaultValue = false)]
+        public MetaData Metadata { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -122,12 +122,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Recipe:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Flow: ").Append(Flow).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
             sb.Append("  Dependencies: ").Append(Dependencies).Append("\n");
+            sb.Append("  Flow: ").Append(Flow).Append("\n");
+            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -161,14 +161,6 @@ namespace PollinationSDK
             return DuplicateRecipe();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateRecipe();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -190,39 +182,39 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Flow == input.Flow ||
-                    this.Flow != null &&
-                    input.Flow != null &&
-                    this.Flow.SequenceEqual(input.Flow)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.ApiVersion == input.ApiVersion ||
                     (this.ApiVersion != null &&
                     this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.Metadata == input.Metadata ||
-                    (this.Metadata != null &&
-                    this.Metadata.Equals(input.Metadata))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Dependencies == input.Dependencies ||
                     this.Dependencies != null &&
                     input.Dependencies != null &&
                     this.Dependencies.SequenceEqual(input.Dependencies)
+                ) && 
+                (
+                    this.Flow == input.Flow ||
+                    this.Flow != null &&
+                    input.Flow != null &&
+                    this.Flow.SequenceEqual(input.Flow)
+                ) && 
+                (
+                    this.Metadata == input.Metadata ||
+                    (this.Metadata != null &&
+                    this.Metadata.Equals(input.Metadata))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -234,19 +226,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Flow != null)
-                    hashCode = hashCode * 59 + this.Flow.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.ApiVersion != null)
                     hashCode = hashCode * 59 + this.ApiVersion.GetHashCode();
-                if (this.Metadata != null)
-                    hashCode = hashCode * 59 + this.Metadata.GetHashCode();
                 if (this.Dependencies != null)
                     hashCode = hashCode * 59 + this.Dependencies.GetHashCode();
+                if (this.Flow != null)
+                    hashCode = hashCode * 59 + this.Flow.GetHashCode();
+                if (this.Metadata != null)
+                    hashCode = hashCode * 59 + this.Metadata.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -258,16 +250,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Recipe$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
 
             
             // ApiVersion (string) pattern
@@ -275,6 +257,15 @@ namespace PollinationSDK
             if (false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
+            }
+
+
+            
+            // Type (string) pattern
+            Regex regexType = new Regex(@"^Recipe$", RegexOptions.CultureInvariant);
+            if (false == regexType.Match(this.Type).Success)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
 
             yield break;

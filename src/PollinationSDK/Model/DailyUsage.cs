@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// DailyUsage
     /// </summary>
     [DataContract(Name = "DailyUsage")]
-    public partial class DailyUsage : OpenAPIGenBaseModel, IEquatable<DailyUsage>, IValidatableObject
+    public partial class DailyUsage : IEquatable<DailyUsage>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DailyUsage" /> class.
@@ -36,40 +36,38 @@ namespace PollinationSDK
         protected DailyUsage() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "DailyUsage";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="DailyUsage" /> class.
         /// </summary>
-        /// <param name="date">The day this usage was aggregated for (required).</param>
         /// <param name="cpu">cpu usage (default to 0D).</param>
+        /// <param name="date">The day this usage was aggregated for (required).</param>
+        /// <param name="failed">failed usage (default to 0).</param>
         /// <param name="memory">memory usage (default to 0D).</param>
         /// <param name="succeeded">succeeded usage (default to 0).</param>
-        /// <param name="failed">failed usage (default to 0).</param>
         public DailyUsage
         (
            DateTime date, // Required parameters
-           double cpu = 0D, double memory = 0D, int succeeded = 0, int failed = 0 // Optional parameters
-        ) : base()// BaseClass
+           double cpu = 0D, int failed = 0, double memory = 0D, int succeeded = 0// Optional parameters
+        )// BaseClass
         {
             this.Date = date;
             this.Cpu = cpu;
+            this.Failed = failed;
             this.Memory = memory;
             this.Succeeded = succeeded;
-            this.Failed = failed;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "DailyUsage";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DailyUsage";
 
+        /// <summary>
+        /// cpu usage
+        /// </summary>
+        /// <value>cpu usage</value>
+        [DataMember(Name = "cpu", EmitDefaultValue = true)]
+        public double Cpu { get; set; }  = 0D;
         /// <summary>
         /// The day this usage was aggregated for
         /// </summary>
@@ -77,11 +75,11 @@ namespace PollinationSDK
         [DataMember(Name = "date", IsRequired = true, EmitDefaultValue = false)]
         public DateTime Date { get; set; } 
         /// <summary>
-        /// cpu usage
+        /// failed usage
         /// </summary>
-        /// <value>cpu usage</value>
-        [DataMember(Name = "cpu", EmitDefaultValue = true)]
-        public double Cpu { get; set; }  = 0D;
+        /// <value>failed usage</value>
+        [DataMember(Name = "failed", EmitDefaultValue = true)]
+        public int Failed { get; set; }  = 0;
         /// <summary>
         /// memory usage
         /// </summary>
@@ -94,12 +92,6 @@ namespace PollinationSDK
         /// <value>succeeded usage</value>
         [DataMember(Name = "succeeded", EmitDefaultValue = true)]
         public int Succeeded { get; set; }  = 0;
-        /// <summary>
-        /// failed usage
-        /// </summary>
-        /// <value>failed usage</value>
-        [DataMember(Name = "failed", EmitDefaultValue = true)]
-        public int Failed { get; set; }  = 0;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -121,12 +113,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DailyUsage:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Date: ").Append(Date).Append("\n");
             sb.Append("  Cpu: ").Append(Cpu).Append("\n");
+            sb.Append("  Date: ").Append(Date).Append("\n");
+            sb.Append("  Failed: ").Append(Failed).Append("\n");
             sb.Append("  Memory: ").Append(Memory).Append("\n");
             sb.Append("  Succeeded: ").Append(Succeeded).Append("\n");
-            sb.Append("  Failed: ").Append(Failed).Append("\n");
             return sb.ToString();
         }
   
@@ -160,14 +151,6 @@ namespace PollinationSDK
             return DuplicateDailyUsage();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateDailyUsage();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -189,36 +172,31 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Date == input.Date ||
-                    (this.Date != null &&
-                    this.Date.Equals(input.Date))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Cpu == input.Cpu ||
                     (this.Cpu != null &&
                     this.Cpu.Equals(input.Cpu))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Memory == input.Memory ||
-                    (this.Memory != null &&
-                    this.Memory.Equals(input.Memory))
-                ) && base.Equals(input) && 
-                (
-                    this.Succeeded == input.Succeeded ||
-                    (this.Succeeded != null &&
-                    this.Succeeded.Equals(input.Succeeded))
-                ) && base.Equals(input) && 
+                    this.Date == input.Date ||
+                    (this.Date != null &&
+                    this.Date.Equals(input.Date))
+                ) && 
                 (
                     this.Failed == input.Failed ||
                     (this.Failed != null &&
                     this.Failed.Equals(input.Failed))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Memory == input.Memory ||
+                    (this.Memory != null &&
+                    this.Memory.Equals(input.Memory))
+                ) && 
+                (
+                    this.Succeeded == input.Succeeded ||
+                    (this.Succeeded != null &&
+                    this.Succeeded.Equals(input.Succeeded))
                 );
         }
 
@@ -230,19 +208,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Date != null)
-                    hashCode = hashCode * 59 + this.Date.GetHashCode();
+                int hashCode = 41;
                 if (this.Cpu != null)
                     hashCode = hashCode * 59 + this.Cpu.GetHashCode();
+                if (this.Date != null)
+                    hashCode = hashCode * 59 + this.Date.GetHashCode();
+                if (this.Failed != null)
+                    hashCode = hashCode * 59 + this.Failed.GetHashCode();
                 if (this.Memory != null)
                     hashCode = hashCode * 59 + this.Memory.GetHashCode();
                 if (this.Succeeded != null)
                     hashCode = hashCode * 59 + this.Succeeded.GetHashCode();
-                if (this.Failed != null)
-                    hashCode = hashCode * 59 + this.Failed.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -254,16 +230,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^DailyUsage$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

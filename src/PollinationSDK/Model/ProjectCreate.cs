@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// ProjectCreate
     /// </summary>
     [DataContract(Name = "ProjectCreate")]
-    public partial class ProjectCreate : OpenAPIGenBaseModel, IEquatable<ProjectCreate>, IValidatableObject
+    public partial class ProjectCreate : IEquatable<ProjectCreate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectCreate" /> class.
@@ -36,20 +36,19 @@ namespace PollinationSDK
         protected ProjectCreate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "ProjectCreate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectCreate" /> class.
         /// </summary>
-        /// <param name="name">The name of the project. Must be unique to a given owner (required).</param>
         /// <param name="description">A description of the project (default to &quot;&quot;).</param>
+        /// <param name="name">The name of the project. Must be unique to a given owner (required).</param>
         /// <param name="_public">Whether or not a project is publicly viewable (default to true).</param>
         public ProjectCreate
         (
            string name, // Required parameters
-           string description = "", bool _public = true // Optional parameters
-        ) : base()// BaseClass
+           string description = "", bool _public = true// Optional parameters
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for ProjectCreate and cannot be null");
@@ -58,28 +57,21 @@ namespace PollinationSDK
             this.Public = _public;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "ProjectCreate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ProjectCreate";
 
-        /// <summary>
-        /// The name of the project. Must be unique to a given owner
-        /// </summary>
-        /// <value>The name of the project. Must be unique to a given owner</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
         /// <summary>
         /// A description of the project
         /// </summary>
         /// <value>A description of the project</value>
         [DataMember(Name = "description", EmitDefaultValue = true)]
         public string Description { get; set; }  = "";
+        /// <summary>
+        /// The name of the project. Must be unique to a given owner
+        /// </summary>
+        /// <value>The name of the project. Must be unique to a given owner</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// Whether or not a project is publicly viewable
         /// </summary>
@@ -107,9 +99,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ProjectCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Public: ").Append(Public).Append("\n");
             return sb.ToString();
         }
@@ -144,14 +135,6 @@ namespace PollinationSDK
             return DuplicateProjectCreate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateProjectCreate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -173,26 +156,21 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Public == input.Public ||
                     (this.Public != null &&
                     this.Public.Equals(input.Public))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -204,15 +182,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                int hashCode = 41;
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Public != null)
                     hashCode = hashCode * 59 + this.Public.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -224,26 +200,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^ProjectCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

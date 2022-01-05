@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// BaseModel with functionality to return the object as a yaml string.
     /// </summary>
     [DataContract(Name = "TaskPathArgument")]
-    public partial class TaskPathArgument : OpenAPIGenBaseModel, IEquatable<TaskPathArgument>, IValidatableObject
+    public partial class TaskPathArgument : IEquatable<TaskPathArgument>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskPathArgument" /> class.
@@ -42,20 +42,20 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="TaskPathArgument" /> class.
         /// </summary>
-        /// <param name="name">Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG. (required).</param>
-        /// <param name="from">A reference to a DAG input, a DAG output or another task output. You can also use the ValueReference type to hard-code an input value. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="from">A reference to a DAG input, a DAG output or another task output. You can also use the ValueReference type to hard-code an input value. (required).</param>
+        /// <param name="name">Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG. (required).</param>
         /// <param name="subPath">A sub_path inside the path that is provided in the &#x60;&#x60;from&#x60;&#x60; field. Use sub_path to only access part of the Path that is needed instead of copying all the files and folders inside the path..</param>
         public TaskPathArgument
         (
-           string name, AnyOf<InputFileReference,InputFolderReference,InputPathReference,TaskFileReference,TaskFolderReference,TaskPathReference,ValueFileReference,ValueFolderReference> from, // Required parameters
-           Dictionary<string, string> annotations= default, string subPath= default// Optional parameters
-        ) : base()// BaseClass
+           AnyOf<InputFileReference,InputFolderReference,InputPathReference,TaskFileReference,TaskFolderReference,TaskPathReference,ValueFileReference,ValueFolderReference> from, string name, // Required parameters
+           Dictionary<string, string> annotations= default, string subPath= default // Optional parameters
+        )// BaseClass
         {
-            // to ensure "name" is required (not null)
-            this.Name = name ?? throw new ArgumentNullException("name is a required property for TaskPathArgument and cannot be null");
             // to ensure "from" is required (not null)
             this.From = from ?? throw new ArgumentNullException("from is a required property for TaskPathArgument and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for TaskPathArgument and cannot be null");
             this.Annotations = annotations;
             this.SubPath = subPath;
 
@@ -71,11 +71,11 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "TaskPathArgument";
 
         /// <summary>
-        /// Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
-        /// <value>Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// A reference to a DAG input, a DAG output or another task output. You can also use the ValueReference type to hard-code an input value.
         /// </summary>
@@ -83,11 +83,11 @@ namespace PollinationSDK
         [DataMember(Name = "from", IsRequired = true, EmitDefaultValue = false)]
         public AnyOf<InputFileReference,InputFolderReference,InputPathReference,TaskFileReference,TaskFolderReference,TaskPathReference,ValueFileReference,ValueFolderReference> From { get; set; } 
         /// <summary>
-        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.
         /// </summary>
-        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
-        public Dictionary<string, string> Annotations { get; set; } 
+        /// <value>Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// A sub_path inside the path that is provided in the &#x60;&#x60;from&#x60;&#x60; field. Use sub_path to only access part of the Path that is needed instead of copying all the files and folders inside the path.
         /// </summary>
@@ -115,11 +115,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("TaskPathArgument:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  From: ").Append(From).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  From: ").Append(From).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  SubPath: ").Append(SubPath).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -153,14 +153,6 @@ namespace PollinationSDK
             return DuplicateTaskPathArgument();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateTaskPathArgument();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -182,32 +174,32 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.From == input.From ||
-                    (this.From != null &&
-                    this.From.Equals(input.From))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.From == input.From ||
+                    (this.From != null &&
+                    this.From.Equals(input.From))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.SubPath == input.SubPath ||
                     (this.SubPath != null &&
                     this.SubPath.Equals(input.SubPath))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -219,17 +211,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.From != null)
-                    hashCode = hashCode * 59 + this.From.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.From != null)
+                    hashCode = hashCode * 59 + this.From.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.SubPath != null)
                     hashCode = hashCode * 59 + this.SubPath.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -241,7 +233,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

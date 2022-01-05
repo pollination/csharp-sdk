@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// UserPrivate
     /// </summary>
     [DataContract(Name = "UserPrivate")]
-    public partial class UserPrivate : OpenAPIGenBaseModel, IEquatable<UserPrivate>, IValidatableObject
+    public partial class UserPrivate : IEquatable<UserPrivate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserPrivate" /> class.
@@ -36,69 +36,37 @@ namespace PollinationSDK
         protected UserPrivate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserPrivate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="UserPrivate" /> class.
         /// </summary>
-        /// <param name="id">The unique ID for that user (required).</param>
-        /// <param name="email">The email associated with that user (required).</param>
-        /// <param name="username">The lowercase account name for this user (required).</param>
-        /// <param name="name">The display name for this user.</param>
         /// <param name="description">A short description of the user.</param>
+        /// <param name="email">The email associated with that user (required).</param>
+        /// <param name="id">The unique ID for that user (required).</param>
+        /// <param name="name">The display name for this user.</param>
         /// <param name="picture">URL to the picture associated with this user.</param>
+        /// <param name="username">The lowercase account name for this user (required).</param>
         public UserPrivate
         (
-           string id, string email, string username, // Required parameters
-           string name= default, string description= default, string picture= default // Optional parameters
-        ) : base()// BaseClass
+           string email, string id, string username, // Required parameters
+           string description= default, string name= default, string picture= default // Optional parameters
+        )// BaseClass
         {
-            // to ensure "id" is required (not null)
-            this.Id = id ?? throw new ArgumentNullException("id is a required property for UserPrivate and cannot be null");
             // to ensure "email" is required (not null)
             this.Email = email ?? throw new ArgumentNullException("email is a required property for UserPrivate and cannot be null");
+            // to ensure "id" is required (not null)
+            this.Id = id ?? throw new ArgumentNullException("id is a required property for UserPrivate and cannot be null");
             // to ensure "username" is required (not null)
             this.Username = username ?? throw new ArgumentNullException("username is a required property for UserPrivate and cannot be null");
-            this.Name = name;
             this.Description = description;
+            this.Name = name;
             this.Picture = picture;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserPrivate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UserPrivate";
 
-        /// <summary>
-        /// The unique ID for that user
-        /// </summary>
-        /// <value>The unique ID for that user</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
-        public string Id { get; set; } 
-        /// <summary>
-        /// The email associated with that user
-        /// </summary>
-        /// <value>The email associated with that user</value>
-        [DataMember(Name = "email", IsRequired = true, EmitDefaultValue = false)]
-        public string Email { get; set; } 
-        /// <summary>
-        /// The lowercase account name for this user
-        /// </summary>
-        /// <value>The lowercase account name for this user</value>
-        [DataMember(Name = "username", IsRequired = true, EmitDefaultValue = false)]
-        public string Username { get; set; } 
-        /// <summary>
-        /// The display name for this user
-        /// </summary>
-        /// <value>The display name for this user</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; } 
         /// <summary>
         /// A short description of the user
         /// </summary>
@@ -106,11 +74,35 @@ namespace PollinationSDK
         [DataMember(Name = "description", EmitDefaultValue = false)]
         public string Description { get; set; } 
         /// <summary>
+        /// The email associated with that user
+        /// </summary>
+        /// <value>The email associated with that user</value>
+        [DataMember(Name = "email", IsRequired = true, EmitDefaultValue = false)]
+        public string Email { get; set; } 
+        /// <summary>
+        /// The unique ID for that user
+        /// </summary>
+        /// <value>The unique ID for that user</value>
+        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        public string Id { get; set; } 
+        /// <summary>
+        /// The display name for this user
+        /// </summary>
+        /// <value>The display name for this user</value>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
         /// URL to the picture associated with this user
         /// </summary>
         /// <value>URL to the picture associated with this user</value>
         [DataMember(Name = "picture", EmitDefaultValue = false)]
         public string Picture { get; set; } 
+        /// <summary>
+        /// The lowercase account name for this user
+        /// </summary>
+        /// <value>The lowercase account name for this user</value>
+        [DataMember(Name = "username", IsRequired = true, EmitDefaultValue = false)]
+        public string Username { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -132,13 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UserPrivate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Email: ").Append(Email).Append("\n");
-            sb.Append("  Username: ").Append(Username).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Email: ").Append(Email).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Picture: ").Append(Picture).Append("\n");
+            sb.Append("  Username: ").Append(Username).Append("\n");
             return sb.ToString();
         }
   
@@ -172,14 +163,6 @@ namespace PollinationSDK
             return DuplicateUserPrivate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateUserPrivate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -201,41 +184,36 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Email == input.Email ||
-                    (this.Email != null &&
-                    this.Email.Equals(input.Email))
-                ) && base.Equals(input) && 
-                (
-                    this.Username == input.Username ||
-                    (this.Username != null &&
-                    this.Username.Equals(input.Username))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Email == input.Email ||
+                    (this.Email != null &&
+                    this.Email.Equals(input.Email))
+                ) && 
+                (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Picture == input.Picture ||
                     (this.Picture != null &&
                     this.Picture.Equals(input.Picture))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Username == input.Username ||
+                    (this.Username != null &&
+                    this.Username.Equals(input.Username))
                 );
         }
 
@@ -247,21 +225,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.Email != null)
-                    hashCode = hashCode * 59 + this.Email.GetHashCode();
-                if (this.Username != null)
-                    hashCode = hashCode * 59 + this.Username.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                int hashCode = 41;
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Email != null)
+                    hashCode = hashCode * 59 + this.Email.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Picture != null)
                     hashCode = hashCode * 59 + this.Picture.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Username != null)
+                    hashCode = hashCode * 59 + this.Username.GetHashCode();
                 return hashCode;
             }
         }
@@ -273,16 +249,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^UserPrivate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

@@ -27,19 +27,20 @@ namespace PollinationSDK
     /// An Item Reference.
     /// </summary>
     [DataContract(Name = "ItemReference")]
-    public partial class ItemReference : BaseReference, IEquatable<ItemReference>, IValidatableObject
+    public partial class ItemReference : IEquatable<ItemReference>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ItemReference" /> class.
         /// </summary>
-        /// <param name="variable">The name of the looped item variable (use dot notation for nested json values).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="variable">The name of the looped item variable (use dot notation for nested json values).</param>
         public ItemReference
         (
            // Required parameters
-            Dictionary<string, string> annotations= default, string variable= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+           Dictionary<string, string> annotations= default, string variable= default// Optional parameters
+        )// BaseClass
         {
+            this.Annotations = annotations;
             this.Variable = variable;
 
             // Set non-required readonly properties with defaultValue
@@ -53,6 +54,12 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "ItemReference";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The name of the looped item variable (use dot notation for nested json values)
         /// </summary>
@@ -80,8 +87,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ItemReference:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Variable: ").Append(Variable).Append("\n");
             return sb.ToString();
         }
@@ -116,14 +123,6 @@ namespace PollinationSDK
             return DuplicateItemReference();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override BaseReference DuplicateBaseReference()
-        {
-            return DuplicateItemReference();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -145,16 +144,22 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Variable == input.Variable ||
-                    (this.Variable != null &&
-                    this.Variable.Equals(input.Variable))
-                ) && base.Equals(input) && 
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
+                ) && 
+                (
+                    this.Variable == input.Variable ||
+                    (this.Variable != null &&
+                    this.Variable.Equals(input.Variable))
                 );
         }
 
@@ -166,11 +171,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Variable != null)
-                    hashCode = hashCode * 59 + this.Variable.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Variable != null)
+                    hashCode = hashCode * 59 + this.Variable.GetHashCode();
                 return hashCode;
             }
         }
@@ -182,7 +189,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

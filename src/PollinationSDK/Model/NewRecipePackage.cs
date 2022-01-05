@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// NewRecipePackage
     /// </summary>
     [DataContract(Name = "NewRecipePackage")]
-    public partial class NewRecipePackage : OpenAPIGenBaseModel, IEquatable<NewRecipePackage>, IValidatableObject
+    public partial class NewRecipePackage : IEquatable<NewRecipePackage>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NewRecipePackage" /> class.
@@ -36,7 +36,6 @@ namespace PollinationSDK
         protected NewRecipePackage() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "NewRecipePackage";
         }
         
         /// <summary>
@@ -47,8 +46,8 @@ namespace PollinationSDK
         public NewRecipePackage
         (
            Recipe manifest, // Required parameters
-           string readme = "" // Optional parameters
-        ) : base()// BaseClass
+           string readme = ""// Optional parameters
+        )// BaseClass
         {
             // to ensure "manifest" is required (not null)
             this.Manifest = manifest ?? throw new ArgumentNullException("manifest is a required property for NewRecipePackage and cannot be null");
@@ -56,15 +55,8 @@ namespace PollinationSDK
             this.Readme = readme ?? "";
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "NewRecipePackage";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "NewRecipePackage";
 
         /// <summary>
         /// The Recipe manifest to be created
@@ -99,7 +91,6 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("NewRecipePackage:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Manifest: ").Append(Manifest).Append("\n");
             sb.Append("  Readme: ").Append(Readme).Append("\n");
             return sb.ToString();
@@ -135,14 +126,6 @@ namespace PollinationSDK
             return DuplicateNewRecipePackage();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateNewRecipePackage();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -164,21 +147,16 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Manifest == input.Manifest ||
                     (this.Manifest != null &&
                     this.Manifest.Equals(input.Manifest))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Readme == input.Readme ||
                     (this.Readme != null &&
                     this.Readme.Equals(input.Readme))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -190,13 +168,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Manifest != null)
                     hashCode = hashCode * 59 + this.Manifest.GetHashCode();
                 if (this.Readme != null)
                     hashCode = hashCode * 59 + this.Readme.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -208,16 +184,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^NewRecipePackage$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

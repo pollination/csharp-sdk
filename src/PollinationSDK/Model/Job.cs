@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Queenbee Job.  A Job is an object to submit a list of arguments to execute a Queenbee recipe.
     /// </summary>
     [DataContract(Name = "Job")]
-    public partial class Job : OpenAPIGenBaseModel, IEquatable<Job>, IValidatableObject
+    public partial class Job : IEquatable<Job>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Job" /> class.
@@ -36,57 +36,51 @@ namespace PollinationSDK
         protected Job() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Job";
             this.ApiVersion = "v1beta1";
+            this.Type = "Job";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Job" /> class.
         /// </summary>
-        /// <param name="source">The source url for downloading the recipe. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="arguments">Input arguments for this job..</param>
-        /// <param name="name">An optional name for this job. This name will be used a the display name for the run..</param>
         /// <param name="description">Run description..</param>
         /// <param name="labels">Optional user data as a dictionary. User data is for user reference only and will not be used in the execution of the job..</param>
+        /// <param name="name">An optional name for this job. This name will be used a the display name for the run..</param>
+        /// <param name="source">The source url for downloading the recipe. (required).</param>
         public Job
         (
            string source, // Required parameters
-           Dictionary<string, string> annotations= default, List<List<AnyOf<JobArgument,JobPathArgument>>> arguments= default, string name= default, string description= default, Dictionary<string, string> labels= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, List<List<AnyOf<JobArgument,JobPathArgument>>> arguments= default, string description= default, Dictionary<string, string> labels= default, string name= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "source" is required (not null)
             this.Source = source ?? throw new ArgumentNullException("source is a required property for Job and cannot be null");
             this.Annotations = annotations;
             this.Arguments = arguments;
-            this.Name = name;
             this.Description = description;
             this.Labels = labels;
+            this.Name = name;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Job";
             this.ApiVersion = "v1beta1";
+            this.Type = "Job";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Job";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
         [DataMember(Name = "api_version", EmitDefaultValue = true)]
         public string ApiVersion { get; protected internal set; }  = "v1beta1";
-
+        //============================================== is ReadOnly 
         /// <summary>
-        /// The source url for downloading the recipe.
+        /// Gets or Sets Type
         /// </summary>
-        /// <value>The source url for downloading the recipe.</value>
-        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
-        public string Source { get; set; } 
+        [DataMember(Name = "type", EmitDefaultValue = true)]
+        public string Type { get; protected internal set; }  = "Job";
+
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
@@ -100,12 +94,6 @@ namespace PollinationSDK
         [DataMember(Name = "arguments", EmitDefaultValue = false)]
         public List<List<AnyOf<JobArgument,JobPathArgument>>> Arguments { get; set; } 
         /// <summary>
-        /// An optional name for this job. This name will be used a the display name for the run.
-        /// </summary>
-        /// <value>An optional name for this job. This name will be used a the display name for the run.</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
-        public string Name { get; set; } 
-        /// <summary>
         /// Run description.
         /// </summary>
         /// <value>Run description.</value>
@@ -117,6 +105,18 @@ namespace PollinationSDK
         /// <value>Optional user data as a dictionary. User data is for user reference only and will not be used in the execution of the job.</value>
         [DataMember(Name = "labels", EmitDefaultValue = false)]
         public Dictionary<string, string> Labels { get; set; } 
+        /// <summary>
+        /// An optional name for this job. This name will be used a the display name for the run.
+        /// </summary>
+        /// <value>An optional name for this job. This name will be used a the display name for the run.</value>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// The source url for downloading the recipe.
+        /// </summary>
+        /// <value>The source url for downloading the recipe.</value>
+        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
+        public string Source { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -138,14 +138,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Job:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
             sb.Append("  Arguments: ").Append(Arguments).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Labels: ").Append(Labels).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -179,14 +179,6 @@ namespace PollinationSDK
             return DuplicateJob();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateJob();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -208,49 +200,49 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.ApiVersion == input.ApiVersion ||
                     (this.ApiVersion != null &&
                     this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Arguments == input.Arguments ||
                     this.Arguments != null &&
                     input.Arguments != null &&
                     this.Arguments.SequenceEqual(input.Arguments)
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Labels == input.Labels ||
                     this.Labels != null &&
                     input.Labels != null &&
                     this.Labels.SequenceEqual(input.Labels)
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -262,23 +254,23 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Source != null)
-                    hashCode = hashCode * 59 + this.Source.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.ApiVersion != null)
                     hashCode = hashCode * 59 + this.ApiVersion.GetHashCode();
                 if (this.Arguments != null)
                     hashCode = hashCode * 59 + this.Arguments.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.Labels != null)
                     hashCode = hashCode * 59 + this.Labels.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -290,16 +282,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Job$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
 
             
             // ApiVersion (string) pattern
@@ -307,6 +289,15 @@ namespace PollinationSDK
             if (false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
+            }
+
+
+            
+            // Type (string) pattern
+            Regex regexType = new Regex(@"^Job$", RegexOptions.CultureInvariant);
+            if (false == regexType.Match(this.Type).Success)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
 
             yield break;

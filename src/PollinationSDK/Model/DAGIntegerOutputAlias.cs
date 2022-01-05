@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// DAG alias integer output.  This output loads the content from a file as an integer.
     /// </summary>
     [DataContract(Name = "DAGIntegerOutputAlias")]
-    public partial class DAGIntegerOutputAlias : DAGArtifactOutputAlias, IEquatable<DAGIntegerOutputAlias>, IValidatableObject
+    public partial class DAGIntegerOutputAlias : IEquatable<DAGIntegerOutputAlias>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGIntegerOutputAlias" /> class.
@@ -42,21 +42,30 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGIntegerOutputAlias" /> class.
         /// </summary>
-        /// <param name="from">Reference to a file or a task output. Task output must be file. (required).</param>
-        /// <param name="name">Output name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="description">Optional description for output..</param>
-        /// <param name="platform">Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe. (required).</param>
+        /// <param name="from">Reference to a file or a task output. Task output must be file. (required).</param>
         /// <param name="handler">List of process actions to process the input or output value. (required).</param>
+        /// <param name="name">Output name. (required).</param>
+        /// <param name="platform">Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe. (required).</param>
         /// <param name="required">A boolean to indicate if an artifact output is required. A False value makes the artifact optional. (default to true).</param>
         public DAGIntegerOutputAlias
         (
-            string name, List<string> platform, List<IOAliasHandler> handler, AnyOf<TaskReference,FileReference> from, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default, bool required = true // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, platform: platform, handler: handler, required: required)// BaseClass
+           AnyOf<TaskReference,FileReference> from, List<IOAliasHandler> handler, string name, List<string> platform, // Required parameters
+           Dictionary<string, string> annotations= default, string description= default, bool required = true // Optional parameters
+        )// BaseClass
         {
             // to ensure "from" is required (not null)
             this.From = from ?? throw new ArgumentNullException("from is a required property for DAGIntegerOutputAlias and cannot be null");
+            // to ensure "handler" is required (not null)
+            this.Handler = handler ?? throw new ArgumentNullException("handler is a required property for DAGIntegerOutputAlias and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for DAGIntegerOutputAlias and cannot be null");
+            // to ensure "platform" is required (not null)
+            this.Platform = platform ?? throw new ArgumentNullException("platform is a required property for DAGIntegerOutputAlias and cannot be null");
+            this.Annotations = annotations;
+            this.Description = description;
+            this.Required = required;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "DAGIntegerOutputAlias";
@@ -70,11 +79,47 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "DAGIntegerOutputAlias";
 
         /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Optional description for output.
+        /// </summary>
+        /// <value>Optional description for output.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
         /// Reference to a file or a task output. Task output must be file.
         /// </summary>
         /// <value>Reference to a file or a task output. Task output must be file.</value>
         [DataMember(Name = "from", IsRequired = true, EmitDefaultValue = false)]
         public AnyOf<TaskReference,FileReference> From { get; set; } 
+        /// <summary>
+        /// List of process actions to process the input or output value.
+        /// </summary>
+        /// <value>List of process actions to process the input or output value.</value>
+        [DataMember(Name = "handler", IsRequired = true, EmitDefaultValue = false)]
+        public List<IOAliasHandler> Handler { get; set; } 
+        /// <summary>
+        /// Output name.
+        /// </summary>
+        /// <value>Output name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.
+        /// </summary>
+        /// <value>Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.</value>
+        [DataMember(Name = "platform", IsRequired = true, EmitDefaultValue = false)]
+        public List<string> Platform { get; set; } 
+        /// <summary>
+        /// A boolean to indicate if an artifact output is required. A False value makes the artifact optional.
+        /// </summary>
+        /// <value>A boolean to indicate if an artifact output is required. A False value makes the artifact optional.</value>
+        [DataMember(Name = "required", EmitDefaultValue = true)]
+        public bool Required { get; set; }  = true;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -96,14 +141,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGIntegerOutputAlias:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Platform: ").Append(Platform).Append("\n");
-            sb.Append("  Handler: ").Append(Handler).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
             sb.Append("  From: ").Append(From).Append("\n");
+            sb.Append("  Handler: ").Append(Handler).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Platform: ").Append(Platform).Append("\n");
+            sb.Append("  Required: ").Append(Required).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -137,14 +182,6 @@ namespace PollinationSDK
             return DuplicateDAGIntegerOutputAlias();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override DAGArtifactOutputAlias DuplicateDAGArtifactOutputAlias()
-        {
-            return DuplicateDAGIntegerOutputAlias();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -166,12 +203,45 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.From == input.From ||
                     (this.From != null &&
                     this.From.Equals(input.From))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Handler == input.Handler ||
+                    this.Handler != null &&
+                    input.Handler != null &&
+                    this.Handler.SequenceEqual(input.Handler)
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Platform == input.Platform ||
+                    this.Platform != null &&
+                    input.Platform != null &&
+                    this.Platform.SequenceEqual(input.Platform)
+                ) && 
+                (
+                    this.Required == input.Required ||
+                    (this.Required != null &&
+                    this.Required.Equals(input.Required))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -187,9 +257,21 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.From != null)
                     hashCode = hashCode * 59 + this.From.GetHashCode();
+                if (this.Handler != null)
+                    hashCode = hashCode * 59 + this.Handler.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Platform != null)
+                    hashCode = hashCode * 59 + this.Platform.GetHashCode();
+                if (this.Required != null)
+                    hashCode = hashCode * 59 + this.Required.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -203,7 +285,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

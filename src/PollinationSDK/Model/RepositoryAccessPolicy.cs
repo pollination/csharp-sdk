@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// RepositoryAccessPolicy
     /// </summary>
     [DataContract(Name = "RepositoryAccessPolicy")]
-    public partial class RepositoryAccessPolicy : OpenAPIGenBaseModel, IEquatable<RepositoryAccessPolicy>, IValidatableObject
+    public partial class RepositoryAccessPolicy : IEquatable<RepositoryAccessPolicy>, IValidatableObject
     {
         /// <summary>
         /// The permission given to the subject of the access policy
@@ -42,34 +42,26 @@ namespace PollinationSDK
         protected RepositoryAccessPolicy() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RepositoryAccessPolicy";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="RepositoryAccessPolicy" /> class.
         /// </summary>
-        /// <param name="subject">The subject of the access policy (required).</param>
         /// <param name="permission">The permission given to the subject of the access policy (required).</param>
+        /// <param name="subject">The subject of the access policy (required).</param>
         public RepositoryAccessPolicy
         (
-           PolicySubject subject, Permission permission// Required parameters
+           Permission permission, PolicySubject subject// Required parameters
            // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
+            this.Permission = permission;
             // to ensure "subject" is required (not null)
             this.Subject = subject ?? throw new ArgumentNullException("subject is a required property for RepositoryAccessPolicy and cannot be null");
-            this.Permission = permission;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "RepositoryAccessPolicy";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RepositoryAccessPolicy";
 
         /// <summary>
         /// The subject of the access policy
@@ -98,9 +90,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryAccessPolicy:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Subject: ").Append(Subject).Append("\n");
             sb.Append("  Permission: ").Append(Permission).Append("\n");
+            sb.Append("  Subject: ").Append(Subject).Append("\n");
             return sb.ToString();
         }
   
@@ -134,14 +125,6 @@ namespace PollinationSDK
             return DuplicateRepositoryAccessPolicy();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateRepositoryAccessPolicy();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -163,21 +146,16 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Subject == input.Subject ||
-                    (this.Subject != null &&
-                    this.Subject.Equals(input.Subject))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Permission == input.Permission ||
                     (this.Permission != null &&
                     this.Permission.Equals(input.Permission))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Subject == input.Subject ||
+                    (this.Subject != null &&
+                    this.Subject.Equals(input.Subject))
                 );
         }
 
@@ -189,13 +167,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Subject != null)
-                    hashCode = hashCode * 59 + this.Subject.GetHashCode();
+                int hashCode = 41;
                 if (this.Permission != null)
                     hashCode = hashCode * 59 + this.Permission.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Subject != null)
+                    hashCode = hashCode * 59 + this.Subject.GetHashCode();
                 return hashCode;
             }
         }
@@ -207,16 +183,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^RepositoryAccessPolicy$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

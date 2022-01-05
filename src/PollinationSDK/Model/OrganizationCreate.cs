@@ -27,34 +27,62 @@ namespace PollinationSDK
     /// OrganizationCreate
     /// </summary>
     [DataContract(Name = "OrganizationCreate")]
-    public partial class OrganizationCreate : OrganizationUpdate, IEquatable<OrganizationCreate>, IValidatableObject
+    public partial class OrganizationCreate : IEquatable<OrganizationCreate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OrganizationCreate" /> class.
         /// </summary>
         /// <param name="accountName">The unique name of the org in small case without spaces.</param>
-        /// <param name="name">The display name for this org.</param>
-        /// <param name="pictureUrl">URL to the picture associated with this org.</param>
         /// <param name="contactEmail">The contact email for the Organization.</param>
         /// <param name="description">A description of the org.</param>
+        /// <param name="name">The display name for this org.</param>
+        /// <param name="pictureUrl">URL to the picture associated with this org.</param>
         public OrganizationCreate
         (
            // Required parameters
-            string accountName= default, string name= default, string pictureUrl= default, string contactEmail= default, string description= default // Optional parameters
-        ) : base(accountName: accountName, name: name, pictureUrl: pictureUrl, contactEmail: contactEmail, description: description)// BaseClass
+           string accountName= default, string contactEmail= default, string description= default, string name= default, string pictureUrl= default// Optional parameters
+        )// BaseClass
         {
+            this.AccountName = accountName;
+            this.ContactEmail = contactEmail;
+            this.Description = description;
+            this.Name = name;
+            this.PictureUrl = pictureUrl;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "OrganizationCreate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "OrganizationCreate";
 
+        /// <summary>
+        /// The unique name of the org in small case without spaces
+        /// </summary>
+        /// <value>The unique name of the org in small case without spaces</value>
+        [DataMember(Name = "account_name", EmitDefaultValue = false)]
+        public string AccountName { get; set; } 
+        /// <summary>
+        /// The contact email for the Organization
+        /// </summary>
+        /// <value>The contact email for the Organization</value>
+        [DataMember(Name = "contact_email", EmitDefaultValue = false)]
+        public string ContactEmail { get; set; } 
+        /// <summary>
+        /// A description of the org
+        /// </summary>
+        /// <value>A description of the org</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// The display name for this org
+        /// </summary>
+        /// <value>The display name for this org</value>
+        [DataMember(Name = "name", EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// URL to the picture associated with this org
+        /// </summary>
+        /// <value>URL to the picture associated with this org</value>
+        [DataMember(Name = "picture_url", EmitDefaultValue = false)]
+        public string PictureUrl { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -76,12 +104,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("OrganizationCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  AccountName: ").Append(AccountName).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
             sb.Append("  ContactEmail: ").Append(ContactEmail).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
             return sb.ToString();
         }
   
@@ -115,14 +142,6 @@ namespace PollinationSDK
             return DuplicateOrganizationCreate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OrganizationUpdate DuplicateOrganizationUpdate()
-        {
-            return DuplicateOrganizationCreate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -144,11 +163,31 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.AccountName == input.AccountName ||
+                    (this.AccountName != null &&
+                    this.AccountName.Equals(input.AccountName))
+                ) && 
+                (
+                    this.ContactEmail == input.ContactEmail ||
+                    (this.ContactEmail != null &&
+                    this.ContactEmail.Equals(input.ContactEmail))
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.PictureUrl == input.PictureUrl ||
+                    (this.PictureUrl != null &&
+                    this.PictureUrl.Equals(input.PictureUrl))
                 );
         }
 
@@ -160,9 +199,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
+                if (this.AccountName != null)
+                    hashCode = hashCode * 59 + this.AccountName.GetHashCode();
+                if (this.ContactEmail != null)
+                    hashCode = hashCode * 59 + this.ContactEmail.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.PictureUrl != null)
+                    hashCode = hashCode * 59 + this.PictureUrl.GetHashCode();
                 return hashCode;
             }
         }
@@ -174,16 +221,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^OrganizationCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

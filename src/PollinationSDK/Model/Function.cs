@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A Function with a single command
     /// </summary>
     [DataContract(Name = "Function")]
-    public partial class Function : OpenAPIGenBaseModel, IEquatable<Function>, IValidatableObject
+    public partial class Function : IEquatable<Function>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Function" /> class.
@@ -42,26 +42,26 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="Function" /> class.
         /// </summary>
-        /// <param name="name">Function name. Must be unique within a plugin. (required).</param>
-        /// <param name="command">Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using | (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="inputs">Input arguments for this function..</param>
-        /// <param name="outputs">List of output arguments..</param>
+        /// <param name="command">Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using | (required).</param>
         /// <param name="description">Function description. A short human readable description for this function..</param>
+        /// <param name="inputs">Input arguments for this function..</param>
+        /// <param name="name">Function name. Must be unique within a plugin. (required).</param>
+        /// <param name="outputs">List of output arguments..</param>
         public Function
         (
-           string name, string command, // Required parameters
-           Dictionary<string, string> annotations= default, List<AnyOf<FunctionStringInput,FunctionIntegerInput,FunctionNumberInput,FunctionBooleanInput,FunctionFolderInput,FunctionFileInput,FunctionPathInput,FunctionArrayInput,FunctionJSONObjectInput>> inputs= default, List<AnyOf<FunctionStringOutput,FunctionIntegerOutput,FunctionNumberOutput,FunctionBooleanOutput,FunctionFolderOutput,FunctionFileOutput,FunctionPathOutput,FunctionArrayOutput,FunctionJSONObjectOutput>> outputs= default, string description= default // Optional parameters
-        ) : base()// BaseClass
+           string command, string name, // Required parameters
+           Dictionary<string, string> annotations= default, string description= default, List<AnyOf<FunctionStringInput,FunctionIntegerInput,FunctionNumberInput,FunctionBooleanInput,FunctionFolderInput,FunctionFileInput,FunctionPathInput,FunctionArrayInput,FunctionJSONObjectInput>> inputs= default, List<AnyOf<FunctionStringOutput,FunctionIntegerOutput,FunctionNumberOutput,FunctionBooleanOutput,FunctionFolderOutput,FunctionFileOutput,FunctionPathOutput,FunctionArrayOutput,FunctionJSONObjectOutput>> outputs= default // Optional parameters
+        )// BaseClass
         {
-            // to ensure "name" is required (not null)
-            this.Name = name ?? throw new ArgumentNullException("name is a required property for Function and cannot be null");
             // to ensure "command" is required (not null)
             this.Command = command ?? throw new ArgumentNullException("command is a required property for Function and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for Function and cannot be null");
             this.Annotations = annotations;
+            this.Description = description;
             this.Inputs = inputs;
             this.Outputs = outputs;
-            this.Description = description;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "Function";
@@ -75,11 +75,11 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "Function";
 
         /// <summary>
-        /// Function name. Must be unique within a plugin.
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
-        /// <value>Function name. Must be unique within a plugin.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using |
         /// </summary>
@@ -87,11 +87,11 @@ namespace PollinationSDK
         [DataMember(Name = "command", IsRequired = true, EmitDefaultValue = false)]
         public string Command { get; set; } 
         /// <summary>
-        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// Function description. A short human readable description for this function.
         /// </summary>
-        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
-        public Dictionary<string, string> Annotations { get; set; } 
+        /// <value>Function description. A short human readable description for this function.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
         /// <summary>
         /// Input arguments for this function.
         /// </summary>
@@ -99,17 +99,17 @@ namespace PollinationSDK
         [DataMember(Name = "inputs", EmitDefaultValue = false)]
         public List<AnyOf<FunctionStringInput,FunctionIntegerInput,FunctionNumberInput,FunctionBooleanInput,FunctionFolderInput,FunctionFileInput,FunctionPathInput,FunctionArrayInput,FunctionJSONObjectInput>> Inputs { get; set; } 
         /// <summary>
+        /// Function name. Must be unique within a plugin.
+        /// </summary>
+        /// <value>Function name. Must be unique within a plugin.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
         /// List of output arguments.
         /// </summary>
         /// <value>List of output arguments.</value>
         [DataMember(Name = "outputs", EmitDefaultValue = false)]
         public List<AnyOf<FunctionStringOutput,FunctionIntegerOutput,FunctionNumberOutput,FunctionBooleanOutput,FunctionFolderOutput,FunctionFileOutput,FunctionPathOutput,FunctionArrayOutput,FunctionJSONObjectOutput>> Outputs { get; set; } 
-        /// <summary>
-        /// Function description. A short human readable description for this function.
-        /// </summary>
-        /// <value>Function description. A short human readable description for this function.</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
-        public string Description { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -131,13 +131,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Function:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Command: ").Append(Command).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
+            sb.Append("  Command: ").Append(Command).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -171,14 +171,6 @@ namespace PollinationSDK
             return DuplicateFunction();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateFunction();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -200,40 +192,40 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Command == input.Command ||
-                    (this.Command != null &&
-                    this.Command.Equals(input.Command))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Command == input.Command ||
+                    (this.Command != null &&
+                    this.Command.Equals(input.Command))
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.Inputs == input.Inputs ||
                     this.Inputs != null &&
                     input.Inputs != null &&
                     this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
                     this.Outputs != null &&
                     input.Outputs != null &&
                     this.Outputs.SequenceEqual(input.Outputs)
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -249,19 +241,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Command != null)
-                    hashCode = hashCode * 59 + this.Command.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
-                if (this.Inputs != null)
-                    hashCode = hashCode * 59 + this.Inputs.GetHashCode();
-                if (this.Outputs != null)
-                    hashCode = hashCode * 59 + this.Outputs.GetHashCode();
+                if (this.Command != null)
+                    hashCode = hashCode * 59 + this.Command.GetHashCode();
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Inputs != null)
+                    hashCode = hashCode * 59 + this.Inputs.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Outputs != null)
+                    hashCode = hashCode * 59 + this.Outputs.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -275,7 +267,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

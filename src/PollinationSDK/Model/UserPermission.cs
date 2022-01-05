@@ -27,34 +27,27 @@ namespace PollinationSDK
     /// UserPermission
     /// </summary>
     [DataContract(Name = "UserPermission")]
-    public partial class UserPermission : OpenAPIGenBaseModel, IEquatable<UserPermission>, IValidatableObject
+    public partial class UserPermission : IEquatable<UserPermission>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserPermission" /> class.
         /// </summary>
         /// <param name="admin">The user has admin permission to this resource (default to false).</param>
-        /// <param name="write">The user has write permission on this resource (default to false).</param>
         /// <param name="read">The user has read permission on this resource (default to false).</param>
+        /// <param name="write">The user has write permission on this resource (default to false).</param>
         public UserPermission
         (
            // Required parameters
-           bool admin = false, bool write = false, bool read = false // Optional parameters
-        ) : base()// BaseClass
+           bool admin = false, bool read = false, bool write = false// Optional parameters
+        )// BaseClass
         {
             this.Admin = admin;
-            this.Write = write;
             this.Read = read;
+            this.Write = write;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserPermission";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UserPermission";
 
         /// <summary>
         /// The user has admin permission to this resource
@@ -63,17 +56,17 @@ namespace PollinationSDK
         [DataMember(Name = "admin", EmitDefaultValue = true)]
         public bool Admin { get; set; }  = false;
         /// <summary>
-        /// The user has write permission on this resource
-        /// </summary>
-        /// <value>The user has write permission on this resource</value>
-        [DataMember(Name = "write", EmitDefaultValue = true)]
-        public bool Write { get; set; }  = false;
-        /// <summary>
         /// The user has read permission on this resource
         /// </summary>
         /// <value>The user has read permission on this resource</value>
         [DataMember(Name = "read", EmitDefaultValue = true)]
         public bool Read { get; set; }  = false;
+        /// <summary>
+        /// The user has write permission on this resource
+        /// </summary>
+        /// <value>The user has write permission on this resource</value>
+        [DataMember(Name = "write", EmitDefaultValue = true)]
+        public bool Write { get; set; }  = false;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -95,10 +88,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UserPermission:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Admin: ").Append(Admin).Append("\n");
-            sb.Append("  Write: ").Append(Write).Append("\n");
             sb.Append("  Read: ").Append(Read).Append("\n");
+            sb.Append("  Write: ").Append(Write).Append("\n");
             return sb.ToString();
         }
   
@@ -132,14 +124,6 @@ namespace PollinationSDK
             return DuplicateUserPermission();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateUserPermission();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -161,26 +145,21 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Admin == input.Admin ||
                     (this.Admin != null &&
                     this.Admin.Equals(input.Admin))
-                ) && base.Equals(input) && 
-                (
-                    this.Write == input.Write ||
-                    (this.Write != null &&
-                    this.Write.Equals(input.Write))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Read == input.Read ||
                     (this.Read != null &&
                     this.Read.Equals(input.Read))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Write == input.Write ||
+                    (this.Write != null &&
+                    this.Write.Equals(input.Write))
                 );
         }
 
@@ -192,15 +171,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Admin != null)
                     hashCode = hashCode * 59 + this.Admin.GetHashCode();
-                if (this.Write != null)
-                    hashCode = hashCode * 59 + this.Write.GetHashCode();
                 if (this.Read != null)
                     hashCode = hashCode * 59 + this.Read.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Write != null)
+                    hashCode = hashCode * 59 + this.Write.GetHashCode();
                 return hashCode;
             }
         }
@@ -212,26 +189,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^UserPermission$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

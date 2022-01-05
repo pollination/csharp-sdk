@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// An Alias for Linked Inputs.  A linked input alias will be hidden in the UI and will be linked to an object in  the UI using the input handler.
     /// </summary>
     [DataContract(Name = "DAGLinkedInputAlias")]
-    public partial class DAGLinkedInputAlias : DAGGenericInputAlias, IEquatable<DAGLinkedInputAlias>, IValidatableObject
+    public partial class DAGLinkedInputAlias : IEquatable<DAGLinkedInputAlias>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGLinkedInputAlias" /> class.
@@ -42,20 +42,31 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGLinkedInputAlias" /> class.
         /// </summary>
-        /// <param name="name">Input name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="description">Optional description for input..</param>
-        /// <param name="platform">Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe. (required).</param>
-        /// <param name="handler">List of process actions to process the input or output value. (required).</param>
         /// <param name="_default">Default value for generic input..</param>
+        /// <param name="description">Optional description for input..</param>
+        /// <param name="handler">List of process actions to process the input or output value. (required).</param>
+        /// <param name="name">Input name. (required).</param>
+        /// <param name="platform">Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe. (required).</param>
         /// <param name="required">A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided. (default to false).</param>
         /// <param name="spec">An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec..</param>
         public DAGLinkedInputAlias
         (
-            string name, List<string> platform, List<IOAliasHandler> handler, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default, string _default= default, bool required = false, Object spec= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, platform: platform, handler: handler, _default: _default, required: required, spec: spec)// BaseClass
+           List<IOAliasHandler> handler, string name, List<string> platform, // Required parameters
+           Dictionary<string, string> annotations= default, string _default= default, string description= default, bool required = false, Object spec= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "handler" is required (not null)
+            this.Handler = handler ?? throw new ArgumentNullException("handler is a required property for DAGLinkedInputAlias and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for DAGLinkedInputAlias and cannot be null");
+            // to ensure "platform" is required (not null)
+            this.Platform = platform ?? throw new ArgumentNullException("platform is a required property for DAGLinkedInputAlias and cannot be null");
+            this.Annotations = annotations;
+            this.Default = _default;
+            this.Description = description;
+            this.Required = required;
+            this.Spec = spec;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "DAGLinkedInputAlias";
@@ -68,6 +79,54 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "DAGLinkedInputAlias";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Default value for generic input.
+        /// </summary>
+        /// <value>Default value for generic input.</value>
+        [DataMember(Name = "default", EmitDefaultValue = false)]
+        public string Default { get; set; } 
+        /// <summary>
+        /// Optional description for input.
+        /// </summary>
+        /// <value>Optional description for input.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// List of process actions to process the input or output value.
+        /// </summary>
+        /// <value>List of process actions to process the input or output value.</value>
+        [DataMember(Name = "handler", IsRequired = true, EmitDefaultValue = false)]
+        public List<IOAliasHandler> Handler { get; set; } 
+        /// <summary>
+        /// Input name.
+        /// </summary>
+        /// <value>Input name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.
+        /// </summary>
+        /// <value>Name of the client platform (e.g. Grasshopper, Revit, etc). The value can be any strings as long as it has been agreed between client-side developer and author of the recipe.</value>
+        [DataMember(Name = "platform", IsRequired = true, EmitDefaultValue = false)]
+        public List<string> Platform { get; set; } 
+        /// <summary>
+        /// A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.
+        /// </summary>
+        /// <value>A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.</value>
+        [DataMember(Name = "required", EmitDefaultValue = true)]
+        public bool Required { get; set; }  = false;
+        /// <summary>
+        /// An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.
+        /// </summary>
+        /// <value>An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.</value>
+        [DataMember(Name = "spec", EmitDefaultValue = false)]
+        public Object Spec { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -89,15 +148,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGLinkedInputAlias:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Platform: ").Append(Platform).Append("\n");
-            sb.Append("  Handler: ").Append(Handler).Append("\n");
             sb.Append("  Default: ").Append(Default).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Handler: ").Append(Handler).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Platform: ").Append(Platform).Append("\n");
             sb.Append("  Required: ").Append(Required).Append("\n");
             sb.Append("  Spec: ").Append(Spec).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -131,14 +190,6 @@ namespace PollinationSDK
             return DuplicateDAGLinkedInputAlias();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override DAGGenericInputAlias DuplicateDAGGenericInputAlias()
-        {
-            return DuplicateDAGLinkedInputAlias();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -160,7 +211,50 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Default == input.Default ||
+                    (this.Default != null &&
+                    this.Default.Equals(input.Default))
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Handler == input.Handler ||
+                    this.Handler != null &&
+                    input.Handler != null &&
+                    this.Handler.SequenceEqual(input.Handler)
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Platform == input.Platform ||
+                    this.Platform != null &&
+                    input.Platform != null &&
+                    this.Platform.SequenceEqual(input.Platform)
+                ) && 
+                (
+                    this.Required == input.Required ||
+                    (this.Required != null &&
+                    this.Required.Equals(input.Required))
+                ) && 
+                (
+                    this.Spec == input.Spec ||
+                    (this.Spec != null &&
+                    this.Spec.Equals(input.Spec))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -176,7 +270,23 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Default != null)
+                    hashCode = hashCode * 59 + this.Default.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Handler != null)
+                    hashCode = hashCode * 59 + this.Handler.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Platform != null)
+                    hashCode = hashCode * 59 + this.Platform.GetHashCode();
+                if (this.Required != null)
+                    hashCode = hashCode * 59 + this.Required.GetHashCode();
+                if (this.Spec != null)
+                    hashCode = hashCode * 59 + this.Spec.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -190,7 +300,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

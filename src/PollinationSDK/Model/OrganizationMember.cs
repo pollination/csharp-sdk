@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// OrganizationMember
     /// </summary>
     [DataContract(Name = "OrganizationMember")]
-    public partial class OrganizationMember : OpenAPIGenBaseModel, IEquatable<OrganizationMember>, IValidatableObject
+    public partial class OrganizationMember : IEquatable<OrganizationMember>, IValidatableObject
     {
         /// <summary>
         /// The role the user has within the organization
@@ -42,34 +42,26 @@ namespace PollinationSDK
         protected OrganizationMember() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "OrganizationMember";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="OrganizationMember" /> class.
         /// </summary>
-        /// <param name="user">The organization member (required).</param>
         /// <param name="role">The role the user has within the organization (required).</param>
+        /// <param name="user">The organization member (required).</param>
         public OrganizationMember
         (
-           UserPublic user, OrganizationRoleEnum role// Required parameters
+           OrganizationRoleEnum role, UserPublic user// Required parameters
            // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
+            this.Role = role;
             // to ensure "user" is required (not null)
             this.User = user ?? throw new ArgumentNullException("user is a required property for OrganizationMember and cannot be null");
-            this.Role = role;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "OrganizationMember";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "OrganizationMember";
 
         /// <summary>
         /// The organization member
@@ -98,9 +90,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("OrganizationMember:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  User: ").Append(User).Append("\n");
             sb.Append("  Role: ").Append(Role).Append("\n");
+            sb.Append("  User: ").Append(User).Append("\n");
             return sb.ToString();
         }
   
@@ -134,14 +125,6 @@ namespace PollinationSDK
             return DuplicateOrganizationMember();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateOrganizationMember();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -163,21 +146,16 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.User == input.User ||
-                    (this.User != null &&
-                    this.User.Equals(input.User))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Role == input.Role ||
                     (this.Role != null &&
                     this.Role.Equals(input.Role))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.User == input.User ||
+                    (this.User != null &&
+                    this.User.Equals(input.User))
                 );
         }
 
@@ -189,13 +167,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.User != null)
-                    hashCode = hashCode * 59 + this.User.GetHashCode();
+                int hashCode = 41;
                 if (this.Role != null)
                     hashCode = hashCode * 59 + this.Role.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.User != null)
+                    hashCode = hashCode * 59 + this.User.GetHashCode();
                 return hashCode;
             }
         }
@@ -207,16 +183,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^OrganizationMember$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

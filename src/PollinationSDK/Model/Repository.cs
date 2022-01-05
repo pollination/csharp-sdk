@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Repository
     /// </summary>
     [DataContract(Name = "Repository")]
-    public partial class Repository : RepositoryCreate, IEquatable<Repository>, IValidatableObject
+    public partial class Repository : IEquatable<Repository>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository" /> class.
@@ -36,48 +36,58 @@ namespace PollinationSDK
         protected Repository() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Repository";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Repository" /> class.
         /// </summary>
-        /// <param name="id">The recipe unique ID (required).</param>
-        /// <param name="latestTag">The latest package version to be indexed (required).</param>
-        /// <param name="owner">The owner of the repository (required).</param>
-        /// <param name="permissions">The permissions the user making the API call has on the resource.</param>
-        /// <param name="slug">The repository slug.</param>
-        /// <param name="_public">Whether or not a repository is publicly viewable.</param>
-        /// <param name="keywords">A list of keywords to index the repository by.</param>
         /// <param name="description">A description of the repository.</param>
         /// <param name="icon">An icon to represent this repository.</param>
+        /// <param name="id">The recipe unique ID (required).</param>
+        /// <param name="keywords">A list of keywords to index the repository by.</param>
+        /// <param name="latestTag">The latest package version to be indexed (required).</param>
         /// <param name="name">The name of the repository (required).</param>
+        /// <param name="owner">The owner of the repository (required).</param>
+        /// <param name="permissions">The permissions the user making the API call has on the resource.</param>
+        /// <param name="_public">Whether or not a repository is publicly viewable.</param>
+        /// <param name="slug">The repository slug.</param>
         public Repository
         (
-            string name, string id, string latestTag, AccountPublic owner, // Required parameters
-            bool _public= default, List<string> keywords= default, string description= default, string icon= default, RepositoryUserPermissions permissions= default, string slug= default // Optional parameters
-        ) : base(_public: _public, keywords: keywords, description: description, icon: icon, name: name)// BaseClass
+           string id, string latestTag, string name, AccountPublic owner, // Required parameters
+           string description= default, string icon= default, List<string> keywords= default, RepositoryUserPermissions permissions= default, bool _public= default, string slug= default// Optional parameters
+        )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Repository and cannot be null");
             // to ensure "latestTag" is required (not null)
             this.LatestTag = latestTag ?? throw new ArgumentNullException("latestTag is a required property for Repository and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for Repository and cannot be null");
             // to ensure "owner" is required (not null)
             this.Owner = owner ?? throw new ArgumentNullException("owner is a required property for Repository and cannot be null");
+            this.Description = description;
+            this.Icon = icon;
+            this.Keywords = keywords;
             this.Permissions = permissions;
+            this.Public = _public;
             this.Slug = slug;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Repository";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Repository";
 
+        /// <summary>
+        /// A description of the repository
+        /// </summary>
+        /// <value>A description of the repository</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// An icon to represent this repository
+        /// </summary>
+        /// <value>An icon to represent this repository</value>
+        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        public string Icon { get; set; } 
         /// <summary>
         /// The recipe unique ID
         /// </summary>
@@ -85,11 +95,23 @@ namespace PollinationSDK
         [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
         public string Id { get; set; } 
         /// <summary>
+        /// A list of keywords to index the repository by
+        /// </summary>
+        /// <value>A list of keywords to index the repository by</value>
+        [DataMember(Name = "keywords", EmitDefaultValue = false)]
+        public List<string> Keywords { get; set; } 
+        /// <summary>
         /// The latest package version to be indexed
         /// </summary>
         /// <value>The latest package version to be indexed</value>
         [DataMember(Name = "latest_tag", IsRequired = true, EmitDefaultValue = false)]
         public string LatestTag { get; set; } 
+        /// <summary>
+        /// The name of the repository
+        /// </summary>
+        /// <value>The name of the repository</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// The owner of the repository
         /// </summary>
@@ -102,6 +124,12 @@ namespace PollinationSDK
         /// <value>The permissions the user making the API call has on the resource</value>
         [DataMember(Name = "permissions", EmitDefaultValue = false)]
         public RepositoryUserPermissions Permissions { get; set; } 
+        /// <summary>
+        /// Whether or not a repository is publicly viewable
+        /// </summary>
+        /// <value>Whether or not a repository is publicly viewable</value>
+        [DataMember(Name = "public", EmitDefaultValue = false)]
+        public bool Public { get; set; } 
         /// <summary>
         /// The repository slug
         /// </summary>
@@ -129,16 +157,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Repository:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Icon: ").Append(Icon).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
             sb.Append("  LatestTag: ").Append(LatestTag).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Owner: ").Append(Owner).Append("\n");
             sb.Append("  Permissions: ").Append(Permissions).Append("\n");
+            sb.Append("  Public: ").Append(Public).Append("\n");
             sb.Append("  Slug: ").Append(Slug).Append("\n");
             return sb.ToString();
         }
@@ -173,14 +200,6 @@ namespace PollinationSDK
             return DuplicateRepository();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override RepositoryCreate DuplicateRepositoryCreate()
-        {
-            return DuplicateRepository();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -202,36 +221,57 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.Icon == input.Icon ||
+                    (this.Icon != null &&
+                    this.Icon.Equals(input.Icon))
+                ) && 
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Keywords == input.Keywords ||
+                    this.Keywords != null &&
+                    input.Keywords != null &&
+                    this.Keywords.SequenceEqual(input.Keywords)
+                ) && 
                 (
                     this.LatestTag == input.LatestTag ||
                     (this.LatestTag != null &&
                     this.LatestTag.Equals(input.LatestTag))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Owner == input.Owner ||
                     (this.Owner != null &&
                     this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Permissions == input.Permissions ||
                     (this.Permissions != null &&
                     this.Permissions.Equals(input.Permissions))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Public == input.Public ||
+                    (this.Public != null &&
+                    this.Public.Equals(input.Public))
+                ) && 
                 (
                     this.Slug == input.Slug ||
                     (this.Slug != null &&
                     this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -243,19 +283,27 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Icon != null)
+                    hashCode = hashCode * 59 + this.Icon.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Keywords != null)
+                    hashCode = hashCode * 59 + this.Keywords.GetHashCode();
                 if (this.LatestTag != null)
                     hashCode = hashCode * 59 + this.LatestTag.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Owner != null)
                     hashCode = hashCode * 59 + this.Owner.GetHashCode();
                 if (this.Permissions != null)
                     hashCode = hashCode * 59 + this.Permissions.GetHashCode();
+                if (this.Public != null)
+                    hashCode = hashCode * 59 + this.Public.GetHashCode();
                 if (this.Slug != null)
                     hashCode = hashCode * 59 + this.Slug.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -267,16 +315,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Repository$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Content for created response.
     /// </summary>
     [DataContract(Name = "CreatedContent")]
-    public partial class CreatedContent : OpenAPIGenBaseModel, IEquatable<CreatedContent>, IValidatableObject
+    public partial class CreatedContent : IEquatable<CreatedContent>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatedContent" /> class.
@@ -36,7 +36,6 @@ namespace PollinationSDK
         protected CreatedContent() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "CreatedContent";
         }
         
         /// <summary>
@@ -47,22 +46,15 @@ namespace PollinationSDK
         public CreatedContent
         (
            Guid id, // Required parameters
-           string message= default // Optional parameters
-        ) : base()// BaseClass
+           string message= default// Optional parameters
+        )// BaseClass
         {
             this.Id = id;
             this.Message = message;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "CreatedContent";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "CreatedContent";
 
         /// <summary>
         /// Id for the newly created resource.
@@ -97,7 +89,6 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("CreatedContent:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  Message: ").Append(Message).Append("\n");
             return sb.ToString();
@@ -133,14 +124,6 @@ namespace PollinationSDK
             return DuplicateCreatedContent();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateCreatedContent();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -162,21 +145,16 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Message == input.Message ||
                     (this.Message != null &&
                     this.Message.Equals(input.Message))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -188,13 +166,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
                 if (this.Message != null)
                     hashCode = hashCode * 59 + this.Message.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -206,16 +182,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^CreatedContent$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

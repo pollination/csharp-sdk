@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Plugin Configuration to run in a Docker container
     /// </summary>
     [DataContract(Name = "DockerConfig")]
-    public partial class DockerConfig : OpenAPIGenBaseModel, IEquatable<DockerConfig>, IValidatableObject
+    public partial class DockerConfig : IEquatable<DockerConfig>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DockerConfig" /> class.
@@ -42,15 +42,15 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="DockerConfig" /> class.
         /// </summary>
-        /// <param name="image">Docker image name. Must include tag. (required).</param>
-        /// <param name="workdir">The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="image">Docker image name. Must include tag. (required).</param>
         /// <param name="registry">The container registry URLs that this container should be pulled from. Will default to Dockerhub if none is specified..</param>
+        /// <param name="workdir">The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container. (required).</param>
         public DockerConfig
         (
            string image, string workdir, // Required parameters
-           Dictionary<string, string> annotations= default, string registry= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, string registry= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "image" is required (not null)
             this.Image = image ?? throw new ArgumentNullException("image is a required property for DockerConfig and cannot be null");
@@ -71,29 +71,29 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "DockerConfig";
 
         /// <summary>
-        /// Docker image name. Must include tag.
-        /// </summary>
-        /// <value>Docker image name. Must include tag.</value>
-        [DataMember(Name = "image", IsRequired = true, EmitDefaultValue = false)]
-        public string Image { get; set; } 
-        /// <summary>
-        /// The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container.
-        /// </summary>
-        /// <value>The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container.</value>
-        [DataMember(Name = "workdir", IsRequired = true, EmitDefaultValue = false)]
-        public string Workdir { get; set; } 
-        /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
+        /// Docker image name. Must include tag.
+        /// </summary>
+        /// <value>Docker image name. Must include tag.</value>
+        [DataMember(Name = "image", IsRequired = true, EmitDefaultValue = false)]
+        public string Image { get; set; } 
+        /// <summary>
         /// The container registry URLs that this container should be pulled from. Will default to Dockerhub if none is specified.
         /// </summary>
         /// <value>The container registry URLs that this container should be pulled from. Will default to Dockerhub if none is specified.</value>
         [DataMember(Name = "registry", EmitDefaultValue = false)]
         public string Registry { get; set; } 
+        /// <summary>
+        /// The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container.
+        /// </summary>
+        /// <value>The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container.</value>
+        [DataMember(Name = "workdir", IsRequired = true, EmitDefaultValue = false)]
+        public string Workdir { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -115,11 +115,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DockerConfig:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Image: ").Append(Image).Append("\n");
-            sb.Append("  Workdir: ").Append(Workdir).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Image: ").Append(Image).Append("\n");
             sb.Append("  Registry: ").Append(Registry).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Workdir: ").Append(Workdir).Append("\n");
             return sb.ToString();
         }
   
@@ -153,14 +153,6 @@ namespace PollinationSDK
             return DuplicateDockerConfig();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateDockerConfig();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -182,32 +174,32 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Image == input.Image ||
-                    (this.Image != null &&
-                    this.Image.Equals(input.Image))
-                ) && base.Equals(input) && 
-                (
-                    this.Workdir == input.Workdir ||
-                    (this.Workdir != null &&
-                    this.Workdir.Equals(input.Workdir))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Image == input.Image ||
+                    (this.Image != null &&
+                    this.Image.Equals(input.Image))
+                ) && 
                 (
                     this.Registry == input.Registry ||
                     (this.Registry != null &&
                     this.Registry.Equals(input.Registry))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
+                ) && 
+                (
+                    this.Workdir == input.Workdir ||
+                    (this.Workdir != null &&
+                    this.Workdir.Equals(input.Workdir))
                 );
         }
 
@@ -219,17 +211,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Image != null)
-                    hashCode = hashCode * 59 + this.Image.GetHashCode();
-                if (this.Workdir != null)
-                    hashCode = hashCode * 59 + this.Workdir.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Image != null)
+                    hashCode = hashCode * 59 + this.Image.GetHashCode();
                 if (this.Registry != null)
                     hashCode = hashCode * 59 + this.Registry.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Workdir != null)
+                    hashCode = hashCode * 59 + this.Workdir.GetHashCode();
                 return hashCode;
             }
         }
@@ -241,7 +233,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

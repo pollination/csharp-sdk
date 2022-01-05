@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// UserUpdate
     /// </summary>
     [DataContract(Name = "UserUpdate")]
-    public partial class UserUpdate : OpenAPIGenBaseModel, IEquatable<UserUpdate>, IValidatableObject
+    public partial class UserUpdate : IEquatable<UserUpdate>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UserUpdate" /> class.
@@ -36,20 +36,19 @@ namespace PollinationSDK
         protected UserUpdate() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserUpdate";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="UserUpdate" /> class.
         /// </summary>
+        /// <param name="description">A description of the user (default to &quot;&quot;).</param>
         /// <param name="name">The display name for this user (required).</param>
         /// <param name="pictureUrl">URL to the picture associated with this user (required).</param>
-        /// <param name="description">A description of the user (default to &quot;&quot;).</param>
         public UserUpdate
         (
            string name, string pictureUrl, // Required parameters
            string description = "" // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for UserUpdate and cannot be null");
@@ -59,16 +58,15 @@ namespace PollinationSDK
             this.Description = description ?? "";
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "UserUpdate";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UserUpdate";
 
+        /// <summary>
+        /// A description of the user
+        /// </summary>
+        /// <value>A description of the user</value>
+        [DataMember(Name = "description", EmitDefaultValue = true)]
+        public string Description { get; set; }  = "";
         /// <summary>
         /// The display name for this user
         /// </summary>
@@ -81,12 +79,6 @@ namespace PollinationSDK
         /// <value>URL to the picture associated with this user</value>
         [DataMember(Name = "picture_url", IsRequired = true, EmitDefaultValue = false)]
         public string PictureUrl { get; set; } 
-        /// <summary>
-        /// A description of the user
-        /// </summary>
-        /// <value>A description of the user</value>
-        [DataMember(Name = "description", EmitDefaultValue = true)]
-        public string Description { get; set; }  = "";
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -108,10 +100,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UserUpdate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
             return sb.ToString();
         }
   
@@ -145,14 +136,6 @@ namespace PollinationSDK
             return DuplicateUserUpdate();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateUserUpdate();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -174,26 +157,21 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.PictureUrl == input.PictureUrl ||
-                    (this.PictureUrl != null &&
-                    this.PictureUrl.Equals(input.PictureUrl))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.PictureUrl == input.PictureUrl ||
+                    (this.PictureUrl != null &&
+                    this.PictureUrl.Equals(input.PictureUrl))
                 );
         }
 
@@ -205,15 +183,13 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.PictureUrl != null)
                     hashCode = hashCode * 59 + this.PictureUrl.GetHashCode();
-                if (this.Description != null)
-                    hashCode = hashCode * 59 + this.Description.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -225,26 +201,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^UserUpdate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

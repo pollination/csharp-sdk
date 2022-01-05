@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Parametric Job Status.
     /// </summary>
     [DataContract(Name = "JobStatus")]
-    public partial class JobStatus : OpenAPIGenBaseModel, IEquatable<JobStatus>, IValidatableObject
+    public partial class JobStatus : IEquatable<JobStatus>, IValidatableObject
     {
         /// <summary>
         /// The status of this job.
@@ -42,75 +42,63 @@ namespace PollinationSDK
         protected JobStatus() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "JobStatus";
             this.ApiVersion = "v1beta1";
+            this.Type = "JobStatus";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="JobStatus" /> class.
         /// </summary>
-        /// <param name="id">The ID of the individual job. (required).</param>
-        /// <param name="startedAt">The time at which the job was started (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="status">The status of this job..</param>
-        /// <param name="message">Any message produced by the job. Usually error/debugging hints..</param>
         /// <param name="finishedAt">The time at which the task was completed.</param>
-        /// <param name="source">Source url for the status object. It can be a recipe or a function..</param>
-        /// <param name="runsPending">The count of runs that are pending (default to 0).</param>
-        /// <param name="runsRunning">The count of runs that are running (default to 0).</param>
+        /// <param name="id">The ID of the individual job. (required).</param>
+        /// <param name="message">Any message produced by the job. Usually error/debugging hints..</param>
+        /// <param name="runsCancelled">The count of runs that have been cancelled (default to 0).</param>
         /// <param name="runsCompleted">The count of runs that have completed (default to 0).</param>
         /// <param name="runsFailed">The count of runs that have failed (default to 0).</param>
-        /// <param name="runsCancelled">The count of runs that have been cancelled (default to 0).</param>
+        /// <param name="runsPending">The count of runs that are pending (default to 0).</param>
+        /// <param name="runsRunning">The count of runs that are running (default to 0).</param>
+        /// <param name="source">Source url for the status object. It can be a recipe or a function..</param>
+        /// <param name="startedAt">The time at which the job was started (required).</param>
+        /// <param name="status">The status of this job..</param>
         public JobStatus
         (
            string id, DateTime startedAt, // Required parameters
-           Dictionary<string, string> annotations= default, JobStatusEnum status= JobStatusEnum.Unknown, string message= default, DateTime finishedAt= default, string source= default, int runsPending = 0, int runsRunning = 0, int runsCompleted = 0, int runsFailed = 0, int runsCancelled = 0// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default, DateTime finishedAt= default, string message= default, int runsCancelled = 0, int runsCompleted = 0, int runsFailed = 0, int runsPending = 0, int runsRunning = 0, string source= default, JobStatusEnum status= JobStatusEnum.Unknown // Optional parameters
+        )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for JobStatus and cannot be null");
             this.StartedAt = startedAt;
             this.Annotations = annotations;
-            this.Status = status;
-            this.Message = message;
             this.FinishedAt = finishedAt;
-            this.Source = source;
-            this.RunsPending = runsPending;
-            this.RunsRunning = runsRunning;
+            this.Message = message;
+            this.RunsCancelled = runsCancelled;
             this.RunsCompleted = runsCompleted;
             this.RunsFailed = runsFailed;
-            this.RunsCancelled = runsCancelled;
+            this.RunsPending = runsPending;
+            this.RunsRunning = runsRunning;
+            this.Source = source;
+            this.Status = status;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "JobStatus";
             this.ApiVersion = "v1beta1";
+            this.Type = "JobStatus";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "JobStatus";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
         [DataMember(Name = "api_version", EmitDefaultValue = true)]
         public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        //============================================== is ReadOnly 
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = true)]
+        public string Type { get; protected internal set; }  = "JobStatus";
 
-        /// <summary>
-        /// The ID of the individual job.
-        /// </summary>
-        /// <value>The ID of the individual job.</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
-        public string Id { get; set; } 
-        /// <summary>
-        /// The time at which the job was started
-        /// </summary>
-        /// <value>The time at which the job was started</value>
-        [DataMember(Name = "started_at", IsRequired = true, EmitDefaultValue = false)]
-        public DateTime StartedAt { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
@@ -118,35 +106,29 @@ namespace PollinationSDK
         [DataMember(Name = "annotations", EmitDefaultValue = false)]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
-        /// Any message produced by the job. Usually error/debugging hints.
-        /// </summary>
-        /// <value>Any message produced by the job. Usually error/debugging hints.</value>
-        [DataMember(Name = "message", EmitDefaultValue = false)]
-        public string Message { get; set; } 
-        /// <summary>
         /// The time at which the task was completed
         /// </summary>
         /// <value>The time at which the task was completed</value>
         [DataMember(Name = "finished_at", EmitDefaultValue = false)]
         public DateTime FinishedAt { get; set; } 
         /// <summary>
-        /// Source url for the status object. It can be a recipe or a function.
+        /// The ID of the individual job.
         /// </summary>
-        /// <value>Source url for the status object. It can be a recipe or a function.</value>
-        [DataMember(Name = "source", EmitDefaultValue = false)]
-        public string Source { get; set; } 
+        /// <value>The ID of the individual job.</value>
+        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        public string Id { get; set; } 
         /// <summary>
-        /// The count of runs that are pending
+        /// Any message produced by the job. Usually error/debugging hints.
         /// </summary>
-        /// <value>The count of runs that are pending</value>
-        [DataMember(Name = "runs_pending", EmitDefaultValue = true)]
-        public int RunsPending { get; set; }  = 0;
+        /// <value>Any message produced by the job. Usually error/debugging hints.</value>
+        [DataMember(Name = "message", EmitDefaultValue = false)]
+        public string Message { get; set; } 
         /// <summary>
-        /// The count of runs that are running
+        /// The count of runs that have been cancelled
         /// </summary>
-        /// <value>The count of runs that are running</value>
-        [DataMember(Name = "runs_running", EmitDefaultValue = true)]
-        public int RunsRunning { get; set; }  = 0;
+        /// <value>The count of runs that have been cancelled</value>
+        [DataMember(Name = "runs_cancelled", EmitDefaultValue = true)]
+        public int RunsCancelled { get; set; }  = 0;
         /// <summary>
         /// The count of runs that have completed
         /// </summary>
@@ -160,11 +142,29 @@ namespace PollinationSDK
         [DataMember(Name = "runs_failed", EmitDefaultValue = true)]
         public int RunsFailed { get; set; }  = 0;
         /// <summary>
-        /// The count of runs that have been cancelled
+        /// The count of runs that are pending
         /// </summary>
-        /// <value>The count of runs that have been cancelled</value>
-        [DataMember(Name = "runs_cancelled", EmitDefaultValue = true)]
-        public int RunsCancelled { get; set; }  = 0;
+        /// <value>The count of runs that are pending</value>
+        [DataMember(Name = "runs_pending", EmitDefaultValue = true)]
+        public int RunsPending { get; set; }  = 0;
+        /// <summary>
+        /// The count of runs that are running
+        /// </summary>
+        /// <value>The count of runs that are running</value>
+        [DataMember(Name = "runs_running", EmitDefaultValue = true)]
+        public int RunsRunning { get; set; }  = 0;
+        /// <summary>
+        /// Source url for the status object. It can be a recipe or a function.
+        /// </summary>
+        /// <value>Source url for the status object. It can be a recipe or a function.</value>
+        [DataMember(Name = "source", EmitDefaultValue = false)]
+        public string Source { get; set; } 
+        /// <summary>
+        /// The time at which the job was started
+        /// </summary>
+        /// <value>The time at which the job was started</value>
+        [DataMember(Name = "started_at", IsRequired = true, EmitDefaultValue = false)]
+        public DateTime StartedAt { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -186,20 +186,20 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("JobStatus:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  StartedAt: ").Append(StartedAt).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
             sb.Append("  FinishedAt: ").Append(FinishedAt).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  RunsPending: ").Append(RunsPending).Append("\n");
-            sb.Append("  RunsRunning: ").Append(RunsRunning).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("  RunsCancelled: ").Append(RunsCancelled).Append("\n");
             sb.Append("  RunsCompleted: ").Append(RunsCompleted).Append("\n");
             sb.Append("  RunsFailed: ").Append(RunsFailed).Append("\n");
-            sb.Append("  RunsCancelled: ").Append(RunsCancelled).Append("\n");
+            sb.Append("  RunsPending: ").Append(RunsPending).Append("\n");
+            sb.Append("  RunsRunning: ").Append(RunsRunning).Append("\n");
+            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  StartedAt: ").Append(StartedAt).Append("\n");
+            sb.Append("  Status: ").Append(Status).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -233,14 +233,6 @@ namespace PollinationSDK
             return DuplicateJobStatus();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateJobStatus();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -262,77 +254,77 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.StartedAt == input.StartedAt ||
-                    (this.StartedAt != null &&
-                    this.StartedAt.Equals(input.StartedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.ApiVersion == input.ApiVersion ||
                     (this.ApiVersion != null &&
                     this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.Status == input.Status ||
-                    (this.Status != null &&
-                    this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
-                (
-                    this.Message == input.Message ||
-                    (this.Message != null &&
-                    this.Message.Equals(input.Message))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.FinishedAt == input.FinishedAt ||
                     (this.FinishedAt != null &&
                     this.FinishedAt.Equals(input.FinishedAt))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
                 (
-                    this.RunsPending == input.RunsPending ||
-                    (this.RunsPending != null &&
-                    this.RunsPending.Equals(input.RunsPending))
-                ) && base.Equals(input) && 
-                (
-                    this.RunsRunning == input.RunsRunning ||
-                    (this.RunsRunning != null &&
-                    this.RunsRunning.Equals(input.RunsRunning))
-                ) && base.Equals(input) && 
-                (
-                    this.RunsCompleted == input.RunsCompleted ||
-                    (this.RunsCompleted != null &&
-                    this.RunsCompleted.Equals(input.RunsCompleted))
-                ) && base.Equals(input) && 
-                (
-                    this.RunsFailed == input.RunsFailed ||
-                    (this.RunsFailed != null &&
-                    this.RunsFailed.Equals(input.RunsFailed))
-                ) && base.Equals(input) && 
+                    this.Message == input.Message ||
+                    (this.Message != null &&
+                    this.Message.Equals(input.Message))
+                ) && 
                 (
                     this.RunsCancelled == input.RunsCancelled ||
                     (this.RunsCancelled != null &&
                     this.RunsCancelled.Equals(input.RunsCancelled))
+                ) && 
+                (
+                    this.RunsCompleted == input.RunsCompleted ||
+                    (this.RunsCompleted != null &&
+                    this.RunsCompleted.Equals(input.RunsCompleted))
+                ) && 
+                (
+                    this.RunsFailed == input.RunsFailed ||
+                    (this.RunsFailed != null &&
+                    this.RunsFailed.Equals(input.RunsFailed))
+                ) && 
+                (
+                    this.RunsPending == input.RunsPending ||
+                    (this.RunsPending != null &&
+                    this.RunsPending.Equals(input.RunsPending))
+                ) && 
+                (
+                    this.RunsRunning == input.RunsRunning ||
+                    (this.RunsRunning != null &&
+                    this.RunsRunning.Equals(input.RunsRunning))
+                ) && 
+                (
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
+                ) && 
+                (
+                    this.StartedAt == input.StartedAt ||
+                    (this.StartedAt != null &&
+                    this.StartedAt.Equals(input.StartedAt))
+                ) && 
+                (
+                    this.Status == input.Status ||
+                    (this.Status != null &&
+                    this.Status.Equals(input.Status))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -344,35 +336,35 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.StartedAt != null)
-                    hashCode = hashCode * 59 + this.StartedAt.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.ApiVersion != null)
                     hashCode = hashCode * 59 + this.ApiVersion.GetHashCode();
-                if (this.Status != null)
-                    hashCode = hashCode * 59 + this.Status.GetHashCode();
-                if (this.Message != null)
-                    hashCode = hashCode * 59 + this.Message.GetHashCode();
                 if (this.FinishedAt != null)
                     hashCode = hashCode * 59 + this.FinishedAt.GetHashCode();
-                if (this.Source != null)
-                    hashCode = hashCode * 59 + this.Source.GetHashCode();
-                if (this.RunsPending != null)
-                    hashCode = hashCode * 59 + this.RunsPending.GetHashCode();
-                if (this.RunsRunning != null)
-                    hashCode = hashCode * 59 + this.RunsRunning.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Message != null)
+                    hashCode = hashCode * 59 + this.Message.GetHashCode();
+                if (this.RunsCancelled != null)
+                    hashCode = hashCode * 59 + this.RunsCancelled.GetHashCode();
                 if (this.RunsCompleted != null)
                     hashCode = hashCode * 59 + this.RunsCompleted.GetHashCode();
                 if (this.RunsFailed != null)
                     hashCode = hashCode * 59 + this.RunsFailed.GetHashCode();
-                if (this.RunsCancelled != null)
-                    hashCode = hashCode * 59 + this.RunsCancelled.GetHashCode();
+                if (this.RunsPending != null)
+                    hashCode = hashCode * 59 + this.RunsPending.GetHashCode();
+                if (this.RunsRunning != null)
+                    hashCode = hashCode * 59 + this.RunsRunning.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
+                if (this.StartedAt != null)
+                    hashCode = hashCode * 59 + this.StartedAt.GetHashCode();
+                if (this.Status != null)
+                    hashCode = hashCode * 59 + this.Status.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -384,16 +376,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^JobStatus$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
 
             
             // ApiVersion (string) pattern
@@ -401,6 +383,15 @@ namespace PollinationSDK
             if (false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
+            }
+
+
+            
+            // Type (string) pattern
+            Regex regexType = new Regex(@"^JobStatus$", RegexOptions.CultureInvariant);
+            if (false == regexType.Match(this.Type).Success)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
 
             yield break;

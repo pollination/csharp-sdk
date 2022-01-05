@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Input and output alias handler object.
     /// </summary>
     [DataContract(Name = "IOAliasHandler")]
-    public partial class IOAliasHandler : OpenAPIGenBaseModel, IEquatable<IOAliasHandler>, IValidatableObject
+    public partial class IOAliasHandler : IEquatable<IOAliasHandler>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="IOAliasHandler" /> class.
@@ -42,23 +42,23 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="IOAliasHandler" /> class.
         /// </summary>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="function">Name of the function. The input value will be passed to this function as the first argument. (required).</param>
+        /// <param name="index">An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained. (default to 0).</param>
         /// <param name="language">Declare the language (e.g. python, csharp, etc.). This option allows the recipe to be flexible on handling different programming languages. (required).</param>
         /// <param name="module">Target module or namespace to load the alias function. (required).</param>
-        /// <param name="function">Name of the function. The input value will be passed to this function as the first argument. (required).</param>
-        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
-        /// <param name="index">An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained. (default to 0).</param>
         public IOAliasHandler
         (
-           string language, string module, string function, // Required parameters
-           Dictionary<string, string> annotations= default, int index = 0// Optional parameters
-        ) : base()// BaseClass
+           string function, string language, string module, // Required parameters
+           Dictionary<string, string> annotations= default, int index = 0 // Optional parameters
+        )// BaseClass
         {
+            // to ensure "function" is required (not null)
+            this.Function = function ?? throw new ArgumentNullException("function is a required property for IOAliasHandler and cannot be null");
             // to ensure "language" is required (not null)
             this.Language = language ?? throw new ArgumentNullException("language is a required property for IOAliasHandler and cannot be null");
             // to ensure "module" is required (not null)
             this.Module = module ?? throw new ArgumentNullException("module is a required property for IOAliasHandler and cannot be null");
-            // to ensure "function" is required (not null)
-            this.Function = function ?? throw new ArgumentNullException("function is a required property for IOAliasHandler and cannot be null");
             this.Annotations = annotations;
             this.Index = index;
 
@@ -74,6 +74,24 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "IOAliasHandler";
 
         /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Name of the function. The input value will be passed to this function as the first argument.
+        /// </summary>
+        /// <value>Name of the function. The input value will be passed to this function as the first argument.</value>
+        [DataMember(Name = "function", IsRequired = true, EmitDefaultValue = false)]
+        public string Function { get; set; } 
+        /// <summary>
+        /// An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained.
+        /// </summary>
+        /// <value>An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained.</value>
+        [DataMember(Name = "index", EmitDefaultValue = true)]
+        public int Index { get; set; }  = 0;
+        /// <summary>
         /// Declare the language (e.g. python, csharp, etc.). This option allows the recipe to be flexible on handling different programming languages.
         /// </summary>
         /// <value>Declare the language (e.g. python, csharp, etc.). This option allows the recipe to be flexible on handling different programming languages.</value>
@@ -85,24 +103,6 @@ namespace PollinationSDK
         /// <value>Target module or namespace to load the alias function.</value>
         [DataMember(Name = "module", IsRequired = true, EmitDefaultValue = false)]
         public string Module { get; set; } 
-        /// <summary>
-        /// Name of the function. The input value will be passed to this function as the first argument.
-        /// </summary>
-        /// <value>Name of the function. The input value will be passed to this function as the first argument.</value>
-        [DataMember(Name = "function", IsRequired = true, EmitDefaultValue = false)]
-        public string Function { get; set; } 
-        /// <summary>
-        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
-        /// </summary>
-        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
-        public Dictionary<string, string> Annotations { get; set; } 
-        /// <summary>
-        /// An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained.
-        /// </summary>
-        /// <value>An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained.</value>
-        [DataMember(Name = "index", EmitDefaultValue = true)]
-        public int Index { get; set; }  = 0;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -124,12 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("IOAliasHandler:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Function: ").Append(Function).Append("\n");
+            sb.Append("  Index: ").Append(Index).Append("\n");
             sb.Append("  Language: ").Append(Language).Append("\n");
             sb.Append("  Module: ").Append(Module).Append("\n");
-            sb.Append("  Function: ").Append(Function).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -163,14 +163,6 @@ namespace PollinationSDK
             return DuplicateIOAliasHandler();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateIOAliasHandler();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -192,37 +184,37 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Language == input.Language ||
-                    (this.Language != null &&
-                    this.Language.Equals(input.Language))
-                ) && base.Equals(input) && 
-                (
-                    this.Module == input.Module ||
-                    (this.Module != null &&
-                    this.Module.Equals(input.Module))
-                ) && base.Equals(input) && 
-                (
-                    this.Function == input.Function ||
-                    (this.Function != null &&
-                    this.Function.Equals(input.Function))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Function == input.Function ||
+                    (this.Function != null &&
+                    this.Function.Equals(input.Function))
+                ) && 
                 (
                     this.Index == input.Index ||
                     (this.Index != null &&
                     this.Index.Equals(input.Index))
+                ) && 
+                (
+                    this.Language == input.Language ||
+                    (this.Language != null &&
+                    this.Language.Equals(input.Language))
+                ) && 
+                (
+                    this.Module == input.Module ||
+                    (this.Module != null &&
+                    this.Module.Equals(input.Module))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -234,19 +226,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Function != null)
+                    hashCode = hashCode * 59 + this.Function.GetHashCode();
+                if (this.Index != null)
+                    hashCode = hashCode * 59 + this.Index.GetHashCode();
                 if (this.Language != null)
                     hashCode = hashCode * 59 + this.Language.GetHashCode();
                 if (this.Module != null)
                     hashCode = hashCode * 59 + this.Module.GetHashCode();
-                if (this.Function != null)
-                    hashCode = hashCode * 59 + this.Function.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
-                if (this.Annotations != null)
-                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
-                if (this.Index != null)
-                    hashCode = hashCode * 59 + this.Index.GetHashCode();
                 return hashCode;
             }
         }
@@ -258,7 +250,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

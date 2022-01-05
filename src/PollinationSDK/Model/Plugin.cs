@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A Queenbee Plugin.  A plugin contains runtime configuration for a Command Line Interface (CLI) and a list of functions that can be executed using this CLI tool.
     /// </summary>
     [DataContract(Name = "Plugin")]
-    public partial class Plugin : OpenAPIGenBaseModel, IEquatable<Plugin>, IValidatableObject
+    public partial class Plugin : IEquatable<Plugin>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Plugin" /> class.
@@ -36,55 +36,55 @@ namespace PollinationSDK
         protected Plugin() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Plugin";
             this.ApiVersion = "v1beta1";
+            this.Type = "Plugin";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Plugin" /> class.
         /// </summary>
-        /// <param name="metadata">The Plugin metadata information (required).</param>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="config">The configuration information to run this plugin (required).</param>
         /// <param name="functions">List of Plugin functions (required).</param>
-        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="metadata">The Plugin metadata information (required).</param>
         public Plugin
         (
-           MetaData metadata, PluginConfig config, List<Function> functions, // Required parameters
+           PluginConfig config, List<Function> functions, MetaData metadata, // Required parameters
            Dictionary<string, string> annotations= default // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
-            // to ensure "metadata" is required (not null)
-            this.Metadata = metadata ?? throw new ArgumentNullException("metadata is a required property for Plugin and cannot be null");
             // to ensure "config" is required (not null)
             this.Config = config ?? throw new ArgumentNullException("config is a required property for Plugin and cannot be null");
             // to ensure "functions" is required (not null)
             this.Functions = functions ?? throw new ArgumentNullException("functions is a required property for Plugin and cannot be null");
+            // to ensure "metadata" is required (not null)
+            this.Metadata = metadata ?? throw new ArgumentNullException("metadata is a required property for Plugin and cannot be null");
             this.Annotations = annotations;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Plugin";
             this.ApiVersion = "v1beta1";
+            this.Type = "Plugin";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Plugin";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
         [DataMember(Name = "api_version", EmitDefaultValue = true)]
         public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        //============================================== is ReadOnly 
+        /// <summary>
+        /// Gets or Sets Type
+        /// </summary>
+        [DataMember(Name = "type", EmitDefaultValue = true)]
+        public string Type { get; protected internal set; }  = "Plugin";
 
         /// <summary>
-        /// The Plugin metadata information
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
-        /// <value>The Plugin metadata information</value>
-        [DataMember(Name = "metadata", IsRequired = true, EmitDefaultValue = false)]
-        public MetaData Metadata { get; set; } 
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The configuration information to run this plugin
         /// </summary>
@@ -98,11 +98,11 @@ namespace PollinationSDK
         [DataMember(Name = "functions", IsRequired = true, EmitDefaultValue = false)]
         public List<Function> Functions { get; set; } 
         /// <summary>
-        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// The Plugin metadata information
         /// </summary>
-        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
-        public Dictionary<string, string> Annotations { get; set; } 
+        /// <value>The Plugin metadata information</value>
+        [DataMember(Name = "metadata", IsRequired = true, EmitDefaultValue = false)]
+        public MetaData Metadata { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -124,12 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Plugin:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  Config: ").Append(Config).Append("\n");
-            sb.Append("  Functions: ").Append(Functions).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
+            sb.Append("  Config: ").Append(Config).Append("\n");
+            sb.Append("  Functions: ").Append(Functions).Append("\n");
+            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -163,14 +163,6 @@ namespace PollinationSDK
             return DuplicatePlugin();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicatePlugin();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -192,38 +184,38 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Metadata == input.Metadata ||
-                    (this.Metadata != null &&
-                    this.Metadata.Equals(input.Metadata))
-                ) && base.Equals(input) && 
-                (
-                    this.Config == input.Config ||
-                    (this.Config != null &&
-                    this.Config.Equals(input.Config))
-                ) && base.Equals(input) && 
-                (
-                    this.Functions == input.Functions ||
-                    this.Functions != null &&
-                    input.Functions != null &&
-                    this.Functions.SequenceEqual(input.Functions)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.ApiVersion == input.ApiVersion ||
                     (this.ApiVersion != null &&
                     this.ApiVersion.Equals(input.ApiVersion))
+                ) && 
+                (
+                    this.Config == input.Config ||
+                    (this.Config != null &&
+                    this.Config.Equals(input.Config))
+                ) && 
+                (
+                    this.Functions == input.Functions ||
+                    this.Functions != null &&
+                    input.Functions != null &&
+                    this.Functions.SequenceEqual(input.Functions)
+                ) && 
+                (
+                    this.Metadata == input.Metadata ||
+                    (this.Metadata != null &&
+                    this.Metadata.Equals(input.Metadata))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -235,19 +227,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Metadata != null)
-                    hashCode = hashCode * 59 + this.Metadata.GetHashCode();
-                if (this.Config != null)
-                    hashCode = hashCode * 59 + this.Config.GetHashCode();
-                if (this.Functions != null)
-                    hashCode = hashCode * 59 + this.Functions.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                int hashCode = 41;
                 if (this.Annotations != null)
                     hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.ApiVersion != null)
                     hashCode = hashCode * 59 + this.ApiVersion.GetHashCode();
+                if (this.Config != null)
+                    hashCode = hashCode * 59 + this.Config.GetHashCode();
+                if (this.Functions != null)
+                    hashCode = hashCode * 59 + this.Functions.GetHashCode();
+                if (this.Metadata != null)
+                    hashCode = hashCode * 59 + this.Metadata.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -259,16 +251,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Plugin", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
 
             
             // ApiVersion (string) pattern
@@ -276,6 +258,15 @@ namespace PollinationSDK
             if (false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
+            }
+
+
+            
+            // Type (string) pattern
+            Regex regexType = new Regex(@"^Plugin", RegexOptions.CultureInvariant);
+            if (false == regexType.Match(this.Type).Success)
+            {
+                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
 
             yield break;

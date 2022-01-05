@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// KeyRequest
     /// </summary>
     [DataContract(Name = "KeyRequest")]
-    public partial class KeyRequest : OpenAPIGenBaseModel, IEquatable<KeyRequest>, IValidatableObject
+    public partial class KeyRequest : IEquatable<KeyRequest>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyRequest" /> class.
@@ -36,7 +36,6 @@ namespace PollinationSDK
         protected KeyRequest() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "KeyRequest";
         }
         
         /// <summary>
@@ -47,21 +46,14 @@ namespace PollinationSDK
         (
            string key// Required parameters
            // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
             // to ensure "key" is required (not null)
             this.Key = key ?? throw new ArgumentNullException("key is a required property for KeyRequest and cannot be null");
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "KeyRequest";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "KeyRequest";
 
         /// <summary>
         /// Gets or Sets Key
@@ -89,7 +81,6 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("KeyRequest:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Key: ").Append(Key).Append("\n");
             return sb.ToString();
         }
@@ -124,14 +115,6 @@ namespace PollinationSDK
             return DuplicateKeyRequest();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateKeyRequest();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -153,16 +136,11 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Key == input.Key ||
                     (this.Key != null &&
                     this.Key.Equals(input.Key))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -174,11 +152,9 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Key != null)
                     hashCode = hashCode * 59 + this.Key.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -190,16 +166,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^KeyRequest$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

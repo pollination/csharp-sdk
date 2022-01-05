@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// BodyPostPluginOwnerPluginsPost
     /// </summary>
     [DataContract(Name = "Body_post_plugin__owner__plugins_post")]
-    public partial class BodyPostPluginOwnerPluginsPost : OpenAPIGenBaseModel, IEquatable<BodyPostPluginOwnerPluginsPost>, IValidatableObject
+    public partial class BodyPostPluginOwnerPluginsPost : IEquatable<BodyPostPluginOwnerPluginsPost>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BodyPostPluginOwnerPluginsPost" /> class.
@@ -36,7 +36,6 @@ namespace PollinationSDK
         protected BodyPostPluginOwnerPluginsPost() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Body_post_plugin__owner__plugins_post";
         }
         
         /// <summary>
@@ -47,21 +46,14 @@ namespace PollinationSDK
         (
            System.IO.Stream package// Required parameters
            // Optional parameters
-        ) : base()// BaseClass
+        )// BaseClass
         {
             // to ensure "package" is required (not null)
             this.Package = package ?? throw new ArgumentNullException("package is a required property for BodyPostPluginOwnerPluginsPost and cannot be null");
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Body_post_plugin__owner__plugins_post";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Body_post_plugin__owner__plugins_post";
 
         /// <summary>
         /// Gets or Sets Package
@@ -89,7 +81,6 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("BodyPostPluginOwnerPluginsPost:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Package: ").Append(Package).Append("\n");
             return sb.ToString();
         }
@@ -124,14 +115,6 @@ namespace PollinationSDK
             return DuplicateBodyPostPluginOwnerPluginsPost();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateBodyPostPluginOwnerPluginsPost();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -153,16 +136,11 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Package == input.Package ||
                     (this.Package != null &&
                     this.Package.Equals(input.Package))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -174,11 +152,9 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Package != null)
                     hashCode = hashCode * 59 + this.Package.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -190,16 +166,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Body_post_plugin__owner__plugins_post$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

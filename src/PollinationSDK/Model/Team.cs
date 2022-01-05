@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// Team
     /// </summary>
     [DataContract(Name = "Team")]
-    public partial class Team : TeamUpdate, IEquatable<Team>, IValidatableObject
+    public partial class Team : IEquatable<Team>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Team" /> class.
@@ -36,40 +36,40 @@ namespace PollinationSDK
         protected Team() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Team";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Team" /> class.
         /// </summary>
+        /// <param name="description">description.</param>
         /// <param name="id">The team ID (required).</param>
-        /// <param name="slug">The public slug of the team (required).</param>
         /// <param name="memberCount">The number of members that are part of this team (default to 0).</param>
         /// <param name="name">name (required).</param>
-        /// <param name="description">description.</param>
+        /// <param name="slug">The public slug of the team (required).</param>
         public Team
         (
-            string name, string id, string slug, // Required parameters
-            string description= default, int memberCount = 0 // Optional parameters
-        ) : base(name: name, description: description)// BaseClass
+           string id, string name, string slug, // Required parameters
+           string description= default, int memberCount = 0 // Optional parameters
+        )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Team and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for Team and cannot be null");
             // to ensure "slug" is required (not null)
             this.Slug = slug ?? throw new ArgumentNullException("slug is a required property for Team and cannot be null");
+            this.Description = description;
             this.MemberCount = memberCount;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Team";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Team";
 
+        /// <summary>
+        /// Gets or Sets Description
+        /// </summary>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
         /// <summary>
         /// The team ID
         /// </summary>
@@ -77,17 +77,22 @@ namespace PollinationSDK
         [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
         public string Id { get; set; } 
         /// <summary>
-        /// The public slug of the team
-        /// </summary>
-        /// <value>The public slug of the team</value>
-        [DataMember(Name = "slug", IsRequired = true, EmitDefaultValue = false)]
-        public string Slug { get; set; } 
-        /// <summary>
         /// The number of members that are part of this team
         /// </summary>
         /// <value>The number of members that are part of this team</value>
         [DataMember(Name = "member_count", EmitDefaultValue = true)]
         public int MemberCount { get; set; }  = 0;
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
+        /// <summary>
+        /// The public slug of the team
+        /// </summary>
+        /// <value>The public slug of the team</value>
+        [DataMember(Name = "slug", IsRequired = true, EmitDefaultValue = false)]
+        public string Slug { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -109,12 +114,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Team:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
             sb.Append("  MemberCount: ").Append(MemberCount).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Slug: ").Append(Slug).Append("\n");
             return sb.ToString();
         }
   
@@ -148,14 +152,6 @@ namespace PollinationSDK
             return DuplicateTeam();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override TeamUpdate DuplicateTeamUpdate()
-        {
-            return DuplicateTeam();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -177,26 +173,31 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
                 (
                     this.Id == input.Id ||
                     (this.Id != null &&
                     this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Slug == input.Slug ||
-                    (this.Slug != null &&
-                    this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.MemberCount == input.MemberCount ||
                     (this.MemberCount != null &&
                     this.MemberCount.Equals(input.MemberCount))
-                ) && base.Equals(input) && 
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Slug == input.Slug ||
+                    (this.Slug != null &&
+                    this.Slug.Equals(input.Slug))
                 );
         }
 
@@ -208,15 +209,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
                 if (this.Id != null)
                     hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.Slug != null)
-                    hashCode = hashCode * 59 + this.Slug.GetHashCode();
                 if (this.MemberCount != null)
                     hashCode = hashCode * 59 + this.MemberCount.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Slug != null)
+                    hashCode = hashCode * 59 + this.Slug.GetHashCode();
                 return hashCode;
             }
         }
@@ -228,16 +231,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Team$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

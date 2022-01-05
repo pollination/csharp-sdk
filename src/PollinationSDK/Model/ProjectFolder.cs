@@ -27,19 +27,20 @@ namespace PollinationSDK
     /// Project Folder Source  This is the path to a folder where files and folders can be sourced. In the context of a desktop run Workflow this folder will correspond to a local folder. In the context of a workflow run on Pollination this folder will correspond to a Project scoped folder.
     /// </summary>
     [DataContract(Name = "ProjectFolder")]
-    public partial class ProjectFolder : ArtifactSource, IEquatable<ProjectFolder>, IValidatableObject
+    public partial class ProjectFolder : IEquatable<ProjectFolder>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFolder" /> class.
         /// </summary>
-        /// <param name="path">The path to a folder where files and folders can be sourced. For a local filesystem this can be \&quot;C:\\Users\\me\\jobs\\test\&quot;..</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="path">The path to a folder where files and folders can be sourced. For a local filesystem this can be \&quot;C:\\Users\\me\\jobs\\test\&quot;..</param>
         public ProjectFolder
         (
            // Required parameters
-            Dictionary<string, string> annotations= default, string path= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+           Dictionary<string, string> annotations= default, string path= default // Optional parameters
+        )// BaseClass
         {
+            this.Annotations = annotations;
             this.Path = path;
 
             // Set non-required readonly properties with defaultValue
@@ -53,6 +54,12 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "ProjectFolder";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The path to a folder where files and folders can be sourced. For a local filesystem this can be \&quot;C:\\Users\\me\\jobs\\test\&quot;.
         /// </summary>
@@ -80,9 +87,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ProjectFolder:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -116,14 +123,6 @@ namespace PollinationSDK
             return DuplicateProjectFolder();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override ArtifactSource DuplicateArtifactSource()
-        {
-            return DuplicateProjectFolder();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -145,12 +144,18 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
                 (
                     this.Path == input.Path ||
                     (this.Path != null &&
                     this.Path.Equals(input.Path))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -166,7 +171,9 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.Path != null)
                     hashCode = hashCode * 59 + this.Path.GetHashCode();
                 if (this.Type != null)
@@ -182,7 +189,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

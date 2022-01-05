@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// AccountPublic
     /// </summary>
     [DataContract(Name = "AccountPublic")]
-    public partial class AccountPublic : OpenAPIGenBaseModel, IEquatable<AccountPublic>, IValidatableObject
+    public partial class AccountPublic : IEquatable<AccountPublic>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountPublic" /> class.
@@ -36,70 +36,62 @@ namespace PollinationSDK
         protected AccountPublic() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "AccountPublic";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="AccountPublic" /> class.
         /// </summary>
-        /// <param name="id">id (required).</param>
         /// <param name="accountType">accountType (required).</param>
-        /// <param name="name">name (required).</param>
-        /// <param name="displayName">displayName.</param>
         /// <param name="description">description.</param>
+        /// <param name="displayName">displayName.</param>
+        /// <param name="id">id (required).</param>
+        /// <param name="name">name (required).</param>
         /// <param name="pictureUrl">https://robohash.org/ladybugbot.</param>
         public AccountPublic
         (
-           string id, string accountType, string name, // Required parameters
-           string displayName= default, string description= default, string pictureUrl= default // Optional parameters
-        ) : base()// BaseClass
+           string accountType, string id, string name, // Required parameters
+           string description= default, string displayName= default, string pictureUrl= default// Optional parameters
+        )// BaseClass
         {
-            // to ensure "id" is required (not null)
-            this.Id = id ?? throw new ArgumentNullException("id is a required property for AccountPublic and cannot be null");
             // to ensure "accountType" is required (not null)
             this.AccountType = accountType ?? throw new ArgumentNullException("accountType is a required property for AccountPublic and cannot be null");
+            // to ensure "id" is required (not null)
+            this.Id = id ?? throw new ArgumentNullException("id is a required property for AccountPublic and cannot be null");
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for AccountPublic and cannot be null");
-            this.DisplayName = displayName;
             this.Description = description;
+            this.DisplayName = displayName;
             this.PictureUrl = pictureUrl;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "AccountPublic";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "AccountPublic";
 
-        /// <summary>
-        /// Gets or Sets Id
-        /// </summary>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
-        public string Id { get; set; } 
         /// <summary>
         /// Gets or Sets AccountType
         /// </summary>
         [DataMember(Name = "account_type", IsRequired = true, EmitDefaultValue = false)]
         public string AccountType { get; set; } 
         /// <summary>
-        /// Gets or Sets Name
+        /// Gets or Sets Description
         /// </summary>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
         /// <summary>
         /// Gets or Sets DisplayName
         /// </summary>
         [DataMember(Name = "display_name", EmitDefaultValue = false)]
         public string DisplayName { get; set; } 
         /// <summary>
-        /// Gets or Sets Description
+        /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
-        public string Description { get; set; } 
+        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        public string Id { get; set; } 
+        /// <summary>
+        /// Gets or Sets Name
+        /// </summary>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
         /// https://robohash.org/ladybugbot
         /// </summary>
@@ -127,12 +119,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("AccountPublic:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
             sb.Append("  AccountType: ").Append(AccountType).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
+            sb.Append("  Id: ").Append(Id).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
             return sb.ToString();
         }
@@ -167,14 +158,6 @@ namespace PollinationSDK
             return DuplicateAccountPublic();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateAccountPublic();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -196,41 +179,36 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.AccountType == input.AccountType ||
                     (this.AccountType != null &&
                     this.AccountType.Equals(input.AccountType))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.DisplayName == input.DisplayName ||
-                    (this.DisplayName != null &&
-                    this.DisplayName.Equals(input.DisplayName))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.Description == input.Description ||
                     (this.Description != null &&
                     this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.DisplayName == input.DisplayName ||
+                    (this.DisplayName != null &&
+                    this.DisplayName.Equals(input.DisplayName))
+                ) && 
+                (
+                    this.Id == input.Id ||
+                    (this.Id != null &&
+                    this.Id.Equals(input.Id))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.PictureUrl == input.PictureUrl ||
                     (this.PictureUrl != null &&
                     this.PictureUrl.Equals(input.PictureUrl))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -242,21 +220,19 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                int hashCode = 41;
                 if (this.AccountType != null)
                     hashCode = hashCode * 59 + this.AccountType.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.DisplayName != null)
-                    hashCode = hashCode * 59 + this.DisplayName.GetHashCode();
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.DisplayName != null)
+                    hashCode = hashCode * 59 + this.DisplayName.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.PictureUrl != null)
                     hashCode = hashCode * 59 + this.PictureUrl.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
             }
         }
@@ -268,16 +244,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^AccountPublic$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

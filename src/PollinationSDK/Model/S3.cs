@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// S3 Source  An S3 bucket artifact Source.
     /// </summary>
     [DataContract(Name = "S3")]
-    public partial class S3 : ArtifactSource, IEquatable<S3>, IValidatableObject
+    public partial class S3 : IEquatable<S3>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="S3" /> class.
@@ -42,23 +42,24 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="S3" /> class.
         /// </summary>
-        /// <param name="key">The path inside the bucket to source artifacts from. (required).</param>
-        /// <param name="endpoint">The HTTP endpoint to reach the S3 bucket. (required).</param>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="bucket">The name of the S3 bucket on the host server. (required).</param>
         /// <param name="credentialsPath">Path to the file holding the AccessKey and SecretAccessKey to authenticate to the bucket. Assumes public bucket access if none are specified..</param>
-        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="endpoint">The HTTP endpoint to reach the S3 bucket. (required).</param>
+        /// <param name="key">The path inside the bucket to source artifacts from. (required).</param>
         public S3
         (
-           string key, string endpoint, string bucket, // Required parameters
-            Dictionary<string, string> annotations= default, string credentialsPath= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+           string bucket, string endpoint, string key, // Required parameters
+           Dictionary<string, string> annotations= default, string credentialsPath= default // Optional parameters
+        )// BaseClass
         {
-            // to ensure "key" is required (not null)
-            this.Key = key ?? throw new ArgumentNullException("key is a required property for S3 and cannot be null");
-            // to ensure "endpoint" is required (not null)
-            this.Endpoint = endpoint ?? throw new ArgumentNullException("endpoint is a required property for S3 and cannot be null");
             // to ensure "bucket" is required (not null)
             this.Bucket = bucket ?? throw new ArgumentNullException("bucket is a required property for S3 and cannot be null");
+            // to ensure "endpoint" is required (not null)
+            this.Endpoint = endpoint ?? throw new ArgumentNullException("endpoint is a required property for S3 and cannot be null");
+            // to ensure "key" is required (not null)
+            this.Key = key ?? throw new ArgumentNullException("key is a required property for S3 and cannot be null");
+            this.Annotations = annotations;
             this.CredentialsPath = credentialsPath;
 
             // Set non-required readonly properties with defaultValue
@@ -73,17 +74,11 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "S3";
 
         /// <summary>
-        /// The path inside the bucket to source artifacts from.
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
-        /// <value>The path inside the bucket to source artifacts from.</value>
-        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
-        public string Key { get; set; } 
-        /// <summary>
-        /// The HTTP endpoint to reach the S3 bucket.
-        /// </summary>
-        /// <value>The HTTP endpoint to reach the S3 bucket.</value>
-        [DataMember(Name = "endpoint", IsRequired = true, EmitDefaultValue = false)]
-        public string Endpoint { get; set; } 
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The name of the S3 bucket on the host server.
         /// </summary>
@@ -96,6 +91,18 @@ namespace PollinationSDK
         /// <value>Path to the file holding the AccessKey and SecretAccessKey to authenticate to the bucket. Assumes public bucket access if none are specified.</value>
         [DataMember(Name = "credentials_path", EmitDefaultValue = false)]
         public string CredentialsPath { get; set; } 
+        /// <summary>
+        /// The HTTP endpoint to reach the S3 bucket.
+        /// </summary>
+        /// <value>The HTTP endpoint to reach the S3 bucket.</value>
+        [DataMember(Name = "endpoint", IsRequired = true, EmitDefaultValue = false)]
+        public string Endpoint { get; set; } 
+        /// <summary>
+        /// The path inside the bucket to source artifacts from.
+        /// </summary>
+        /// <value>The path inside the bucket to source artifacts from.</value>
+        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
+        public string Key { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -117,12 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("S3:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  Endpoint: ").Append(Endpoint).Append("\n");
             sb.Append("  Bucket: ").Append(Bucket).Append("\n");
             sb.Append("  CredentialsPath: ").Append(CredentialsPath).Append("\n");
+            sb.Append("  Endpoint: ").Append(Endpoint).Append("\n");
+            sb.Append("  Key: ").Append(Key).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -156,14 +163,6 @@ namespace PollinationSDK
             return DuplicateS3();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override ArtifactSource DuplicateArtifactSource()
-        {
-            return DuplicateS3();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -185,27 +184,33 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
-                ) && base.Equals(input) && 
-                (
-                    this.Endpoint == input.Endpoint ||
-                    (this.Endpoint != null &&
-                    this.Endpoint.Equals(input.Endpoint))
-                ) && base.Equals(input) && 
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
                 (
                     this.Bucket == input.Bucket ||
                     (this.Bucket != null &&
                     this.Bucket.Equals(input.Bucket))
-                ) && base.Equals(input) && 
+                ) && 
                 (
                     this.CredentialsPath == input.CredentialsPath ||
                     (this.CredentialsPath != null &&
                     this.CredentialsPath.Equals(input.CredentialsPath))
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Endpoint == input.Endpoint ||
+                    (this.Endpoint != null &&
+                    this.Endpoint.Equals(input.Endpoint))
+                ) && 
+                (
+                    this.Key == input.Key ||
+                    (this.Key != null &&
+                    this.Key.Equals(input.Key))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -221,15 +226,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
-                if (this.Key != null)
-                    hashCode = hashCode * 59 + this.Key.GetHashCode();
-                if (this.Endpoint != null)
-                    hashCode = hashCode * 59 + this.Endpoint.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.Bucket != null)
                     hashCode = hashCode * 59 + this.Bucket.GetHashCode();
                 if (this.CredentialsPath != null)
                     hashCode = hashCode * 59 + this.CredentialsPath.GetHashCode();
+                if (this.Endpoint != null)
+                    hashCode = hashCode * 59 + this.Endpoint.GetHashCode();
+                if (this.Key != null)
+                    hashCode = hashCode * 59 + this.Key.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -243,7 +250,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

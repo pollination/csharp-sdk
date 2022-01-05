@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// DAG generic output.  In most cases, you should not be using the generic output unless you need a dynamic output that changes its type in different platforms because of returning different objects in handler.
     /// </summary>
     [DataContract(Name = "DAGGenericOutput")]
-    public partial class DAGGenericOutput : FromOutput, IEquatable<DAGGenericOutput>, IValidatableObject
+    public partial class DAGGenericOutput : IEquatable<DAGGenericOutput>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DAGGenericOutput" /> class.
@@ -43,17 +43,23 @@ namespace PollinationSDK
         /// Initializes a new instance of the <see cref="DAGGenericOutput" /> class.
         /// </summary>
         /// <param name="alias">A list of additional processes for loading this output on different platforms..</param>
-        /// <param name="name">Output name. (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="description">Optional description for output..</param>
         /// <param name="from">Reference to a file or a task output. Task output must be file. (required).</param>
+        /// <param name="name">Output name. (required).</param>
         public DAGGenericOutput
         (
-            string name, object from, // Required parameters
-            Dictionary<string, string> annotations= default, string description= default, List<AnyOf<DAGGenericOutputAlias,DAGStringOutputAlias,DAGIntegerOutputAlias,DAGNumberOutputAlias,DAGBooleanOutputAlias,DAGFolderOutputAlias,DAGFileOutputAlias,DAGPathOutputAlias,DAGArrayOutputAlias,DAGJSONObjectOutputAlias,DAGLinkedOutputAlias>> alias= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, from: from)// BaseClass
+           object from, string name, // Required parameters
+           List<AnyOf<DAGGenericOutputAlias,DAGStringOutputAlias,DAGIntegerOutputAlias,DAGNumberOutputAlias,DAGBooleanOutputAlias,DAGFolderOutputAlias,DAGFileOutputAlias,DAGPathOutputAlias,DAGArrayOutputAlias,DAGJSONObjectOutputAlias,DAGLinkedOutputAlias>> alias= default, Dictionary<string, string> annotations= default, string description= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "from" is required (not null)
+            this.From = from ?? throw new ArgumentNullException("from is a required property for DAGGenericOutput and cannot be null");
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for DAGGenericOutput and cannot be null");
             this.Alias = alias;
+            this.Annotations = annotations;
+            this.Description = description;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "DAGGenericOutput";
@@ -72,6 +78,30 @@ namespace PollinationSDK
         /// <value>A list of additional processes for loading this output on different platforms.</value>
         [DataMember(Name = "alias", EmitDefaultValue = false)]
         public List<AnyOf<DAGGenericOutputAlias,DAGStringOutputAlias,DAGIntegerOutputAlias,DAGNumberOutputAlias,DAGBooleanOutputAlias,DAGFolderOutputAlias,DAGFileOutputAlias,DAGPathOutputAlias,DAGArrayOutputAlias,DAGJSONObjectOutputAlias,DAGLinkedOutputAlias>> Alias { get; set; } 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// Optional description for output.
+        /// </summary>
+        /// <value>Optional description for output.</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// Reference to a file or a task output. Task output must be file.
+        /// </summary>
+        /// <value>Reference to a file or a task output. Task output must be file.</value>
+        [DataMember(Name = "from", IsRequired = true, EmitDefaultValue = true)]
+        public object From { get; set; } 
+        /// <summary>
+        /// Output name.
+        /// </summary>
+        /// <value>Output name.</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -93,12 +123,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGGenericOutput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Alias: ").Append(Alias).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Description: ").Append(Description).Append("\n");
             sb.Append("  From: ").Append(From).Append("\n");
-            sb.Append("  Alias: ").Append(Alias).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -132,14 +162,6 @@ namespace PollinationSDK
             return DuplicateDAGGenericOutput();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override FromOutput DuplicateFromOutput()
-        {
-            return DuplicateDAGGenericOutput();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -161,13 +183,34 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
                 (
                     this.Alias == input.Alias ||
                     this.Alias != null &&
                     input.Alias != null &&
                     this.Alias.SequenceEqual(input.Alias)
-                ) && base.Equals(input) && 
+                ) && 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && 
+                (
+                    this.From == input.From ||
+                    (this.From != null &&
+                    this.From.Equals(input.From))
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -183,9 +226,17 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
                 if (this.Alias != null)
                     hashCode = hashCode * 59 + this.Alias.GetHashCode();
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.From != null)
+                    hashCode = hashCode * 59 + this.From.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -199,17 +250,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// BaseModel with functionality to return the object as a yaml string.
     /// </summary>
     [DataContract(Name = "JobPathArgument")]
-    public partial class JobPathArgument : OpenAPIGenBaseModel, IEquatable<JobPathArgument>, IValidatableObject
+    public partial class JobPathArgument : IEquatable<JobPathArgument>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="JobPathArgument" /> class.
@@ -42,14 +42,14 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="JobPathArgument" /> class.
         /// </summary>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="name">Argument name. The name must match one of the input names from Job&#39;s template which can be a function or DAG. (required).</param>
         /// <param name="source">The path to source the file from. (required).</param>
-        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         public JobPathArgument
         (
            string name, AnyOf<HTTP,S3,ProjectFolder> source, // Required parameters
-           Dictionary<string, string> annotations= default// Optional parameters
-        ) : base()// BaseClass
+           Dictionary<string, string> annotations= default // Optional parameters
+        )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for JobPathArgument and cannot be null");
@@ -69,6 +69,12 @@ namespace PollinationSDK
         public string Type { get; protected internal set; }  = "JobPathArgument";
 
         /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
         /// Argument name. The name must match one of the input names from Job&#39;s template which can be a function or DAG.
         /// </summary>
         /// <value>Argument name. The name must match one of the input names from Job&#39;s template which can be a function or DAG.</value>
@@ -80,12 +86,6 @@ namespace PollinationSDK
         /// <value>The path to source the file from.</value>
         [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
         public AnyOf<HTTP,S3,ProjectFolder> Source { get; set; } 
-        /// <summary>
-        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
-        /// </summary>
-        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
-        public Dictionary<string, string> Annotations { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -107,10 +107,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("JobPathArgument:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Name: ").Append(Name).Append("\n");
             sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -144,14 +144,6 @@ namespace PollinationSDK
             return DuplicateJobPathArgument();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
-        {
-            return DuplicateJobPathArgument();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -173,27 +165,27 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+            return 
                 (
                     this.Annotations == input.Annotations ||
                     this.Annotations != null &&
                     input.Annotations != null &&
                     this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
+                ) && 
+                (
+                    this.Source == input.Source ||
+                    (this.Source != null &&
+                    this.Source.Equals(input.Source))
+                ) && 
+                (
+                    this.Type == input.Type ||
+                    (this.Type != null &&
+                    this.Type.Equals(input.Type))
                 );
         }
 
@@ -205,15 +197,15 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
                 if (this.Source != null)
                     hashCode = hashCode * 59 + this.Source.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
-                if (this.Annotations != null)
-                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
                 return hashCode;
             }
         }
@@ -225,7 +217,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern

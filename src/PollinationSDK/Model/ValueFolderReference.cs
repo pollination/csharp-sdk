@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// A reference to a fixed folder.
     /// </summary>
     [DataContract(Name = "ValueFolderReference")]
-    public partial class ValueFolderReference : ValueFileReference, IEquatable<ValueFolderReference>, IValidatableObject
+    public partial class ValueFolderReference : IEquatable<ValueFolderReference>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueFolderReference" /> class.
@@ -46,10 +46,13 @@ namespace PollinationSDK
         /// <param name="path">A fixed value for this reference. (required).</param>
         public ValueFolderReference
         (
-            string path, // Required parameters
-            Dictionary<string, string> annotations= default // Optional parameters
-        ) : base(annotations: annotations, path: path)// BaseClass
+           string path, // Required parameters
+           Dictionary<string, string> annotations= default // Optional parameters
+        )// BaseClass
         {
+            // to ensure "path" is required (not null)
+            this.Path = path ?? throw new ArgumentNullException("path is a required property for ValueFolderReference and cannot be null");
+            this.Annotations = annotations;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "ValueFolderReference";
@@ -62,6 +65,18 @@ namespace PollinationSDK
         [DataMember(Name = "type", EmitDefaultValue = true)]
         public string Type { get; protected internal set; }  = "ValueFolderReference";
 
+        /// <summary>
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
+        /// </summary>
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
+        /// <summary>
+        /// A fixed value for this reference.
+        /// </summary>
+        /// <value>A fixed value for this reference.</value>
+        [DataMember(Name = "path", IsRequired = true, EmitDefaultValue = false)]
+        public string Path { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -83,9 +98,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ValueFolderReference:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
             sb.Append("  Annotations: ").Append(Annotations).Append("\n");
             sb.Append("  Path: ").Append(Path).Append("\n");
+            sb.Append("  Type: ").Append(Type).Append("\n");
             return sb.ToString();
         }
   
@@ -119,14 +134,6 @@ namespace PollinationSDK
             return DuplicateValueFolderReference();
         }
 
-        /// <summary>
-        /// Creates a new instance with the same properties.
-        /// </summary>
-        /// <returns>OpenAPIGenBaseModel</returns>
-        public override ValueFileReference DuplicateValueFileReference()
-        {
-            return DuplicateValueFolderReference();
-        }
      
         /// <summary>
         /// Returns true if objects are equal
@@ -148,7 +155,18 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return base.Equals(input) && 
+            return 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && 
+                (
+                    this.Path == input.Path ||
+                    (this.Path != null &&
+                    this.Path.Equals(input.Path))
+                ) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
@@ -164,7 +182,11 @@ namespace PollinationSDK
         {
             unchecked // Overflow is fine, just wrap
             {
-                int hashCode = base.GetHashCode();
+                int hashCode = 41;
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.Path != null)
+                    hashCode = hashCode * 59 + this.Path.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -178,7 +200,6 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            foreach(var x in base.BaseValidate(validationContext)) yield return x;
 
             
             // Type (string) pattern
