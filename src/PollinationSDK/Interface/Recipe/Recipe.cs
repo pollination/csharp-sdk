@@ -8,6 +8,8 @@ namespace PollinationSDK.Interface.Recipe
 //Classes implemented this interface:
 namespace PollinationSDK
 {
+	public partial class BakedRecipe: PollinationSDK.Interface.Recipe.IRecipe {}
 	public partial class Recipe: PollinationSDK.Interface.Recipe.IRecipe {}
 	public partial class RecipeInterface: PollinationSDK.Interface.Recipe.IRecipe {}
+	public partial class TemplateFunction: PollinationSDK.Interface.Recipe.IRecipe {}
 }
