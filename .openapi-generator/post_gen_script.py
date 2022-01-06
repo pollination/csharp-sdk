@@ -270,7 +270,7 @@ def get_allof_types_from_json(source_json_url):
     return unitItem
 
 
-def check_types(source_json_url, mapper_json):
+def check_types(source_json_url):
     all_types = get_allof_types_from_json(source_json_url)
 
     root = os.path.dirname(os.path.dirname(__file__))
@@ -331,7 +331,7 @@ time.sleep(3)
 cleanup(name_space)
 print(f"post processing {json_file} with {mapper_json}")
 
-check_types(json_file, mapper_json)
+check_types(json_file)
 # fix enums
 classes_enum_data = get_enum_parameters(json_file, mapper_json)
 fix_enums_with_defaults(classes_enum_data, f'./src/{name_space}/Model')
