@@ -48,10 +48,11 @@ namespace PollinationSDK
         /// <param name="recipe">The recipe used to generate this .</param>
         /// <param name="generation">The generation of this run.</param>
         /// <param name="status">The status of the run.</param>
+        /// <param name="meta">Extra metadata about the run.</param>
         public Run
         (
            string id, // Required parameters
-           AccountPublic author= default, AccountPublic owner= default, RecipeInterface recipe= default, double generation= default, RunStatus status= default // Optional parameters
+           AccountPublic author= default, AccountPublic owner= default, RecipeInterface recipe= default, double generation= default, RunStatus status= default, RunMeta meta= default // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "id" is required (not null)
@@ -61,6 +62,7 @@ namespace PollinationSDK
             this.Recipe = recipe;
             this.Generation = generation;
             this.Status = status;
+            this.Meta = meta;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "Run";
@@ -109,6 +111,12 @@ namespace PollinationSDK
         /// <value>The status of the run</value>
         [DataMember(Name = "status", EmitDefaultValue = false)]
         public RunStatus Status { get; set; } 
+        /// <summary>
+        /// Extra metadata about the run
+        /// </summary>
+        /// <value>Extra metadata about the run</value>
+        [DataMember(Name = "meta", EmitDefaultValue = false)]
+        public RunMeta Meta { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -137,6 +145,7 @@ namespace PollinationSDK
             sb.Append("  Recipe: ").Append(Recipe).Append("\n");
             sb.Append("  Generation: ").Append(Generation).Append("\n");
             sb.Append("  Status: ").Append(Status).Append("\n");
+            sb.Append("  Meta: ").Append(Meta).Append("\n");
             return sb.ToString();
         }
   
@@ -231,6 +240,11 @@ namespace PollinationSDK
                     this.Status.Equals(input.Status))
                 ) && base.Equals(input) && 
                 (
+                    this.Meta == input.Meta ||
+                    (this.Meta != null &&
+                    this.Meta.Equals(input.Meta))
+                ) && base.Equals(input) && 
+                (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
@@ -258,6 +272,8 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.Generation.GetHashCode();
                 if (this.Status != null)
                     hashCode = hashCode * 59 + this.Status.GetHashCode();
+                if (this.Meta != null)
+                    hashCode = hashCode * 59 + this.Meta.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;

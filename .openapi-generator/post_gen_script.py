@@ -267,6 +267,17 @@ def get_allof_types_from_json(source_json_url):
         if props == []:
             continue
         get_allof_types(props, unitItem)
+
+    for sn, sp in data['paths'].items():
+        props = []
+        for pn, pp in sp.items():
+            for rn, rp in pp['responses'].items():
+                schema = rp.get('content',{}).get('application/json',{}).get('schema', {})
+                if 'anyOf' in schema:
+                    props = schema
+        if props == []:
+            continue
+        get_allof_types(props, unitItem)
     return unitItem
 
 

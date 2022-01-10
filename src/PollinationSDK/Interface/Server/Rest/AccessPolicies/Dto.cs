@@ -10,6 +10,7 @@ namespace PollinationSDK
 {
 	public partial class AccessPolicy: PollinationSDK.Interface.Server.Rest.AccessPolicies.IDto {}
 	public partial class AccessPolicyList: PollinationSDK.Interface.Server.Rest.AccessPolicies.IDto {}
+	public partial class Accessor: PollinationSDK.Interface.Server.Rest.AccessPolicies.IDto {}
 	public partial class PolicySubject: PollinationSDK.Interface.Server.Rest.AccessPolicies.IDto {}
 	public partial class UserPermission: PollinationSDK.Interface.Server.Rest.AccessPolicies.IDto {}
 }
