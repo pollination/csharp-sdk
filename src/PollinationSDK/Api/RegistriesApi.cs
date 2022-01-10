@@ -62,8 +62,9 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
-        /// <returns>AnyOfRecipePlugin</returns>
-        AnyOf<Recipe,Plugin> GetPackageJson (string owner, string type, string name, string digest);
+        /// <param name="baked"> (optional, default to false)</param>
+        /// <returns>AnyOfRecipePluginBakedRecipe</returns>
+        AnyOf<Recipe,Plugin,BakedRecipe> GetPackageJson (string owner, string type, string name, string digest, bool? baked = default);
 
         /// <summary>
         /// Get Package in JSON format
@@ -76,8 +77,9 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
-        /// <returns>ApiResponse of AnyOfRecipePlugin</returns>
-        ApiResponse<AnyOf<Recipe,Plugin>> GetPackageJsonWithHttpInfo (string owner, string type, string name, string digest);
+        /// <param name="baked"> (optional, default to false)</param>
+        /// <returns>ApiResponse of AnyOfRecipePluginBakedRecipe</returns>
+        ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>> GetPackageJsonWithHttpInfo (string owner, string type, string name, string digest, bool? baked = default);
         /// <summary>
         /// Get Registry Index
         /// </summary>
@@ -191,9 +193,10 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
+        /// <param name="baked"> (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of AnyOfRecipePlugin</returns>
-        System.Threading.Tasks.Task<AnyOf<Recipe,Plugin>> GetPackageJsonAsync (string owner, string type, string name, string digest, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of AnyOfRecipePluginBakedRecipe</returns>
+        System.Threading.Tasks.Task<AnyOf<Recipe,Plugin,BakedRecipe>> GetPackageJsonAsync (string owner, string type, string name, string digest, bool? baked = default, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get Package in JSON format
@@ -206,9 +209,10 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
+        /// <param name="baked"> (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (AnyOf<Recipe,Plugin>)</returns>
-        System.Threading.Tasks.Task<ApiResponse<AnyOf<Recipe,Plugin>>> GetPackageJsonWithHttpInfoAsync (string owner, string type, string name, string digest, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of ApiResponse (AnyOf<Recipe,Plugin,BakedRecipe>)</returns>
+        System.Threading.Tasks.Task<ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>>> GetPackageJsonWithHttpInfoAsync (string owner, string type, string name, string digest, bool? baked = default, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get Registry Index
         /// </summary>
@@ -568,10 +572,11 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
-        /// <returns>AnyOfRecipePlugin</returns>
-        public AnyOf<Recipe,Plugin> GetPackageJson (string owner, string type, string name, string digest)
+        /// <param name="baked"> (optional, default to false)</param>
+        /// <returns>AnyOfRecipePluginBakedRecipe</returns>
+        public AnyOf<Recipe,Plugin,BakedRecipe> GetPackageJson (string owner, string type, string name, string digest, bool? baked = default)
         {
-             ApiResponse<AnyOf<Recipe,Plugin>> localVarResponse = GetPackageJsonWithHttpInfo(owner, type, name, digest);
+             ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>> localVarResponse = GetPackageJsonWithHttpInfo(owner, type, name, digest, baked);
              return localVarResponse.Data;
         }
 
@@ -583,8 +588,9 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
-        /// <returns>ApiResponse of AnyOfRecipePlugin</returns>
-        public ApiResponse<AnyOf<Recipe,Plugin>> GetPackageJsonWithHttpInfo (string owner, string type, string name, string digest)
+        /// <param name="baked"> (optional, default to false)</param>
+        /// <returns>ApiResponse of AnyOfRecipePluginBakedRecipe</returns>
+        public ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>> GetPackageJsonWithHttpInfo (string owner, string type, string name, string digest, bool? baked = default)
         {
             // verify the required parameter 'owner' is set
             if (owner == null)
@@ -624,6 +630,7 @@ namespace PollinationSDK.Api
             if (type != null) localVarPathParams.Add("type", this.Configuration.ApiClient.ParameterToString(type)); // path parameter
             if (name != null) localVarPathParams.Add("name", this.Configuration.ApiClient.ParameterToString(name)); // path parameter
             if (digest != null) localVarPathParams.Add("digest", this.Configuration.ApiClient.ParameterToString(digest)); // path parameter
+            if (baked != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "baked", baked)); // query parameter
 
             // authentication (APIKeyAuth) required
             if (!String.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("x-pollination-token")))
@@ -650,9 +657,9 @@ namespace PollinationSDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<AnyOf<Recipe,Plugin>>(localVarStatusCode,
+            return new ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (AnyOf<Recipe,Plugin>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AnyOf<Recipe,Plugin>)));
+                (AnyOf<Recipe,Plugin,BakedRecipe>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AnyOf<Recipe,Plugin,BakedRecipe>)));
         }
 
         /// <summary>
@@ -663,11 +670,12 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
+        /// <param name="baked"> (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of AnyOfRecipePlugin</returns>
-        public async System.Threading.Tasks.Task<AnyOf<Recipe,Plugin>> GetPackageJsonAsync (string owner, string type, string name, string digest, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of AnyOfRecipePluginBakedRecipe</returns>
+        public async System.Threading.Tasks.Task<AnyOf<Recipe,Plugin,BakedRecipe>> GetPackageJsonAsync (string owner, string type, string name, string digest, bool? baked = default, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<AnyOf<Recipe,Plugin>> localVarResponse = await GetPackageJsonWithHttpInfoAsync(owner, type, name, digest, cancellationToken);
+             ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>> localVarResponse = await GetPackageJsonWithHttpInfoAsync(owner, type, name, digest, baked, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -680,9 +688,10 @@ namespace PollinationSDK.Api
         /// <param name="type"></param>
         /// <param name="name"></param>
         /// <param name="digest"></param>
+        /// <param name="baked"> (optional, default to false)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (AnyOf<Recipe,Plugin>)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<AnyOf<Recipe,Plugin>>> GetPackageJsonWithHttpInfoAsync (string owner, string type, string name, string digest, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of ApiResponse (AnyOf<Recipe,Plugin,BakedRecipe>)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>>> GetPackageJsonWithHttpInfoAsync (string owner, string type, string name, string digest, bool? baked = default, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'owner' is set
             if (owner == null)
@@ -722,6 +731,7 @@ namespace PollinationSDK.Api
             if (type != null) localVarPathParams.Add("type", this.Configuration.ApiClient.ParameterToString(type)); // path parameter
             if (name != null) localVarPathParams.Add("name", this.Configuration.ApiClient.ParameterToString(name)); // path parameter
             if (digest != null) localVarPathParams.Add("digest", this.Configuration.ApiClient.ParameterToString(digest)); // path parameter
+            if (baked != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "baked", baked)); // query parameter
 
             // authentication (APIKeyAuth) required
             if (!String.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("x-pollination-token")))
@@ -748,9 +758,9 @@ namespace PollinationSDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<AnyOf<Recipe,Plugin>>(localVarStatusCode,
+            return new ApiResponse<AnyOf<Recipe,Plugin,BakedRecipe>>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (AnyOf<Recipe,Plugin>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AnyOf<Recipe,Plugin>)));
+                (AnyOf<Recipe,Plugin,BakedRecipe>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(AnyOf<Recipe,Plugin,BakedRecipe>)));
         }
 
         /// <summary>

@@ -101,7 +101,7 @@ Name | Type | Description  | Notes
 
 ## GetPackageJson
 
-> AnyOfRecipePlugin GetPackageJson (string owner, string type, string name, string digest)
+> AnyOfRecipePluginBakedRecipe GetPackageJson (string owner, string type, string name, string digest, bool? baked = null)
 
 Get Package in JSON format
 
@@ -133,11 +133,12 @@ namespace Example
             var type = type_example;  // string | 
             var name = name_example;  // string | 
             var digest = digest_example;  // string | 
+            var baked = true;  // bool? |  (optional)  (default to false)
 
             try
             {
                 // Get Package in JSON format
-                AnyOfRecipePlugin result = apiInstance.GetPackageJson(owner, type, name, digest);
+                AnyOfRecipePluginBakedRecipe result = apiInstance.GetPackageJson(owner, type, name, digest, baked);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -160,10 +161,11 @@ Name | Type | Description  | Notes
  **type** | **string**|  | 
  **name** | **string**|  | 
  **digest** | **string**|  | 
+ **baked** | **bool?**|  | [optional] [default to false]
 
 ### Return type
 
-[**AnyOfRecipePlugin**](AnyOfRecipePlugin.md)
+[**AnyOfRecipePluginBakedRecipe**](AnyOfRecipePluginBakedRecipe.md)
 
 ### Authorization
 
