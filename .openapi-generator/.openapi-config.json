@@ -2,7 +2,7 @@
     "packageName": "PollinationSDK",
     "projectName": "PollinationSDK",
     "packageUrl": "https://github.com/pollination/csharp-sdk",
-    "packageVersion": "0.14.0",
+    "packageVersion": "0.23.0",
     "sourceFolder": "src",
     "optionalAssemblyInfo": false,
     "optionalProjectFile": false

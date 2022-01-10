@@ -1,4 +1,4 @@
-/*
+/* 
  * pollination-server
  *
  * Pollination Server OpenAPI Definition
@@ -99,7 +99,7 @@ namespace PollinationSDK.Client
         /// Version of the package.
         /// </summary>
         /// <value>Version of the package.</value>
-        public const string Version = "0.14.0";
+        public const string Version = "0.23.0";
 
         /// <summary>
         /// Identifier for ISO 8601 DateTime Format
@@ -190,7 +190,7 @@ namespace PollinationSDK.Client
         /// </summary>
         public Configuration()
         {
-            UserAgent = "OpenAPI-Generator/0.14.0/csharp";
+            UserAgent = "OpenAPI-Generator/0.23.0/csharp";
             BasePath = "http://localhost";
             DefaultHeader = new ConcurrentDictionary<string, string>();
             ApiKey = new ConcurrentDictionary<string, string>();
@@ -263,7 +263,7 @@ namespace PollinationSDK.Client
             string tempFolderPath = null,
             string dateTimeFormat = null,
             int timeout = 100000,
-            string userAgent = "OpenAPI-Generator/0.14.0/csharp"
+            string userAgent = "OpenAPI-Generator/0.23.0/csharp"
             // ReSharper restore UnusedParameter.Local
             )
         {
@@ -303,15 +303,12 @@ namespace PollinationSDK.Client
         /// <summary>
         /// Gets or sets the base path for API access.
         /// </summary>
-        public virtual string BasePath
-        {
+        public virtual string BasePath {
             get { return _basePath; }
-            set
-            {
+            set {
                 _basePath = value;
                 // pass-through to ApiClient if it's set.
-                if (_apiClient != null)
-                {
+                if(_apiClient != null) {
                     _apiClient.RestClient.BaseUrl = new Uri(_basePath);
                 }
             }
@@ -327,7 +324,7 @@ namespace PollinationSDK.Client
         /// </summary>
         public virtual int Timeout
         {
-
+            
             get { return ApiClient.RestClient.Timeout; }
             set { ApiClient.RestClient.Timeout = value; }
         }
@@ -358,9 +355,9 @@ namespace PollinationSDK.Client
         public string GetApiKeyWithPrefix(string apiKeyIdentifier)
         {
             var apiKeyValue = "";
-            ApiKey.TryGetValue(apiKeyIdentifier, out apiKeyValue);
+            ApiKey.TryGetValue (apiKeyIdentifier, out apiKeyValue);
             var apiKeyPrefix = "";
-            if (ApiKeyPrefix.TryGetValue(apiKeyIdentifier, out apiKeyPrefix))
+            if (ApiKeyPrefix.TryGetValue (apiKeyIdentifier, out apiKeyPrefix))
                 return apiKeyPrefix + " " + apiKeyValue;
             else
                 return apiKeyValue;
@@ -508,9 +505,9 @@ namespace PollinationSDK.Client
         {
             String report = "C# SDK (PollinationSDK) Debug Report:\n";
             report += "    OS: " + System.Environment.OSVersion + "\n";
-            report += "    .NET Framework Version: " + System.Environment.Version + "\n";
-            report += "    Version of the API: 0.14.0\n";
-            report += "    SDK Package Version: 0.14.0\n";
+            report += "    .NET Framework Version: " + System.Environment.Version  + "\n";
+            report += "    Version of the API: 0.23.0\n";
+            report += "    SDK Package Version: 0.23.0\n";
 
             return report;
         }
