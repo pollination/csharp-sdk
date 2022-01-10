@@ -8,7 +8,6 @@ namespace PollinationSDK.Interface.Server.Rest.Licenses
 //Classes implemented this interface:
 namespace PollinationSDK
 {
-	public partial class Activation: PollinationSDK.Interface.Server.Rest.Licenses.IDto {}
 	public partial class ActivationList: PollinationSDK.Interface.Server.Rest.Licenses.IDto {}
 	public partial class LicensePoolAccessPolicy: PollinationSDK.Interface.Server.Rest.Licenses.IDto {}
 	public partial class LicensePoolAccessPolicyList: PollinationSDK.Interface.Server.Rest.Licenses.IDto {}

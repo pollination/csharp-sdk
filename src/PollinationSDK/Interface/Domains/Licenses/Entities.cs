@@ -8,6 +8,7 @@ namespace PollinationSDK.Interface.Domains.Licenses
 //Classes implemented this interface:
 namespace PollinationSDK
 {
+	public partial class Activation: PollinationSDK.Interface.Domains.Licenses.IEntities {}
 	public partial class CryptlexBase: PollinationSDK.Interface.Domains.Licenses.IEntities {}
 	public partial class Location: PollinationSDK.Interface.Domains.Licenses.IEntities {}
 	public partial class Metadata: PollinationSDK.Interface.Domains.Licenses.IEntities {}

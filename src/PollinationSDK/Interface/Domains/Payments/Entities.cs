@@ -10,9 +10,11 @@ namespace PollinationSDK
 {
 	public partial class BaseList: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class Coupon: PollinationSDK.Interface.Domains.Payments.IEntities {}
+	public partial class DeleteSubscriptionItem: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class Discount: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class DiscountAmount: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class ExternalResource: PollinationSDK.Interface.Domains.Payments.IEntities {}
+	public partial class Inventory: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class Invoice: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class InvoiceStatusTransitions: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class LineItem: PollinationSDK.Interface.Domains.Payments.IEntities {}
@@ -24,5 +26,7 @@ namespace PollinationSDK
 	public partial class PriceTier: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class Product: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class ProductFamily: PollinationSDK.Interface.Domains.Payments.IEntities {}
+	public partial class Subscription: PollinationSDK.Interface.Domains.Payments.IEntities {}
 	public partial class SubscriptionItem: PollinationSDK.Interface.Domains.Payments.IEntities {}
+	public partial class SubscriptionItemList: PollinationSDK.Interface.Domains.Payments.IEntities {}
 }

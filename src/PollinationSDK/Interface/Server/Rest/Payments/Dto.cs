@@ -9,7 +9,6 @@ namespace PollinationSDK.Interface.Server.Rest.Payments
 namespace PollinationSDK
 {
 	public partial class CardPublic: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
-	public partial class Inventory: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class InvoiceList: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class InvoicePreview: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class PaymentCreate: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
@@ -18,10 +17,7 @@ namespace PollinationSDK
 	public partial class PaymentSetup: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class Status: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class Subscribe: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
-	public partial class Subscription: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class SubscriptionCreate: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
-	public partial class SubscriptionItemPublic: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
-	public partial class SubscriptionItemPublicList: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class SubscriptionUpdate: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 	public partial class UpdateInvoicePreview: PollinationSDK.Interface.Server.Rest.Payments.IDto {}
 }
