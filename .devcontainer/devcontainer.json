@@ -14,7 +14,11 @@
   // Set *default* container specific settings.json values on container create.
   "settings": {},
   // Add the IDs of extensions you want installed when the container is created.
-  "extensions": ["ms-dotnettools.csharp", "eamodio.gitlens"],
+  "extensions": [
+    "ms-dotnettools.csharp",
+    "eamodio.gitlens",
+    "ms-python.python"
+  ],
   // Use 'forwardPorts' to make a list of ports inside the container available locally.
   // "forwardPorts": [5000, 5001],
   // [Optional] To reuse of your local HTTPS dev cert:
