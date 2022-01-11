@@ -34,7 +34,7 @@ namespace PollinationSDK
         /// </summary>
         /// <value>The type of resource</value>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public QuotaType Type { get; set; }   
+        public QuotaType QuotaType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="Quota" /> class.
         /// </summary>

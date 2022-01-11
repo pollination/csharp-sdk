@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// HTTPValidationError
     /// </summary>
     [DataContract(Name = "HTTPValidationError")]
-    public partial class HTTPValidationError : IEquatable<HTTPValidationError>, IValidatableObject
+    public partial class HTTPValidationError : OpenAPIGenBaseModel, IEquatable<HTTPValidationError>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="HTTPValidationError" /> class.
@@ -40,7 +40,6 @@ namespace PollinationSDK
         )// BaseClass
         {
             this.Detail = detail;
-
             // Set non-required readonly properties with defaultValue
         }
 

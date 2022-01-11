@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public LicenseType Type { get; set; }   
+        public LicenseType LicenseType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="LicensePublic" /> class.
         /// </summary>
@@ -68,7 +68,7 @@ namespace PollinationSDK
         /// <param name="url">A URL to the license used for the package..</param>
         public LicensePublic
         (
-            string name, string id, DateTime createdAt, DateTime updatedAt, string key, bool revoked, bool suspended, int totalActivations, int totalDeactivations, int validity, int allowedActivations, int serverSyncGracePeriod, int serverSyncInterval, int leaseDuration, string productId, List<Metadata> metadata, LicenseType type, // Required parameters
+            string name, string id, DateTime createdAt, DateTime updatedAt, string key, bool revoked, bool suspended, int totalActivations, int totalDeactivations, int validity, int allowedActivations, int serverSyncGracePeriod, int serverSyncInterval, int leaseDuration, string productId, List<LicenseMetadata> metadata, LicenseType type, // Required parameters
             Dictionary<string, string> annotations= default, string url= default, string notes= default// Optional parameters
         ) : base(name: name, annotations: annotations, url: url)// BaseClass
         {
@@ -91,7 +91,7 @@ namespace PollinationSDK
             this.ProductId = productId ?? throw new ArgumentNullException("productId is a required property for LicensePublic and cannot be null");
             // to ensure "metadata" is required (not null)
             this.Metadata = metadata ?? throw new ArgumentNullException("metadata is a required property for LicensePublic and cannot be null");
-            this.Type = type;
+            this.LicenseType = type;
             this.Notes = notes;
 
             // Set non-required readonly properties with defaultValue
@@ -173,7 +173,7 @@ namespace PollinationSDK
         /// Gets or Sets Metadata
         /// </summary>
         [DataMember(Name = "metadata", IsRequired = true, EmitDefaultValue = false)]
-        public List<Metadata> Metadata { get; set; } 
+        public List<LicenseMetadata> Metadata { get; set; } 
         /// <summary>
         /// Gets or Sets Notes
         /// </summary>

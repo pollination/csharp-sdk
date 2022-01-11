@@ -27,7 +27,7 @@ namespace PollinationSDK
     /// ValidationError
     /// </summary>
     [DataContract(Name = "ValidationError")]
-    public partial class ValidationError : IEquatable<ValidationError>, IValidatableObject
+    public partial class ValidationError : OpenAPIGenBaseModel, IEquatable<ValidationError>, IValidatableObject
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValidationError" /> class.

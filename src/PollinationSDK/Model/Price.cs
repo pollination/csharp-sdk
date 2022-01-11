@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name="type", EmitDefaultValue=false)]
-        public PriceType Type { get; set; }   
+        public PriceType PriceType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="Price" /> class.
         /// </summary>
@@ -67,7 +67,7 @@ namespace PollinationSDK
             this.Active = active;
             // to ensure "currency" is required (not null)
             this.Currency = currency ?? throw new ArgumentNullException("currency is a required property for Price and cannot be null");
-            this.Type = type;
+            this.PriceType = type;
             this.UnitAmount = unitAmount;
             this.Recurring = recurring;
             this.Nickname = nickname;
