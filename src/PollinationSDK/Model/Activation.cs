@@ -58,7 +58,7 @@ namespace PollinationSDK
         public Activation
         (
            string id, DateTime createdAt, DateTime updatedAt, bool offline, DateTime lastSyncedAt, Location location, // Required parameters
-           string os= default, string osVersion= default, string hostname= default, string appVersion= default, DateTime leaseExpiresAt= default, List<Metadata> metadata= default, string licenseId= default // Optional parameters
+           string os= default, string osVersion= default, string hostname= default, string appVersion= default, DateTime leaseExpiresAt= default, List<LicenseMetadata> metadata= default, string licenseId= default // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "id" is required (not null)
@@ -147,7 +147,7 @@ namespace PollinationSDK
         /// Gets or Sets Metadata
         /// </summary>
         [DataMember(Name = "metadata", EmitDefaultValue = false)]
-        public List<Metadata> Metadata { get; set; } 
+        public List<LicenseMetadata> Metadata { get; set; } 
         /// <summary>
         /// Gets or Sets LicenseId
         /// </summary>

@@ -24,43 +24,59 @@ using System.ComponentModel.DataAnnotations;
 namespace PollinationSDK
 {
     /// <summary>
-    /// Metadata
+    /// Package metadata information.
     /// </summary>
-    [DataContract(Name = "Metadata")]
-    public partial class Metadata : CryptlexBase, IEquatable<Metadata>, IValidatableObject
+    [DataContract(Name = "MetaData")]
+    public partial class MetaData : OpenAPIGenBaseModel, IEquatable<MetaData>, IValidatableObject
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="Metadata" /> class.
+        /// Initializes a new instance of the <see cref="MetaData" /> class.
         /// </summary>
         [JsonConstructorAttribute]
-        protected Metadata() 
+        protected MetaData() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Metadata";
+            this.Type = "MetaData";
         }
         
         /// <summary>
-        /// Initializes a new instance of the <see cref="Metadata" /> class.
+        /// Initializes a new instance of the <see cref="MetaData" /> class.
         /// </summary>
-        /// <param name="key">key (required).</param>
-        /// <param name="value">value (required).</param>
-        /// <param name="id">id.</param>
-        /// <param name="visible">visible (default to false).</param>
-        public Metadata
+        /// <param name="name">Package name. Make it descriptive and helpful ;) (required).</param>
+        /// <param name="tag">The tag of the package (required).</param>
+        /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
+        /// <param name="appVersion">The version of the application code underlying the manifest.</param>
+        /// <param name="keywords">A list of keywords to search the package by.</param>
+        /// <param name="maintainers">A list of maintainers for the package.</param>
+        /// <param name="home">The URL of this package&#39;s home page.</param>
+        /// <param name="sources">A list of URLs to source code for this project.</param>
+        /// <param name="icon">A URL to an SVG or PNG image to be used as an icon.</param>
+        /// <param name="deprecated">Whether this package is deprecated.</param>
+        /// <param name="description">A description of what this package does.</param>
+        /// <param name="license">The license information..</param>
+        public MetaData
         (
-           string key, string value, // Required parameters
-           string id= default, bool visible = false // Optional parameters
+           string name, string tag, // Required parameters
+           Dictionary<string, string> annotations= default, string appVersion= default, List<string> keywords= default, List<Maintainer> maintainers= default, string home= default, List<string> sources= default, string icon= default, bool deprecated= default, string description= default, License license= default// Optional parameters
         ) : base()// BaseClass
         {
-            // to ensure "key" is required (not null)
-            this.Key = key ?? throw new ArgumentNullException("key is a required property for Metadata and cannot be null");
-            // to ensure "value" is required (not null)
-            this.Value = value ?? throw new ArgumentNullException("value is a required property for Metadata and cannot be null");
-            this.Id = id;
-            this.Visible = visible;
+            // to ensure "name" is required (not null)
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for MetaData and cannot be null");
+            // to ensure "tag" is required (not null)
+            this.Tag = tag ?? throw new ArgumentNullException("tag is a required property for MetaData and cannot be null");
+            this.Annotations = annotations;
+            this.AppVersion = appVersion;
+            this.Keywords = keywords;
+            this.Maintainers = maintainers;
+            this.Home = home;
+            this.Sources = sources;
+            this.Icon = icon;
+            this.Deprecated = deprecated;
+            this.Description = description;
+            this.License = license;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Metadata";
+            this.Type = "MetaData";
         }
 
         //============================================== is ReadOnly 
@@ -68,28 +84,80 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Metadata";
+        public string Type { get; protected internal set; }  = "MetaData";
 
         /// <summary>
-        /// Gets or Sets Key
+        /// Package name. Make it descriptive and helpful ;)
         /// </summary>
-        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
-        public string Key { get; set; } 
+        /// <value>Package name. Make it descriptive and helpful ;)</value>
+        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        public string Name { get; set; } 
         /// <summary>
-        /// Gets or Sets Value
+        /// The tag of the package
         /// </summary>
-        [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = false)]
-        public string Value { get; set; } 
+        /// <value>The tag of the package</value>
+        [DataMember(Name = "tag", IsRequired = true, EmitDefaultValue = false)]
+        public string Tag { get; set; } 
         /// <summary>
-        /// Gets or Sets Id
+        /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
-        public string Id { get; set; } 
+        /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
+        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
-        /// Gets or Sets Visible
+        /// The version of the application code underlying the manifest
         /// </summary>
-        [DataMember(Name = "visible", EmitDefaultValue = true)]
-        public bool Visible { get; set; }  = false;
+        /// <value>The version of the application code underlying the manifest</value>
+        [DataMember(Name = "app_version", EmitDefaultValue = false)]
+        public string AppVersion { get; set; } 
+        /// <summary>
+        /// A list of keywords to search the package by
+        /// </summary>
+        /// <value>A list of keywords to search the package by</value>
+        [DataMember(Name = "keywords", EmitDefaultValue = false)]
+        public List<string> Keywords { get; set; } 
+        /// <summary>
+        /// A list of maintainers for the package
+        /// </summary>
+        /// <value>A list of maintainers for the package</value>
+        [DataMember(Name = "maintainers", EmitDefaultValue = false)]
+        public List<Maintainer> Maintainers { get; set; } 
+        /// <summary>
+        /// The URL of this package&#39;s home page
+        /// </summary>
+        /// <value>The URL of this package&#39;s home page</value>
+        [DataMember(Name = "home", EmitDefaultValue = false)]
+        public string Home { get; set; } 
+        /// <summary>
+        /// A list of URLs to source code for this project
+        /// </summary>
+        /// <value>A list of URLs to source code for this project</value>
+        [DataMember(Name = "sources", EmitDefaultValue = false)]
+        public List<string> Sources { get; set; } 
+        /// <summary>
+        /// A URL to an SVG or PNG image to be used as an icon
+        /// </summary>
+        /// <value>A URL to an SVG or PNG image to be used as an icon</value>
+        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        public string Icon { get; set; } 
+        /// <summary>
+        /// Whether this package is deprecated
+        /// </summary>
+        /// <value>Whether this package is deprecated</value>
+        [DataMember(Name = "deprecated", EmitDefaultValue = false)]
+        public bool Deprecated { get; set; } 
+        /// <summary>
+        /// A description of what this package does
+        /// </summary>
+        /// <value>A description of what this package does</value>
+        [DataMember(Name = "description", EmitDefaultValue = false)]
+        public string Description { get; set; } 
+        /// <summary>
+        /// The license information.
+        /// </summary>
+        /// <value>The license information.</value>
+        [DataMember(Name = "license", EmitDefaultValue = false)]
+        public License License { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -97,7 +165,7 @@ namespace PollinationSDK
         /// <returns>String presentation of the object</returns>
         public override string ToString()
         {
-            return "Metadata";
+            return "MetaData";
         }
 
         /// <summary>
@@ -110,22 +178,30 @@ namespace PollinationSDK
                 return this.ToString();
             
             var sb = new StringBuilder();
-            sb.Append("Metadata:\n");
+            sb.Append("MetaData:\n");
             sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Visible: ").Append(Visible).Append("\n");
+            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Tag: ").Append(Tag).Append("\n");
+            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  AppVersion: ").Append(AppVersion).Append("\n");
+            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
+            sb.Append("  Maintainers: ").Append(Maintainers).Append("\n");
+            sb.Append("  Home: ").Append(Home).Append("\n");
+            sb.Append("  Sources: ").Append(Sources).Append("\n");
+            sb.Append("  Icon: ").Append(Icon).Append("\n");
+            sb.Append("  Deprecated: ").Append(Deprecated).Append("\n");
+            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  License: ").Append(License).Append("\n");
             return sb.ToString();
         }
   
         /// <summary>
         /// Returns the object from JSON string
         /// </summary>
-        /// <returns>Metadata object</returns>
-        public static Metadata FromJson(string json)
+        /// <returns>MetaData object</returns>
+        public static MetaData FromJson(string json)
         {
-            var obj = JsonConvert.DeserializeObject<Metadata>(json, JsonSetting.AnyOfConvertSetting);
+            var obj = JsonConvert.DeserializeObject<MetaData>(json, JsonSetting.AnyOfConvertSetting);
             if (obj == null)
                 return null;
             return obj.Type.ToLower() == obj.GetType().Name.ToLower() ? obj : null;
@@ -134,8 +210,8 @@ namespace PollinationSDK
         /// <summary>
         /// Creates a new instance with the same properties.
         /// </summary>
-        /// <returns>Metadata object</returns>
-        public virtual Metadata DuplicateMetadata()
+        /// <returns>MetaData object</returns>
+        public virtual MetaData DuplicateMetaData()
         {
             return FromJson(this.ToJson());
         }
@@ -146,16 +222,16 @@ namespace PollinationSDK
         /// <returns>OpenAPIGenBaseModel</returns>
         public override OpenAPIGenBaseModel Duplicate()
         {
-            return DuplicateMetadata();
+            return DuplicateMetaData();
         }
 
         /// <summary>
         /// Creates a new instance with the same properties.
         /// </summary>
         /// <returns>OpenAPIGenBaseModel</returns>
-        public override CryptlexBase DuplicateCryptlexBase()
+        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
         {
-            return DuplicateMetadata();
+            return DuplicateMetaData();
         }
      
         /// <summary>
@@ -166,43 +242,87 @@ namespace PollinationSDK
         public override bool Equals(object input)
         {
             input = input is AnyOf anyOf ? anyOf.Obj : input;
-            return this.Equals(input as Metadata);
+            return this.Equals(input as MetaData);
         }
 
         /// <summary>
-        /// Returns true if Metadata instances are equal
+        /// Returns true if MetaData instances are equal
         /// </summary>
-        /// <param name="input">Instance of Metadata to be compared</param>
+        /// <param name="input">Instance of MetaData to be compared</param>
         /// <returns>Boolean</returns>
-        public bool Equals(Metadata input)
+        public bool Equals(MetaData input)
         {
             if (input == null)
                 return false;
             return base.Equals(input) && 
                 (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
+                    this.Name == input.Name ||
+                    (this.Name != null &&
+                    this.Name.Equals(input.Name))
                 ) && base.Equals(input) && 
                 (
-                    this.Value == input.Value ||
-                    (this.Value != null &&
-                    this.Value.Equals(input.Value))
-                ) && base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Visible == input.Visible ||
-                    (this.Visible != null &&
-                    this.Visible.Equals(input.Visible))
+                    this.Tag == input.Tag ||
+                    (this.Tag != null &&
+                    this.Tag.Equals(input.Tag))
                 ) && base.Equals(input) && 
                 (
                     this.Type == input.Type ||
                     (this.Type != null &&
                     this.Type.Equals(input.Type))
+                ) && base.Equals(input) && 
+                (
+                    this.Annotations == input.Annotations ||
+                    this.Annotations != null &&
+                    input.Annotations != null &&
+                    this.Annotations.SequenceEqual(input.Annotations)
+                ) && base.Equals(input) && 
+                (
+                    this.AppVersion == input.AppVersion ||
+                    (this.AppVersion != null &&
+                    this.AppVersion.Equals(input.AppVersion))
+                ) && base.Equals(input) && 
+                (
+                    this.Keywords == input.Keywords ||
+                    this.Keywords != null &&
+                    input.Keywords != null &&
+                    this.Keywords.SequenceEqual(input.Keywords)
+                ) && base.Equals(input) && 
+                (
+                    this.Maintainers == input.Maintainers ||
+                    this.Maintainers != null &&
+                    input.Maintainers != null &&
+                    this.Maintainers.SequenceEqual(input.Maintainers)
+                ) && base.Equals(input) && 
+                (
+                    this.Home == input.Home ||
+                    (this.Home != null &&
+                    this.Home.Equals(input.Home))
+                ) && base.Equals(input) && 
+                (
+                    this.Sources == input.Sources ||
+                    this.Sources != null &&
+                    input.Sources != null &&
+                    this.Sources.SequenceEqual(input.Sources)
+                ) && base.Equals(input) && 
+                (
+                    this.Icon == input.Icon ||
+                    (this.Icon != null &&
+                    this.Icon.Equals(input.Icon))
+                ) && base.Equals(input) && 
+                (
+                    this.Deprecated == input.Deprecated ||
+                    (this.Deprecated != null &&
+                    this.Deprecated.Equals(input.Deprecated))
+                ) && base.Equals(input) && 
+                (
+                    this.Description == input.Description ||
+                    (this.Description != null &&
+                    this.Description.Equals(input.Description))
+                ) && base.Equals(input) && 
+                (
+                    this.License == input.License ||
+                    (this.License != null &&
+                    this.License.Equals(input.License))
                 );
         }
 
@@ -215,16 +335,32 @@ namespace PollinationSDK
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = base.GetHashCode();
-                if (this.Key != null)
-                    hashCode = hashCode * 59 + this.Key.GetHashCode();
-                if (this.Value != null)
-                    hashCode = hashCode * 59 + this.Value.GetHashCode();
-                if (this.Id != null)
-                    hashCode = hashCode * 59 + this.Id.GetHashCode();
-                if (this.Visible != null)
-                    hashCode = hashCode * 59 + this.Visible.GetHashCode();
+                if (this.Name != null)
+                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Tag != null)
+                    hashCode = hashCode * 59 + this.Tag.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.Annotations != null)
+                    hashCode = hashCode * 59 + this.Annotations.GetHashCode();
+                if (this.AppVersion != null)
+                    hashCode = hashCode * 59 + this.AppVersion.GetHashCode();
+                if (this.Keywords != null)
+                    hashCode = hashCode * 59 + this.Keywords.GetHashCode();
+                if (this.Maintainers != null)
+                    hashCode = hashCode * 59 + this.Maintainers.GetHashCode();
+                if (this.Home != null)
+                    hashCode = hashCode * 59 + this.Home.GetHashCode();
+                if (this.Sources != null)
+                    hashCode = hashCode * 59 + this.Sources.GetHashCode();
+                if (this.Icon != null)
+                    hashCode = hashCode * 59 + this.Icon.GetHashCode();
+                if (this.Deprecated != null)
+                    hashCode = hashCode * 59 + this.Deprecated.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.License != null)
+                    hashCode = hashCode * 59 + this.License.GetHashCode();
                 return hashCode;
             }
         }
@@ -240,7 +376,7 @@ namespace PollinationSDK
 
             
             // Type (string) pattern
-            Regex regexType = new Regex(@"^Metadata$", RegexOptions.CultureInvariant);
+            Regex regexType = new Regex(@"^MetaData$", RegexOptions.CultureInvariant);
             if (false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
