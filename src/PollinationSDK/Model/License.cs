@@ -47,12 +47,12 @@ namespace PollinationSDK
         /// <param name="url">A URL to the license used for the package..</param>
         public License
         (
-           string name, // Required parameters
+           //string name, // Required parameters
            Dictionary<string, string> annotations= default, string url= default// Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "name" is required (not null)
-            this.Name = name ?? throw new ArgumentNullException("name is a required property for License and cannot be null");
+            //this.Name = name ?? throw new ArgumentNullException("name is a required property for License and cannot be null");
             this.Annotations = annotations;
             this.Url = url;
 
@@ -71,7 +71,7 @@ namespace PollinationSDK
         /// The license name used for the package.
         /// </summary>
         /// <value>The license name used for the package.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", EmitDefaultValue = false)]
         public string Name { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
