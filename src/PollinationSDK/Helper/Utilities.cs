@@ -162,6 +162,27 @@ namespace PollinationSDK
 
         }
 
+        /// <summary>
+        /// Get a valid license key which is a not suspended or revoked.
+        /// </summary>
+        /// <param name="product">rhino_plugin or revit_plugin</param>
+        /// <returns></returns>
+        public static string GetValidLicenseKey(string product)
+        {
+            var api = new PollinationSDK.Api.LicensesApi();
+            var pool = api.GetAvailablePools().Resources.Where(_ => _.Product == product).FirstOrDefault();
+            if (pool == null)
+                throw new ArgumentException($"Failed to find any available license pool for product: {product}");
+            var id = pool.Id;
+            Helper.Logger.Information($"GetValidLicenseKey: Pool ID: {id}");
+            var license = api.GetPoolLicense(id);
+            if (license.Revoked)
+                throw new ArgumentException($"License is revoked. ID: {pool.LicenseId}");
+            if (license.Suspended)
+                throw new ArgumentException($"License is suspended. ID: {pool.LicenseId}");
+            return license.Key;
+
+        }
 
     }
 }

@@ -39,6 +39,17 @@ namespace PollinationSDK
                         throw new ArgumentException($"{typeName} is not a valid type for {reader.Path}, this might because of mismatch version of honeybee schema!");
                     }
                 }
+                else if (jObject["account_type"] != null) //TODO: temporary solution for AccountPublic 
+                {
+                    //Accessor's subjuect
+                    //"account_type": "user",
+                    data = jObject.ToObject(typeof(AccountPublic), serializer);
+                }
+                else if (jObject["memberCount"] != null) //TODO: temporary solution for Team
+                {
+                    //Accessor's subjuect
+                    data = jObject.ToObject(typeof(Team), serializer);
+                }
                 else
                 {
                     throw new ArgumentException($"Unable to load {reader.Path}");
