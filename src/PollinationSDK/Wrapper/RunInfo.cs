@@ -367,7 +367,7 @@ namespace PollinationSDK.Wrapper
             return updatedAssets;
         }
 
-        public async Task<List<RunAssetBase>> DownloadRunAssetsAsync(List<RunAssetBase> runAssets, string saveAsDir = default, Action<string> reportingAction = default, bool useCached = false)
+        public async Task<List<RunAssetBase>> DownloadRunAssetsAsync(List<RunAssetBase> runAssets, string saveAsDir = default, Action<string> reportingAction = default, bool useCached = false, System.Threading.CancellationToken cancelToken = default)
         {
 
             if (this.IsLocalRun)
@@ -388,11 +388,13 @@ namespace PollinationSDK.Wrapper
                     allAssets = CheckCached(allAssets, dir).ToList();
                 }
 
+                cancelToken.ThrowIfCancellationRequested();
                 // assembly download tasks
                 reportingAction?.Invoke("Starting");
-                var tasks = DownloadAssets(this, allAssets, dir, reportingAction);
+                var tasks = DownloadAssets(this, allAssets, dir, reportingAction, cancelToken);
                 await Task.WhenAll(tasks);
                 reportingAction?.Invoke("Downloaded");
+
                 // collect all downloaded assets
                 var works = allAssets.Zip(tasks, (asset, saved) => new { asset, saved });
                 foreach (var item in works)
@@ -475,7 +477,7 @@ namespace PollinationSDK.Wrapper
         /// <param name="runInfo"></param>
         /// <param name="saveAsDir"></param>
         /// <returns></returns>
-        private static List<Task<string>> DownloadAssets(RunInfo runInfo, IEnumerable<RunAssetBase> assets, string saveAsDir, Action<string> reportProgressAction)
+        private static List<Task<string>> DownloadAssets(RunInfo runInfo, IEnumerable<RunAssetBase> assets, string saveAsDir, Action<string> reportProgressAction, System.Threading.CancellationToken cancelToken = default)
         {
             var tasks = new List<Task<string>>();
             if (assets == null || !assets.Any()) return tasks;
@@ -511,10 +513,13 @@ namespace PollinationSDK.Wrapper
                                 url = api.DownloadRunArtifact(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, path: asset.RelativePath).ToString();
                             else
                                 url = api.GetRunOutput(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, assetName).ToString();
-                            var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress);
-                            await t.ConfigureAwait(false);
 
-                            return t.Result; 
+                            Helper.Logger.Information($"DownloadAssets: downloading {assetName} from \n  -{url}\n");
+                            var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress, cancelToken);
+                            await t.ConfigureAwait(false);
+                            var path = t.Result;
+                            Helper.Logger.Information($"DownloadAssets: saved {assetName} to {path}");
+                            return path; 
                         });
                         tasks.Add(task);
                        
@@ -527,6 +532,10 @@ namespace PollinationSDK.Wrapper
                 }
                 catch (Exception e)
                 {
+                    //canceled by user
+                    if (e is OperationCanceledException)
+                        return null;
+
                     throw new ArgumentException($"Failed to download asset {asset.Name}.\n -{e.Message}");
                 }
             }
