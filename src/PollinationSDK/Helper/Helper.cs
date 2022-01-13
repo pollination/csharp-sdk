@@ -277,14 +277,14 @@ namespace PollinationSDK
         }
 
 
-        public static async Task<string> DownloadUrlAsync(string url, string saveAsDir, Action<int> reportProgressAction = default, Action whenDone = default)
+        public static async Task<string> DownloadUrlAsync(string url, string saveAsDir, Action<int> reportProgressAction = default, Action whenDone = default, System.Threading.CancellationToken cancelToken = default)
         {  
             // prep file path
             var fileName = Path.GetFileName(url).Split(new[] { '?' })[0];
 
             Directory.CreateDirectory(saveAsDir);
             var file = Path.Combine(saveAsDir, fileName);
-            Helper.Logger.Information($"DownloadUrlAsync: downloading {fileName} from \n  -{url}");
+            Helper.Logger.Information($"DownloadUrlAsync: downloading {url}");
             using (WebClient wc = new WebClient())
             {
                 var prog = 0;
@@ -296,11 +296,33 @@ namespace PollinationSDK
                     reportProgressAction?.Invoke(prog);
                 };
                 wc.DownloadFileCompleted += (s, e) => whenDone?.Invoke();
-                var t = wc.DownloadFileTaskAsync(new Uri(url), file);
-                await t;
-                if (t.IsFaulted && t.Exception != null)
-                    throw t.Exception;
-                Helper.Logger.Information($"DownloadUrlAsync: saved {fileName} to {file}");
+            
+
+                try
+                {    
+                    cancelToken.ThrowIfCancellationRequested();
+                    cancelToken.Register(wc.CancelAsync);
+
+                    var t = wc.DownloadFileTaskAsync(new Uri(url), file);
+                    await t;
+                    if (t.IsFaulted && t.Exception != null)
+                        throw t.Exception;
+                    Helper.Logger.Information($"DownloadUrlAsync: saved {fileName} to {file}");
+                }
+                catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
+                {
+                    throw new OperationCanceledException();
+                }
+                catch (AggregateException ex) when (ex.InnerException is WebException exWeb && exWeb.Status == WebExceptionStatus.RequestCanceled)
+                {
+                    throw new OperationCanceledException();
+                }
+                catch (TaskCanceledException)
+                {
+                    throw new OperationCanceledException();
+                }
+
+                
             }
 
             if (!File.Exists(file))
@@ -322,7 +344,6 @@ namespace PollinationSDK
                 throw new ArgumentException($"Failed to unzip file {Path.GetFileName(file)}.\n -{e.Message}");
             }
 
-            Helper.Logger.Information($"DownloadUrlAsync: {fileName}: {outputDirOrFile}");
             return outputDirOrFile;
         }
 
