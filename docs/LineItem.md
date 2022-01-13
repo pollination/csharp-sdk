@@ -5,11 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | 
-**Metadata** | **Object** |  | [optional] 
 **Amount** | **int** |  | 
 **Currency** | **string** |  | 
 **Description** | **string** |  | 
+**Id** | **string** |  | 
+**Metadata** | **Object** |  | [optional] 
 **Period** | [**Period**](Period.md) |  | 
 **Price** | [**Price**](Price.md) |  | 
 **Proration** | **bool** |  | 

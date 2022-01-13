@@ -7,7 +7,8 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Id** | **string** |  | 
 **Metadata** | **Object** |  | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "SubscriptionItem"]
+**Price** | [**Price**](Price.md) |  | 
+**Quantity** | **int** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

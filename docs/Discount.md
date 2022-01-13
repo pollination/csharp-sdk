@@ -5,13 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | 
-**Metadata** | **Object** |  | [optional] 
-**Start** | **DateTime** |  | 
 **Coupon** | [**Coupon**](Coupon.md) |  | 
 **End** | **DateTime** |  | [optional] 
+**Id** | **string** |  | 
+**Metadata** | **Object** |  | [optional] 
 **PromotionCode** | **string** |  | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "Discount"]
+**Start** | **DateTime** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
