@@ -197,24 +197,24 @@ namespace PollinationSDK
 
 
 
-        public static async Task<string> DownloadArtifact(Project proj, FileMeta file, string saveAsFolder)
+        public static async Task<string> DownloadArtifact(Project proj, FileMeta file, string saveAsFolder, Action<int> reportProgressAction = default)
         {
             var api = new ArtifactsApi();
             var task = api.DownloadArtifactAsync(proj.Owner.Name, proj.Name, file.Key);
             var result = await task;
 
-            var downlaodTask = DownloadFromUrlAsync(result.ToString(), saveAsFolder);
+            var downlaodTask = DownloadUrlAsync(result.ToString(), saveAsFolder, reportProgressAction);
             var saved = await downlaodTask;
             return saved;
         }
 
-        private static async Task<List<string>> Download(string url, string dir)
+        private static async Task<List<string>> Download(string url, string dir, Action<int> reportProgressAction)
         {
 
             try
             {
                 // downloaded folder
-                var task = DownloadFromUrlAsync(url, dir);
+                var task = DownloadUrlAsync(url, dir, reportProgressAction);
                 var finishedTask = await Task.WhenAny(new[] { task });
                 var downloadedFileFolder = finishedTask.Result;
 
@@ -236,7 +236,7 @@ namespace PollinationSDK
             }
         }
 
-        public static async Task<List<string>> DownloadArtifactZip(RunInfo runInfo, string zipFileName, string saveAsDir = default, Action<int> reportProgressAction = default)
+        private static async Task<List<string>> DownloadArtifactZip(RunInfo runInfo, string zipFileName, string saveAsDir = default, Action<int> reportProgressAction = default)
         {
             try
             {
@@ -248,7 +248,7 @@ namespace PollinationSDK
                 var simuID = runInfo.RunID.Substring(0, 8);
                 dir = Path.Combine(dir, simuID);
                 // downloaded folder
-                return await Download(url, dir);
+                return await Download(url, dir, reportProgressAction);
             }
             catch (Exception)
             {
@@ -256,7 +256,7 @@ namespace PollinationSDK
             }
 
         }
-        public static async Task<List<string>> DownloadSimulationInputAssets(RunInfo runInfo, string saveAsDir = default, Action<int> reportProgressAction = default)
+        private static async Task<List<string>> DownloadSimulationInputAssets(RunInfo runInfo, string saveAsDir = default, Action<int> reportProgressAction = default)
         {
             try
             {
@@ -268,7 +268,7 @@ namespace PollinationSDK
                 var simuID = runInfo.RunID.Substring(0, 8);
                 dir = Path.Combine(dir, simuID, "inputs");
                 // downloaded folder
-                return await Download(url, dir);
+                return await Download(url, dir, reportProgressAction);
             }
             catch (Exception)
             {
@@ -277,31 +277,31 @@ namespace PollinationSDK
         }
 
 
-
-        public static async Task<string> DownloadFromUrlAsync(string url, string saveAsDir)
-        {
-            var file = string.Empty;
-            var outputDirOrFile = string.Empty;
-
-            var request = new RestRequest(Method.GET);
-            var client = new RestClient(url.ToString());
-            var response = await client.ExecuteAsync(request);
-            if (response.StatusCode != HttpStatusCode.OK)
-            {
-                var e = new ArgumentException($"Unable to download file. Code {response.StatusCode}: { response.StatusDescription}");
-                Helper.Logger.Error(e, $"DownloadFromUrlAsync: Unable to download file {url}");
-                throw e;
-            }
-
-
+        public static async Task<string> DownloadUrlAsync(string url, string saveAsDir, Action<int> reportProgressAction = default, Action whenDone = default)
+        {  
             // prep file path
             var fileName = Path.GetFileName(url).Split(new[] { '?' })[0];
 
             Directory.CreateDirectory(saveAsDir);
-            file = Path.Combine(saveAsDir, fileName);
-
-            var b = response.RawBytes;
-            File.WriteAllBytes(file, b);
+            var file = Path.Combine(saveAsDir, fileName);
+            Helper.Logger.Information($"DownloadUrlAsync: downloading {fileName} from \n  -{url}");
+            using (WebClient wc = new WebClient())
+            {
+                var prog = 0;
+                wc.DownloadProgressChanged += (s, e) =>
+                {
+                    if (prog == e.ProgressPercentage)
+                        return;
+                    prog = e.ProgressPercentage;
+                    reportProgressAction?.Invoke(prog);
+                };
+                wc.DownloadFileCompleted += (s, e) => whenDone?.Invoke();
+                var t = wc.DownloadFileTaskAsync(new Uri(url), file);
+                await t;
+                if (t.IsFaulted && t.Exception != null)
+                    throw t.Exception;
+                Helper.Logger.Information($"DownloadUrlAsync: saved {fileName} to {file}");
+            }
 
             if (!File.Exists(file))
             {
@@ -309,7 +309,7 @@ namespace PollinationSDK
                 Helper.Logger.Error(e, $"DownloadFromUrlAsync: error");
                 throw e;
             }
-            outputDirOrFile = file;
+            var outputDirOrFile = file;
 
             // unzip
             try
@@ -322,10 +322,11 @@ namespace PollinationSDK
                 throw new ArgumentException($"Failed to unzip file {Path.GetFileName(file)}.\n -{e.Message}");
             }
 
-            Helper.Logger.Information($"Finished downloading: {url} to {outputDirOrFile}");
+            Helper.Logger.Information($"DownloadUrlAsync: {fileName}: {outputDirOrFile}");
             return outputDirOrFile;
-
         }
+
+     
 
         /// <summary>
         /// Download an artifact(file/folder) items independently.
@@ -334,7 +335,7 @@ namespace PollinationSDK
         /// <param name="artifact"></param>
         /// <param name="saveAsDir"></param>
         /// <returns></returns>
-        public static List<Task<string>> DownloadArtifactWithItems(RunInfo simu, DAGPathOutput artifact, string saveAsDir)
+        private static List<Task<string>> DownloadArtifactWithItems(RunInfo simu, DAGPathOutput artifact, string saveAsDir, Action<int> reportProgressAction)
         {
             var file = string.Empty;
             var outputDirOrFile = string.Empty;
@@ -368,7 +369,7 @@ namespace PollinationSDK
                 if (artfact.Type == "file")
                 {
                     var url = api.DownloadRunArtifact(owner, projName, simuID, artfact.Key).ToString();
-                    var task = DownloadFromUrlAsync(url, dir);
+                    var task = DownloadUrlAsync(url, dir, reportProgressAction);
                     ts.Add(task);
                 }
                 else if (artfact.Type == "folder")
@@ -385,7 +386,7 @@ namespace PollinationSDK
                         }
                         // item is file
                         var url = api.DownloadRunArtifact(owner, projName, simuID, item.Key).ToString();
-                        var task = DownloadFromUrlAsync(url, dir);
+                        var task = DownloadUrlAsync(url, dir, reportProgressAction);
 
                         ts.Add(task);
                     }
