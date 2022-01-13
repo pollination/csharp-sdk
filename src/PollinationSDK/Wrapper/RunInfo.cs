@@ -379,45 +379,20 @@ namespace PollinationSDK.Wrapper
                 var dir = string.IsNullOrEmpty(saveAsDir) ? Helper.GenTempFolder() : saveAsDir;
                 var simuID = this.RunID.Substring(0, 8);
                 dir = Path.Combine(dir, simuID);
-                var inputDir = Path.Combine(dir, "inputs");
-                var outputDir = Path.Combine(dir, "outputs");
-
-                var inputAssets = runAssets.OfType<RunInputAsset>();
-                var outputAssets = runAssets.OfType<RunOutputAsset>();
+                
+                var allAssets = runAssets;
 
                 // check if cached
                 if (useCached)
                 {
-                    inputAssets = CheckCached(inputAssets, inputDir).OfType<RunInputAsset>();
-                    outputAssets = CheckCached(outputAssets, outputDir).OfType<RunOutputAsset>();
+                    allAssets = CheckCached(allAssets, dir).ToList();
                 }
-                
+
                 // assembly download tasks
-                var tasks = new List<Task<string>>();
-                var inputTasks = DownloadInputArtifact(this, inputAssets, inputDir);
-                tasks.AddRange(inputTasks);
-                var outputTasks = DownloadOutputArtifact(this, outputAssets, outputDir);
-                tasks.AddRange(outputTasks);
-
-                // download tasks
-                var total = tasks.Count();
-                var completed = 0;
-                reportingAction?.Invoke($"0%");
-                while (total - completed > 0)
-                {
-                    var finishedTask = await Task.WhenAny(tasks);
-                    await finishedTask;
-                    completed++;
-
-                    int finishedPercent = (int)(completed / (double)total * 100);
-                    reportingAction?.Invoke($"{finishedPercent}%");
-                }
-                reportingAction?.Invoke($"{completed}/{total} loaded");
-
-                var allAssets = new List<RunAssetBase>();
-                allAssets.AddRange(inputAssets);
-                allAssets.AddRange(outputAssets);
-
+                reportingAction?.Invoke("Starting");
+                var tasks = DownloadAssets(this, allAssets, dir, reportingAction);
+                await Task.WhenAll(tasks);
+                reportingAction?.Invoke("Downloaded");
                 // collect all downloaded assets
                 var works = allAssets.Zip(tasks, (asset, saved) => new { asset, saved });
                 foreach (var item in works)
@@ -451,6 +426,7 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
+                Helper.Logger.Error(e, "DownloadRunAssetsAsync");
                 throw e;
             }
 
@@ -458,17 +434,32 @@ namespace PollinationSDK.Wrapper
 
         }
 
+        class DownloadProgress
+        {
+            public int Total { get; set; }
+            public int Completed { get; set; }
+
+            public override string ToString()
+            {
+                return $"{Completed}/{Total}";
+            }
+            public bool IsRunning => Total > Completed;
+            public bool IsValid => Total > 0;
+        }
+
         private static IEnumerable<RunAssetBase> CheckCached(IEnumerable<RunAssetBase> outputAssets, string dir)
         {
-            var inputDir = dir;
             var checkedAssets = new List<RunAssetBase>();
+            var inputDir = Path.Combine(dir, "inputs");
+            var outputDir = Path.Combine(dir, "outputs");
             foreach (var item in outputAssets)
             {
+                var savedDir = item is RunInputAsset ? inputDir : outputDir;
                 var dupObj = item.Duplicate();
-                var isCached = item.CheckIfAssetCached(inputDir);
+                var isCached = item.CheckIfAssetCached(savedDir);
                 if (isCached)
                 {
-                    var cachedPath = item.GetCachedAsset(inputDir);
+                    var cachedPath = item.GetCachedAsset(savedDir);
                     dupObj.LocalPath = cachedPath;
                 }
 
@@ -479,78 +470,69 @@ namespace PollinationSDK.Wrapper
 
 
         /// <summary>
-        /// Download output assets with one call
+        /// Download all assets (input/output) with one call
         /// </summary>
         /// <param name="runInfo"></param>
-        /// <param name="artifactName"></param>
         /// <param name="saveAsDir"></param>
         /// <returns></returns>
-        private static List<Task<string>> DownloadOutputArtifact(RunInfo runInfo, IEnumerable<RunOutputAsset> assets, string saveAsDir)
+        private static List<Task<string>> DownloadAssets(RunInfo runInfo, IEnumerable<RunAssetBase> assets, string saveAsDir, Action<string> reportProgressAction)
         {
             var tasks = new List<Task<string>>();
             if (assets == null || !assets.Any()) return tasks;
             var api = new PollinationSDK.Api.RunsApi();
+            var inputDir = Path.Combine(saveAsDir, "inputs");
+            var outputDir = Path.Combine(saveAsDir, "outputs");
+
+            var total = assets.Count();
+            var completed = 0;
             foreach (var asset in assets)
             {
                 try
                 {
                     if (asset.IsPathAsset() && !asset.IsSaved())
                     {
-                        var url = api.GetRunOutput(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, asset.Name).ToString();
-                        var task = Helper.DownloadFromUrlAsync(url, Path.Combine(saveAsDir, asset.Name));
+                        var assetName = asset.Name;
+                        var isInputAsset = asset is RunInputAsset;
+                        var dir = isInputAsset ? inputDir : outputDir;
+                        dir = Path.Combine(dir, assetName);
+
+                        Action<int> individualProgress = (percent) => {
+                            reportProgressAction?.Invoke($"{assetName}: {percent}%");
+                        };
+                        Action overAllProgress = () => {
+                            completed++;
+                            reportProgressAction?.Invoke($"OVERALL: {completed}/{total}");
+                        };
+
+                        var task =Task.Run(async ()=> {
+                            var url = string.Empty;
+
+                            if (isInputAsset)
+                                url = api.DownloadRunArtifact(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, path: asset.RelativePath).ToString();
+                            else
+                                url = api.GetRunOutput(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, assetName).ToString();
+                            var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress);
+                            await t.ConfigureAwait(false);
+
+                            return t.Result; 
+                        });
                         tasks.Add(task);
                        
                     }
                     else
                     {
                         tasks.Add(Task.Run(() => asset.LocalPath));
+                        completed++;
                     }
                 }
                 catch (Exception e)
                 {
-                    throw new ArgumentException($"Failed to download output artifact {asset.Name}.\n -{e.Message}");
+                    throw new ArgumentException($"Failed to download asset {asset.Name}.\n -{e.Message}");
                 }
             }
             return tasks;
 
         }
-        /// <summary>
-        /// Download input assets with one call.
-        /// </summary>
-        /// <param name="runInfo"></param>
-        /// <param name="assets">RunInputAssets</param>
-        /// <param name="saveAsDir"></param>
-        /// <returns>Saved path</returns>
-        private static List<Task<string>> DownloadInputArtifact(RunInfo runInfo, IEnumerable<RunInputAsset> assets, string saveAsDir)
-        {
-            var tasks = new List<Task<string>>();
-            if (assets == null || !assets.Any()) return tasks;
-            var api = new PollinationSDK.Api.RunsApi();
-            foreach (var asset in assets)
-            {
-                try
-                {
-                    if (asset.IsPathAsset() && !asset.IsSaved())
-                    {
-                        var url = api.DownloadRunArtifact(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, path: asset.RelativePath).ToString();
-                        var task = Helper.DownloadFromUrlAsync(url, Path.Combine(saveAsDir, asset.Name));
-                        tasks.Add(task);
-                    }
-                    else
-                    {
-                        tasks.Add(Task.Run(() => asset.LocalPath));
-                    }
-          
-                }
-                catch (Exception e)
-                {
-                    throw new ArgumentException($"Failed to download input artifact {asset.Name}.\n -{e.Message}");
-                }
-            }
-            return tasks;
-
-        }
-
-
+       
     }
 }

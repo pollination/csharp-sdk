@@ -20,7 +20,7 @@ namespace ConsoleAppDemo
             Console.ReadKey();
 
 
-            AuthHelper.SignInAsync( devEnv: true).Wait();
+            AuthHelper.SignInAsync( devEnv: false).Wait();
 
             var me = Helper.CurrentUser;
             Console.WriteLine($"You are: {me.Username}");
@@ -133,8 +133,46 @@ namespace ConsoleAppDemo
             //var log = rapi.GetRunStepLogs("mingbo", "demo", "941e9e52-4f98-4dd8-87b9-16129bc38c47", entryID);
 
 
+            //DownloadBigAssetTest();
 
             Console.ReadKey();
+
+        }
+        public static void DownloadBigAssetTest()
+        {
+            var owner = "studio-greenaarch";
+            var projName = "puri-market-complex";
+            var instance = new ProjectsApi();
+            var proj = instance.GetProject(owner, projName);
+
+
+            var runApi = new RunsApi();
+            // energy simu
+            var runId = "4a16380d-0eae-59ea-bf03-871cb4163b7b";
+            var run = runApi.GetRun(owner, projName, runId);
+            var runInfo = new RunInfo(proj, run);
+
+
+            var assets = runInfo.GetOutputAssets("grasshopper").OfType<RunAssetBase>().ToList();
+
+            var task = runInfo.DownloadRunAssetsAsync(assets, useCached: false, reportingAction: (s) => Console.WriteLine(s));
+            var downloaded = task.Result;
+
+
+            foreach (var savedAsset in downloaded)
+            {
+                var item = savedAsset;
+
+                if (item.IsPathAsset())
+                {
+                    Console.WriteLine($"Is Saved {item.Name}:{item.IsSaved()} to {item.LocalPath}");
+                }
+                else
+                {
+                    var v = string.Join(",", item.Value);
+                    Console.WriteLine($"Value {item.Name}: {v}");
+                }
+            }
 
         }
 
@@ -321,12 +359,14 @@ namespace ConsoleAppDemo
             var runInfo = new RunInfo(proj, firstRun);
 
             // get all output assets to download
+
             var assets = runInfo.GetOutputAssets("grasshopper").OfType<RunAssetBase>().ToList();
+            var inputAssets = runInfo.GetInputAssets();
+            assets = assets.Concat(inputAssets).ToList();
 
             var savedPath = System.IO.Path.GetTempPath();
             var task = Task.Run(async () => await DownloadAsync(runInfo, assets, savedPath));
-            task.Wait();
-            var filePaths = task.Result;
+            var filePaths = task.GetAwaiter().GetResult();
 
             foreach (var item in filePaths)
             {

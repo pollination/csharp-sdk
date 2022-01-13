@@ -237,44 +237,44 @@ namespace PollinationSDK.Test
 
         }
 
-        [Test]
+        //[Test]
         public void DownloadBigAssetTest()
         {
-            //var owner = "abrahamyezioro";
-            //var projName = "demo";
-            //var instance = new ProjectsApi();
-            //var proj = instance.GetProject(owner, projName);
+            var owner = "studio-greenaarch";
+            var projName = "puri-market-complex";
+            var instance = new ProjectsApi();
+            var proj = instance.GetProject(owner, projName);
 
 
-            //var runApi = new Api.RunsApi();
-            //// energy simu
-            //var runId = "1a12e860-a081-5622-a1e9-e5b2506ab181";
-            //var run = runApi.GetRun(owner, projName, runId);
-            //var runInfo = new RunInfo(proj, run);
+            var runApi = new Api.RunsApi();
+            // energy simu
+            var runId = "4a16380d-0eae-59ea-bf03-871cb4163b7b";
+            var run = runApi.GetRun(owner, projName, runId);
+            var runInfo = new RunInfo(proj, run);
 
 
-            //var assets = runInfo.GetOutputAssets("grasshopper").OfType<RunAssetBase>().ToList();
-       
-            //var task = runInfo.DownloadRunAssetsAsync(assets, useCached: false);
-            //var downloaded = task.Result;
-           
+            var assets = runInfo.GetOutputAssets("grasshopper").OfType<RunAssetBase>().Where(_=>_.Name == "sql").ToList();
 
-            //foreach (var savedAsset in downloaded)
-            //{
-            //    var item = savedAsset;
+            var task = runInfo.DownloadRunAssetsAsync(assets, useCached: false);
+            var downloaded = task.Result;
 
-            //    if (item.IsDownloadable())
-            //    {
-            //        Console.WriteLine($"Is Saved {item.Name}:{item.IsSaved()} to {item.LocalPath}");
-            //        Assert.IsTrue(item.IsSaved());
-            //    }
-            //    else
-            //    {
-            //        var v = string.Join(",", item.Value);
-            //        Console.WriteLine($"Value {item.Name}: {v}");
-            //        Assert.IsTrue(!string.IsNullOrEmpty(v));
-            //    }
-            //}
+
+            foreach (var savedAsset in downloaded)
+            {
+                var item = savedAsset;
+
+                if (item.IsPathAsset())
+                {
+                    Console.WriteLine($"Is Saved {item.Name}:{item.IsSaved()} to {item.LocalPath}");
+                    Assert.IsTrue(item.IsSaved());
+                }
+                else
+                {
+                    var v = string.Join(",", item.Value);
+                    Console.WriteLine($"Value {item.Name}: {v}");
+                    Assert.IsTrue(!string.IsNullOrEmpty(v));
+                }
+            }
 
         }
 
