@@ -5,24 +5,25 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**AutoAdvance** | **bool** |  | [optional] 
 **CollectionMethod** | **string** |  | 
 **Currency** | **string** |  | 
 **Customer** | **string** |  | 
+**Description** | **string** |  | [optional] 
+**Discount** | [**Discount**](Discount.md) |  | [optional] 
+**HostedInvoiceUrl** | **string** |  | [optional] 
 **Lines** | [**LineItemList**](LineItemList.md) |  | 
-**PeriodStart** | **DateTime** |  | 
+**PaymentMethod** | [**CardPublic**](CardPublic.md) | The payment method that will be billed when this invoice is due. | [optional] 
 **PeriodEnd** | **DateTime** |  | 
+**PeriodStart** | **DateTime** |  | 
 **Status** | **InvoiceStatus** |  | 
 **StatusTransitions** | [**InvoiceStatusTransitions**](InvoiceStatusTransitions.md) |  | 
-**Subtotal** | **int** |  | 
-**Total** | **int** |  | 
-**AutoAdvance** | **bool** |  | [optional] 
-**Description** | **string** |  | [optional] 
-**HostedInvoiceUrl** | **string** |  | [optional] 
 **Subscription** | **string** |  | [optional] 
-**Discount** | [**Discount**](Discount.md) |  | [optional] 
+**Subtotal** | **int** |  | 
+**Tax** | **int** |  | [optional] 
+**Total** | **int** |  | 
 **TotalDiscountAmounts** | [**List&lt;DiscountAmount&gt;**](DiscountAmount.md) |  | [optional] 
-**PaymentMethod** | [**CardPublic**](CardPublic.md) | The payment method that will be billed when this invoice is due. | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "InvoicePreview"]
+**TotalTaxAmounts** | [**List&lt;TaxAmount&gt;**](TaxAmount.md) |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

@@ -5,12 +5,11 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**UnitAmount** | **int** |  | 
-**UnitAmountDecimal** | **string** |  | 
 **FlatAmount** | **int** |  | [optional] 
 **FlatAmountDecimal** | **string** |  | [optional] 
+**UnitAmount** | **int** |  | 
+**UnitAmountDecimal** | **string** |  | 
 **UpTo** | **int** |  | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "PriceTier"]
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

@@ -5,9 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**HasMore** | **bool** |  | 
 **Data** | [**List&lt;AnyOfSubscriptionItemDeleteSubscriptionItem&gt;**](AnyOfSubscriptionItemDeleteSubscriptionItem.md) |  | 
-**Type** | **string** |  | [optional] [readonly] [default to "SubscriptionItemList"]
+**HasMore** | **bool** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

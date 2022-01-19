@@ -1,12 +1,11 @@
 
-# PollinationSDK.Model.SecureResourcePublic
+# PollinationSDK.Model.UpdatePaymentMethod
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**ClientSecret** | **string** | Secret string to be used to retrieve the resource from the client | 
-**Type** | **string** |  | [optional] [readonly] [default to "_SecureResourcePublic"]
+**IsDefault** | **bool** | Sets this payment method as the default | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

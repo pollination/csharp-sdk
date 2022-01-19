@@ -1,12 +1,13 @@
 
-# PollinationSDK.Model.InputReferenceBase
+# PollinationSDK.Model.TaxAmount
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Variable** | **string** | The name of the DAG input variable | 
-**Type** | **string** |  | [optional] [readonly] [default to "_InputReferenceBase"]
+**Amount** | **int** |  | 
+**Inclusive** | **bool** |  | 
+**TaxRate** | **string** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

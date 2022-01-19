@@ -1,13 +1,16 @@
 
-# PollinationSDK.Model.BaseList
+# PollinationSDK.Model.Card
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**HasMore** | **bool** |  | 
-**Data** | **List&lt;Object&gt;** |  | 
-**Type** | **string** |  | [optional] [readonly] [default to "BaseList"]
+**Brand** | **string** |  | 
+**Country** | **string** |  | 
+**ExpMonth** | **int** |  | 
+**ExpYear** | **int** |  | 
+**Last4** | **string** |  | 
+**Networks** | **Object** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
