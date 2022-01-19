@@ -11,6 +11,7 @@
     <PackageProjectUrl>https://github.com/pollination/csharp-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pollination/csharp-sdk</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
