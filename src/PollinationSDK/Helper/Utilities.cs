@@ -117,10 +117,10 @@ namespace PollinationSDK
 
         }
 
-        public static bool IsMac => System.Environment.OSVersion.Platform == PlatformID.Unix;
-        public static string LadybugToolRoot { get; set; }
-        public static string PythonRoot { get; set; }
-        public static string RecipeCacheFolder
+        internal static bool IsMac => System.Environment.OSVersion.Platform == PlatformID.Unix;
+        internal static string LadybugToolRoot { get; set; }
+        internal static string PythonRoot { get; set; }
+        internal static string RecipeCacheFolder
         {
             get { 
                 var p = Path.Combine(Path.GetTempPath(), "Pollination", "Recipes");
