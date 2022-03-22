@@ -180,11 +180,11 @@ namespace PollinationSDK
 
             //var recipeSource = job.Source;
             if (string.IsNullOrEmpty(recipeSource)) return false;
-            string pattern = @"(?=[\w\W]*)\/registries\/[\w\d-]*\/recipes?\/[\w\d-]*\/[\d\w.]*";
+            string pattern = @"(?=[\w\W]*)\/registries\/[\w\d-]*\/recipes?\/[\w\d-]*\/[\d\w.-]*";
             var m = System.Text.RegularExpressions.Regex.Match(recipeSource, pattern);
             if (!m.Success) return false;
 
-            // /registries/ladybug-tools/recipe/annual-daylight/0.2.0
+            // /registries/ladybug-tools/recipe/annual-daylight/0.2.0-viz
             recipeVersion = m.Value;
 
             var items = recipeVersion.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
