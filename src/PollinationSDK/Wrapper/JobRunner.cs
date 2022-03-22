@@ -144,7 +144,7 @@ namespace PollinationSDK.Wrapper
 
         public string RunOnLocalMachine(string workFolder, int workerNum)
         {
-            if (string.IsNullOrEmpty(Utilities.LadybugToolRoot) || string.IsNullOrEmpty(Utilities.PythonRoot))
+            if (string.IsNullOrEmpty(Utilities.PythonRoot) || !Directory.Exists(Utilities.PythonRoot))
                 throw new ArgumentException("Missing some setting for local simulations, please use Utilities.SetPaths before running any local simulations");
 
             var workName = this.Job.Name ?? "Unnamed";
@@ -189,7 +189,7 @@ namespace PollinationSDK.Wrapper
                 var arguments = $"local run \"{recipeDir}\" \"{workDir}\" -n \"{name}\" -i \"{inputJons}\" -w {workerNumber} {envArg}";
                 var runFile = Utilities.IsMac ? "run.sh" : "run.bat";
                 var scriptFile = Path.Combine(workDir, runFile);
-                var script = $"{program} {arguments}";
+                var script = $"\"{program}\" {arguments}";
                 //script = Utilities.IsMac ? script : $"{script}{Environment.NewLine}PAUSE";
                 File.WriteAllText(scriptFile, script);
 
