@@ -155,7 +155,7 @@ namespace PollinationSDK.Test
         public void AnnualEnergyUseTest()
         {
             var rec = this.annualEnergyUse;
-            var filterInput = rec.Inputs.OfType<DAGStringInput>().First(_ => _.Name == "additional-string");
+            var filterInput = rec.InputList.First(_ => _.Name == "additional-idf");
             var alias = filterInput.Alias.OfType<DAGArrayInputAlias>().First();
 
 
