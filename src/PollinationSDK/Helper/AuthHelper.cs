@@ -164,7 +164,7 @@ namespace PollinationSDK
                 UseShellExecute = true
             };
             System.Diagnostics.Process.Start(psi);
-            Helper.Logger.Information($"PollinationSignInAsync: loggin from {loginUrl}");
+            Helper.Logger.Information($"PollinationSignInAsync: login from {loginUrl}");
 
             // wait for the authorization response.
             var context = await listener.GetContextAsync();

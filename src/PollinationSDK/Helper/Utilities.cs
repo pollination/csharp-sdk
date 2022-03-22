@@ -117,7 +117,7 @@ namespace PollinationSDK
 
         }
 
-        internal static bool IsMac => System.Environment.OSVersion.Platform == PlatformID.Unix;
+        public static bool IsMac => System.Environment.OSVersion.Platform == PlatformID.Unix;
         internal static string LadybugToolRoot { get; set; }
         internal static string PythonRoot { get; set; }
         internal static string RecipeCacheFolder
