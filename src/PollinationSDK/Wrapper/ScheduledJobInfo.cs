@@ -143,30 +143,39 @@ namespace PollinationSDK.Wrapper
                 return _runInfoCache[runIndex];
 
             var jobInfo = this;
-            // only get the first run asset for now
-            var job = jobInfo.CloudJob;
 
-            //check run index if valid
-            var page = runIndex + 1;
-            var totalRuns = job.Status.RunsCompleted + job.Status.RunsFailed + job.Status.RunsPending + job.Status.RunsRunning;
-            if (totalRuns == 0)
-                throw new ArgumentException($"[Error] Job status: [{job.Status.Status}]. There is no run available in this job");
+            if (jobInfo.IsLocalJob)
+            {
+                return this.LocalJob;
+            }
+            else
+            {
+                // only get the first run asset for now
+                var job = jobInfo.CloudJob;
 
-            if (page > totalRuns)
-                throw new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
+                //check run index if valid
+                var page = runIndex + 1;
+                var totalRuns = job.Status.RunsCompleted + job.Status.RunsFailed + job.Status.RunsPending + job.Status.RunsRunning;
+                if (totalRuns == 0)
+                    throw new ArgumentException($"[Error] Job status: [{job.Status.Status}]. There is no run available in this job");
 
-            var api = new PollinationSDK.Api.RunsApi();
-            var runs = api.ListRuns(jobInfo.Project.Owner.Name, jobInfo.Project.Name, jobId: new List<string>() { job.Id }, page: page, perPage: 1).Resources;
-            var firstRun = runs.FirstOrDefault();
+                if (page > totalRuns)
+                    throw new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
 
-            var isRunFinished = firstRun.Status.FinishedAt > firstRun.Status.StartedAt;
-            if (!isRunFinished)
-                throw new ArgumentException($"[Warning] Run status: {firstRun.Status.Status}. If this run [{firstRun.Id.Substring(0, 5)}] is scheduled but not finished, please check it again in a few seconds;");
+                var api = new PollinationSDK.Api.RunsApi();
+                var runs = api.ListRuns(jobInfo.Project.Owner.Name, jobInfo.Project.Name, jobId: new List<string>() { job.Id }, page: page, perPage: 1).Resources;
+                var firstRun = runs.FirstOrDefault();
+
+                var isRunFinished = firstRun.Status.FinishedAt > firstRun.Status.StartedAt;
+                if (!isRunFinished)
+                    throw new ArgumentException($"[Warning] Run status: {firstRun.Status.Status}. If this run [{firstRun.Id.Substring(0, 5)}] is scheduled but not finished, please check it again in a few seconds;");
+
+                var runInfo = new RunInfo(jobInfo.Project, firstRun);
+
+                _runInfoCache.Add(runIndex, runInfo);
+                return runInfo;
+            }
            
-            var runInfo = new RunInfo(jobInfo.Project, firstRun);
-
-            _runInfoCache.Add(runIndex, runInfo);
-            return runInfo;
         }
 
     }
