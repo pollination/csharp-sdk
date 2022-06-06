@@ -11,6 +11,25 @@ namespace PollinationSDK
             var argSet = arg ?? new List<AnyOf<JobArgument, JobPathArgument>>();
             this.Arguments.Add(argSet);
         }
+
+        public void AddArgument(PollinationSDK.Interface.Io.Inputs.IJob arg)
+        {
+            if (arg == null)
+                return;
+
+            if (arg is JobArgument a)
+            {
+                this.AddArgument(a);
+            }
+            else if (arg is JobPathArgument path)
+            {
+                this.AddArgument(path);
+            }
+            else
+            {
+                throw new System.ArgumentException($"Invalid argument {arg}");
+            }
+        }
         public void AddArgument(JobArgument arg)
         {
             this.Arguments = Arguments ?? new List<List<AnyOf<JobArgument, JobPathArgument>>>();

@@ -79,8 +79,9 @@ namespace PollinationSDK.Test
             jobInfo.SetJobName("A new daylight simulation");
 
             // run a job
-            var task = jobInfo.RunJobOnCloud(Project, (s) => Console.WriteLine(s));
+            jobInfo.SetCloudJob(Project.Owner.Name, Project.Name);
 
+            var task = jobInfo.RunJobOnCloud((s) => Console.WriteLine(s));
 
             //cts.CancelAfter(60000);
             ScheduledJob = task.Result;
@@ -321,11 +322,63 @@ namespace PollinationSDK.Test
 
             }
 
-
-       
-
         }
 
+        private JobInfo CreateTestJobInfo()
+        {
+            //var recipe = @"https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4";
+            var recipe = @"https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/daylight-factor/0.7.14-viz";
+
+            var job = new Job(recipe);
+
+            var jobInfo = new JobInfo(job);
+
+            var model = Path.GetFullPath(@"../../../TestSample/two_rooms.hbjson");
+            if (!File.Exists(model))
+                throw new ArgumentException("Input doesn't exist");
+            jobInfo.AddArgument(new JobPathArgument("model", new ProjectFolder(path: model)));
+
+            jobInfo.SetJobSubFolderPath("round1/test");
+            jobInfo.SetJobName("A new daylight simulation");
+
+            // check handler
+            jobInfo.CheckArgumentsWithHandlers("web", "csharp");
+
+            // run a job
+            jobInfo.SetCloudJob(Project.Owner.Name, Project.Name);
+
+  
+            return jobInfo;
+        }
+
+        [Test]
+        public void CreateJobFromJobInfoTest()
+        {
+            //var jsonFile = @"D:\Dev\Pollination\rhino-plugin\src\bin\jobInfo.json";
+            //var json = System.IO.File.ReadAllText(jsonFile);
+            //var job = PollinationSDK.Wrapper.JobInfo.FromJson(json);
+
+            //job.CheckArgumentsWithHandlers("rhino", "csharp");
+
+            //var dir = @"C:\Users\mingo\simulation\ttt";
+            //job.SetLocalJob(dir, 2);
+
+            // create JobInfo
+            var jobInfo = CreateTestJobInfo();
+            var dup = jobInfo.Duplicate();
+            Assert.AreEqual(jobInfo.Job.Source, dup.Job.Source);
+            Assert.AreEqual(jobInfo.Job.Arguments.Count, dup.Job.Arguments.Count);
+            Assert.AreEqual(jobInfo.Recipe.Source, dup.Recipe.Source);
+
+            // run a job
+            var task = jobInfo.RunJobOnCloud((s) => Console.WriteLine(s));
+
+            //cts.CancelAfter(60000);
+            ScheduledJob = task.Result;
+
+            Assert.IsTrue(!string.IsNullOrEmpty(ScheduledJob.CloudJob.Id));
+
+        }
 
         // [Test]
         // public void WatchJobTest2()
