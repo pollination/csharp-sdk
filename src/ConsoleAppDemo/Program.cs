@@ -189,7 +189,8 @@ namespace ConsoleAppDemo
                 jobInfo.SetJobName("A new daylight simulation");
 
                 // run a job
-                var task = jobInfo.RunJobOnCloud(proj, (s) => Console.WriteLine(s), token);
+                jobInfo.SetCloudJob(proj.Owner.Name, proj.Name);
+                var task = jobInfo.RunJobOnCloud((s) => Console.WriteLine(s), token);
 
                 //cts.CancelAfter(60000);
                 var scheduledJob = task.Result;
@@ -211,7 +212,8 @@ namespace ConsoleAppDemo
         {
             try
             {
-                var scheduledJobInfo = await job.RunJobOnCloud(proj, msgAction, token);
+                job.SetCloudJob(proj.Owner.Name, proj.Name);
+                var scheduledJobInfo = await job.RunJobOnCloud(msgAction, token);
                 msgAction($"Starting the job: {scheduledJobInfo.JobID}");
                 //await scheduledJobInfo.WatchRunStatusAsync(msgAction, token);
 
