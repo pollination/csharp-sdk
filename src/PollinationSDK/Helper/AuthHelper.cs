@@ -128,6 +128,12 @@ namespace PollinationSDK
                 throw new ArgumentException("PollinationSignIn is not supported on this system");
             }
 
+            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
+            {
+                Helper.Logger.Error($"PollinationSignInAsync: Network is not available, please double check with your connection or firewall!");
+                throw new ArgumentException("Network is not available, please double check with your connection or firewall!");
+            }
+
             var redirectUrl = "http://localhost:8645/";
             var loginUrl = devEnv ? LoginURL_Dev : LoginURL;
 
