@@ -21,6 +21,15 @@ namespace PollinationSDK.Test
 
         }
 
+        [Test]
+        public void TestGetLatestVersion()
+        {
+            var version = Utilities.GetLatestVersion("rhino");
+            Assert.IsTrue(version != null);
+        }
+
+        
+
         //[Test]
         //public void DownloadRecipeTest()
         //{

@@ -8,6 +8,18 @@ namespace PollinationSDK
 {
     public static class Utilities
     {
+        public static Version GetLatestVersion(string product)
+        {
+            var apiUrl = $"https://utilities.pollination.cloud/latest-version/{product}";
+
+            var request = new RestSharp.RestRequest(RestSharp.Method.GET);
+            var client = new RestSharp.RestClient(apiUrl);
+            var response = client.Execute(request);
+            var version = response.Content?.Replace("\"", ""); //"1.2.9"
+            var isValid = System.Version.TryParse(version, out var newVersion);
+            return isValid ? newVersion : null;
+        }
+
         /// <summary>
         /// Download a translated recipe for luigi
         /// </summary>
