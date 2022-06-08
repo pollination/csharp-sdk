@@ -56,29 +56,23 @@ namespace PollinationSDK
         public static async Task SignInAsync(Action ActionWhenDone = default, bool devEnv = false)
         {
             //OutputMessage = string.Empty;
-
             try
             {
                 var task = PollinationSignInAsync(devEnv);
                 var authResult = await task;
-                if (!string.IsNullOrEmpty(authResult.IDToken))
-                {
-                    Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
+                if (string.IsNullOrEmpty(authResult.IDToken))
+                    throw new ArgumentException($"SignInAsync: Failed to get the Auth token");
 
-                    Configuration.Default.TokenRepo = new TokenRepo(
-                        refreshURL: devEnv ? RefreshURL_Dev : RefreshURL,
-                        idToken: authResult.IDToken,
-                        expiresInSeconds: authResult.ExpiresInSeconds,
-                        refreshToken: authResult.RefreshToken
-                    );
-                    Helper.CurrentUser = Helper.GetUser();
-                    Helper.Logger.Information($"SignInAsync: logged in as {Helper.CurrentUser.Username}");
-                }
-                else
-                {
-                    Helper.Logger.Warning($"SignInAsync: Failed to get the Auth token");
-                }
+                Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
 
+                Configuration.Default.TokenRepo = new TokenRepo(
+                    refreshURL: devEnv ? RefreshURL_Dev : RefreshURL,
+                    idToken: authResult.IDToken,
+                    expiresInSeconds: authResult.ExpiresInSeconds,
+                    refreshToken: authResult.RefreshToken
+                );
+                Helper.CurrentUser = Helper.GetUser();
+                Helper.Logger?.Information($"SignInAsync: logged in as {Helper.CurrentUser.Username}");
                 ActionWhenDone?.Invoke();
             }
             catch (Exception e)
