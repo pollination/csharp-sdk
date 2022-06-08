@@ -13,6 +13,14 @@ namespace PollinationSDK.Test
     [TestFixture]
     public class UtilityTests
     {
+        [Test]
+        public void TestConnectivityTest()
+        {
+            var available = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
+            Assert.IsTrue(available);
+
+        }
+
         //[Test]
         //public void DownloadRecipeTest()
         //{
