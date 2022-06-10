@@ -20,6 +20,12 @@ namespace PollinationSDK
             return isValid ? newVersion : null;
         }
 
+        public static string GetDownloadTheLatestVersionUrl(string product)
+        {
+            var apiUrl = $"https://utilities.pollination.cloud/download-plugin/{product}";
+            return apiUrl;
+        }
+
         /// <summary>
         /// Download a translated recipe for luigi
         /// </summary>
