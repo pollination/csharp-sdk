@@ -63,13 +63,17 @@ namespace PollinationSDK.Wrapper
 
         public async Task<string> WatchJobStatusAsync(Action<string> progressAction = default, System.Threading.CancellationToken cancelToken = default)
         {
+
             var api = new JobsApi();
             var proj = this.Project;
             var jobId = this.JobID;
+            Helper.Logger.Information($"WatchJobStatusAsync: checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
 
             var cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
             var status = cloudJob.Status;
-            var startTime = status.StartedAt;
+            var startTime = status.StartedAt; 
+            Helper.Logger.Information($"WatchJobStatusAsync: job [{proj.Owner.Name}/{proj.Name}/{jobId}] is [{status.Status}]. Started at: {status.StartedAt.ToLocalTime().ToLongTimeString()}, finished at: {status.FinishedAt.ToLocalTime().ToLongTimeString()}");
+
             while (status.FinishedAt <= status.StartedAt)
             {
                 var currentSeconds = Math.Round((DateTime.UtcNow - startTime).TotalSeconds);
@@ -107,10 +111,13 @@ namespace PollinationSDK.Wrapper
 
             var totalTime = status.FinishedAt - startTime;
             var finishMessage = status.Status.ToString();
+            
             //progressAction?.Invoke($"Task: {status.Status}");
 
             finishMessage = $"{finishMessage}: [{GetUserFriendlyTimeCounter(totalTime)}]";
             progressAction?.Invoke(finishMessage);
+            Helper.Logger.Information($"WatchJobStatusAsync: finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
+
             return finishMessage;
 
             string GetUserFriendlyTimeCounter(TimeSpan timeDelta)
@@ -133,6 +140,8 @@ namespace PollinationSDK.Wrapper
             var proj = this.Project;
             var api = new JobsApi();
             api.CancelJobAsync(proj.Owner.Name, proj.Name, this.JobID);
+            Helper.Logger.Information($"CancelJob: [{proj.Owner.Name}/{proj.Name}/{this.JobID}].");
+
         }
 
         private Dictionary<int, RunInfo> _runInfoCache = new Dictionary<int, RunInfo>();
@@ -155,12 +164,21 @@ namespace PollinationSDK.Wrapper
 
                 //check run index if valid
                 var page = runIndex + 1;
-                var totalRuns = job.Status.RunsCompleted + job.Status.RunsFailed + job.Status.RunsPending + job.Status.RunsRunning;
+                var jobStatus = job.Status;
+                var totalRuns = jobStatus.RunsCompleted + jobStatus.RunsFailed + jobStatus.RunsPending + jobStatus.RunsRunning + jobStatus.RunsCancelled;
                 if (totalRuns == 0)
-                    throw new ArgumentException($"[Error] Job status: [{job.Status.Status}]. There is no run available in this job");
+                {
+                    var err = new ArgumentException($"[Error] Job status: [{jobStatus.Status}]. There is no run available in this job");
+                    Helper.Logger.Error(err, $"GetRunInfo: {jobStatus?.ToJson()}.");
+                    throw err;
+                }
 
                 if (page > totalRuns)
-                    throw new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
+                {
+                    var err = new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
+                    Helper.Logger.Error(err, $"GetRunInfo: {jobStatus.ToJson()}.");
+                    throw err;
+                }
 
                 var api = new PollinationSDK.Api.RunsApi();
                 var runs = api.ListRuns(jobInfo.Project.Owner.Name, jobInfo.Project.Name, jobId: new List<string>() { job.Id }, page: page, perPage: 1).Resources;
@@ -168,7 +186,11 @@ namespace PollinationSDK.Wrapper
 
                 var isRunFinished = firstRun.Status.FinishedAt > firstRun.Status.StartedAt;
                 if (!isRunFinished)
-                    throw new ArgumentException($"[Warning] Run status: {firstRun.Status.Status}. If this run [{firstRun.Id.Substring(0, 5)}] is scheduled but not finished, please check it again in a few seconds;");
+                {
+                    var err = new ArgumentException($"[Warning] Run status: {firstRun.Status.Status}. If this run [{firstRun.Id.Substring(0, 5)}] is scheduled but not finished, please check it again in a few seconds;");
+                    Helper.Logger.Error(err, $"GetRunInfo: {firstRun?.Status?.ToJson()}.");
+                    throw err;
+                }
 
                 var runInfo = new RunInfo(jobInfo.Project, firstRun);
 
