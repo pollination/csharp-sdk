@@ -58,21 +58,15 @@ namespace PollinationSDK
             //OutputMessage = string.Empty;
             try
             {
+                Helper.CurrentUser = null;
                 var task = PollinationSignInAsync(devEnv);
                 var authResult = await task;
                 if (string.IsNullOrEmpty(authResult.IDToken))
                     throw new ArgumentException($"SignInAsync: Failed to get the Auth token");
 
-                Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
+                if (Helper.CurrentUser == null)
+                    throw new ArgumentException($"SignInAsync: Failed to sign in to the Pollination");
 
-                Configuration.Default.TokenRepo = new TokenRepo(
-                    refreshURL: devEnv ? RefreshURL_Dev : RefreshURL,
-                    idToken: authResult.IDToken,
-                    expiresInSeconds: authResult.ExpiresInSeconds,
-                    refreshToken: authResult.RefreshToken
-                );
-                Helper.CurrentUser = Helper.GetUser();
-                Helper.Logger?.Information($"SignInAsync: logged in as {Helper.CurrentUser.Username}");
                 ActionWhenDone?.Invoke();
             }
             catch (Exception e)
@@ -132,67 +126,113 @@ namespace PollinationSDK
             var loginUrl = devEnv ? LoginURL_Dev : LoginURL;
 
             var listener = new System.Net.HttpListener();
-
             try
             {
-
-                listener.Prefixes.Add(redirectUrl);
-                listener.Start();
-                //listener.TimeoutManager.IdleConnection = TimeSpan.FromSeconds(30);
-                //listener.TimeoutManager.HeaderWait = TimeSpan.FromSeconds(30);
-
-            }
-            catch (HttpListenerException e)
-            {
-                //it is already listening the port, but users didn't login
-                if (e.ErrorCode == 183)
+                try
                 {
-                    Console.WriteLine(e.Message);
-                    Helper.Logger.Warning($"PollinationSignInAsync: it is still waiting for users to login from last time.\n{e.Message}");
+
+                    listener.Prefixes.Add(redirectUrl);
+                    listener.Start();
+                    //listener.TimeoutManager.IdleConnection = TimeSpan.FromSeconds(30);
+                    //listener.TimeoutManager.HeaderWait = TimeSpan.FromSeconds(30);
+
                 }
+                catch (HttpListenerException e)
+                {
+                    //it is already listening the port, but users didn't login
+                    if (e.ErrorCode == 183)
+                    {
+                        Console.WriteLine(e.Message);
+                        Helper.Logger.Warning($"PollinationSignInAsync: it is still waiting for users to login from last time.\n{e.Message}");
+                    }
+                    else
+                    {
+                        Helper.Logger.Error($"PollinationSignInAsync: Failed to start the listener.\n{e.Message}");
+                        throw e;
+                    }
+
+                }
+
+                var psi = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = loginUrl,
+                    UseShellExecute = true
+                };
+                System.Diagnostics.Process.Start(psi);
+                Helper.Logger.Information($"PollinationSignInAsync: login from {loginUrl}");
+
+                // wait for the authorization response.
+                var context = await listener.GetContextAsync();
+
+                var request = context.Request;
+                var response = context.Response;
+
+                var returnUrl = request.RawUrl.Contains("?token=") ? request.RawUrl : request.UrlReferrer?.PathAndQuery;
+                if (string.IsNullOrEmpty(returnUrl))
+                {
+                    Helper.Logger.Error($"PollinationSignInAsync: Failed to authorize the login: \n{request.RawUrl}");
+                    throw new ArgumentException($"Failed to authorize the login: \n{request.RawUrl}");
+                }
+
+                var auth = AuthResult.From(request.QueryString);
+                var loggedIn = CheckGetUser(auth, devEnv);
+
+                var message = string.Empty;
+                if (loggedIn)
+                    message = $"<h1>Authorization was successful!</h1><h4>{Helper.CurrentUser.Name} ({Helper.CurrentUser.Username})</h4><p>You can close this browser window.</p>";
                 else
-                {
-                    Helper.Logger.Error($"PollinationSignInAsync: Failed to start the listener.\n{e.Message}");
-                    throw e;
-                }
+                    message = "<h1>Invalid authorization!</h1><p>Please report the issue with your account to https://discourse.pollination.cloud.</p>";
+
+                //sends an HTTP response to the browser.
+                var responseString = string.Format($"<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\"><img src=\"https://app.pollination.cloud/logo.svg\">{message}</body></html>");
+
+                var buffer = Encoding.UTF8.GetBytes(responseString);
+                response.ContentLength64 = buffer.Length;
+                var responseOutput = response.OutputStream;
+                await responseOutput.WriteAsync(buffer, 0, buffer.Length);
+                await Task.Delay(1000);
+                responseOutput.Flush();
+                responseOutput.Close();
+
+                Helper.Logger.Information($"PollinationSignInAsync: closing the listener");
+
+                return auth;
+            }
+            finally
+            {
+                listener.Stop();
+            }
+            
+          
+        }
+
+        private static bool CheckGetUser(AuthResult auth, bool devEnv = false)
+        {
+            try
+            {
+                Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
+
+                Configuration.Default.TokenRepo = new TokenRepo(
+                    refreshURL: devEnv ? RefreshURL_Dev : RefreshURL,
+                    idToken: auth.IDToken,
+                    expiresInSeconds: auth.ExpiresInSeconds,
+                    refreshToken: auth.RefreshToken
+                );
+                Helper.CurrentUser = Helper.GetUser();
+                Helper.Logger?.Information($"CheckGetUser: logged in as {Helper.CurrentUser.Username}");
+
+                return true;
 
             }
-
-            var psi = new System.Diagnostics.ProcessStartInfo
+            catch (Exception e)
             {
-                FileName = loginUrl,
-                UseShellExecute = true
-            };
-            System.Diagnostics.Process.Start(psi);
-            Helper.Logger.Information($"PollinationSignInAsync: login from {loginUrl}");
-
-            // wait for the authorization response.
-            var context = await listener.GetContextAsync();
-
-            var request = context.Request;
-            var response = context.Response;
-
-            var returnUrl = request.RawUrl.Contains("?token=") ? request.RawUrl : request.UrlReferrer?.PathAndQuery;
-            if (string.IsNullOrEmpty(returnUrl))
-            {
-                Helper.Logger.Error($"PollinationSignInAsync: Failed to authorize the login: \n{request.RawUrl}");
-                throw new ArgumentException($"Failed to authorize the login: \n{request.RawUrl}");
+                Configuration.Default.TokenRepo = null;
+                Helper.CurrentUser = null;
+                Helper.Logger?.Error(e, $"CheckGetUser()");
+                return false;
+                //throw;
             }
-
-            //sends an HTTP response to the browser.
-            string responseString = string.Format("<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\"><img src=\"https://app.pollination.cloud/logo.svg\"><h1>Authorization was successful!</h1><p>You can close this browser window.</p></body></html>");
-            var buffer = Encoding.UTF8.GetBytes(responseString);
-            response.ContentLength64 = buffer.Length;
-            var responseOutput = response.OutputStream;
-            await responseOutput.WriteAsync(buffer, 0, buffer.Length);
-            await Task.Delay(1000);
-            responseOutput.Flush();
-            responseOutput.Close();
-            listener.Stop();
-
-            Helper.Logger.Information($"PollinationSignInAsync: closing the listener");
-
-            return AuthResult.From(request.QueryString);
+        
         }
     }
 }
