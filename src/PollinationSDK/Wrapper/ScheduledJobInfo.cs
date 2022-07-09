@@ -74,7 +74,7 @@ namespace PollinationSDK.Wrapper
                 var cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
                 var status = cloudJob.Status;
                 var startTime = status.StartedAt;
-                Helper.Logger.Information($"WatchJobStatusAsync: job [{proj.Owner.Name}/{proj.Name}/{jobId}] is [{status.Status}]. Started at: {status.StartedAt.ToLocalTime().ToLongTimeString()}, finished at: {status.FinishedAt.ToLocalTime().ToLongTimeString()}");
+                Helper.Logger.Information($"WatchJobStatusAsync: init status: {status.ToJson()}");
 
                 while (status.FinishedAt <= status.StartedAt)
                 {
@@ -107,6 +107,8 @@ namespace PollinationSDK.Wrapper
                     status = cloudJob.Status;
                     //_simulation = new Simulation(proj, simuId);
                 }
+
+                Helper.Logger.Information($"WatchJobStatusAsync: finished status: {status.ToJson()}");
                 this.CloudJob = cloudJob;
                 // suspended by user
                 cancelToken.ThrowIfCancellationRequested();
