@@ -63,62 +63,72 @@ namespace PollinationSDK.Wrapper
 
         public async Task<string> WatchJobStatusAsync(Action<string> progressAction = default, System.Threading.CancellationToken cancelToken = default)
         {
-
-            var api = new JobsApi();
-            var proj = this.Project;
-            var jobId = this.JobID;
-            Helper.Logger.Information($"WatchJobStatusAsync: checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
-
-            var cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
-            var status = cloudJob.Status;
-            var startTime = status.StartedAt; 
-            Helper.Logger.Information($"WatchJobStatusAsync: job [{proj.Owner.Name}/{proj.Name}/{jobId}] is [{status.Status}]. Started at: {status.StartedAt.ToLocalTime().ToLongTimeString()}, finished at: {status.FinishedAt.ToLocalTime().ToLongTimeString()}");
-
-            while (status.FinishedAt <= status.StartedAt)
+            try
             {
-                var currentSeconds = Math.Round((DateTime.UtcNow - startTime).TotalSeconds);
-                // wait 5 seconds before calling api to re-check the status
-                var totalDelaySeconds = status.Status == JobStatusEnum.Created ? 3 : 5;
+                var api = new JobsApi();
+                //api.ListJobs
+                var proj = this.Project;
+                var jobId = this.JobID;
+                Helper.Logger.Information($"WatchJobStatusAsync: checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
 
-                var running = status.RunsPending + status.RunsRunning;
-                var done = status.RunsFailed + status.RunsCompleted + status.RunsCancelled;
-                var total = running + done;
+                var cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
+                var status = cloudJob.Status;
+                var startTime = status.StartedAt;
+                Helper.Logger.Information($"WatchJobStatusAsync: job [{proj.Owner.Name}/{proj.Name}/{jobId}] is [{status.Status}]. Started at: {status.StartedAt.ToLocalTime().ToLongTimeString()}, finished at: {status.FinishedAt.ToLocalTime().ToLongTimeString()}");
 
-                for (int i = 0; i < totalDelaySeconds; i++)
+                while (status.FinishedAt <= status.StartedAt)
                 {
+                    var currentSeconds = Math.Round((DateTime.UtcNow - startTime).TotalSeconds);
+                    // wait 5 seconds before calling api to re-check the status
+                    var totalDelaySeconds = status.Status == JobStatusEnum.Created ? 3 : 5;
+
+                    var running = status.RunsPending + status.RunsRunning;
+                    var done = status.RunsFailed + status.RunsCompleted + status.RunsCancelled;
+                    var total = running + done;
+
+                    for (int i = 0; i < totalDelaySeconds; i++)
+                    {
+                        // suspended by user
+                        cancelToken.ThrowIfCancellationRequested();
+
+                        var timer = GetUserFriendlyTimeCounter(TimeSpan.FromSeconds(currentSeconds));
+                        var message = total > 1 ? $"{status.Status}: [{done}/{total}]\n{timer}" : $"{status.Status}: [{timer}]";
+                        progressAction?.Invoke(message);
+
+                        await Task.Delay(1000);
+                        currentSeconds++;
+                    }
                     // suspended by user
                     cancelToken.ThrowIfCancellationRequested();
 
-                    var timer = GetUserFriendlyTimeCounter(TimeSpan.FromSeconds(currentSeconds));
-                    var message = total > 1 ? $"{status.Status}: [{done}/{total}]\n{timer}": $"{status.Status}: [{timer}]";
-                    progressAction?.Invoke(message);
-
+                    // update status
                     await Task.Delay(1000);
-                    currentSeconds++;
+                    cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
+                    status = cloudJob.Status;
+                    //_simulation = new Simulation(proj, simuId);
                 }
+                this.CloudJob = cloudJob;
                 // suspended by user
                 cancelToken.ThrowIfCancellationRequested();
 
-                // update status
-                await Task.Delay(1000);
-                cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
-                status = cloudJob.Status;
-                //_simulation = new Simulation(proj, simuId);
+                var totalTime = status.FinishedAt - startTime;
+                var finishMessage = status.Status.ToString();
+
+                //progressAction?.Invoke($"Task: {status.Status}");
+
+                finishMessage = $"{finishMessage}: [{GetUserFriendlyTimeCounter(totalTime)}]";
+                progressAction?.Invoke(finishMessage);
+                Helper.Logger.Information($"WatchJobStatusAsync: finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
+
+                return finishMessage;
             }
-            this.CloudJob = cloudJob;
-            // suspended by user
-            cancelToken.ThrowIfCancellationRequested();
+            catch (Exception e)
+            {
+                Helper.Logger.Error(e, $"WatchJobStatusAsync: failed to watch job [{Project.Owner.Name}/{Project.Name}/{JobID}].");
+                throw e;
+            }
 
-            var totalTime = status.FinishedAt - startTime;
-            var finishMessage = status.Status.ToString();
-            
-            //progressAction?.Invoke($"Task: {status.Status}");
-
-            finishMessage = $"{finishMessage}: [{GetUserFriendlyTimeCounter(totalTime)}]";
-            progressAction?.Invoke(finishMessage);
-            Helper.Logger.Information($"WatchJobStatusAsync: finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
-
-            return finishMessage;
+           
 
             string GetUserFriendlyTimeCounter(TimeSpan timeDelta)
             {
