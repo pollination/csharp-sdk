@@ -43,15 +43,45 @@ namespace PollinationSDK.Wrapper
                 {
                     //copy to folder
                     var tempPath = (p.Source.Obj as PollinationSDK.ProjectFolder).Path;
-                    if (!File.Exists(tempPath))
-                        throw new ArgumentException($"Failed to find path argument {tempPath}");
-                    var fileName = Path.GetFileName(tempPath);
-                    var newPath = Path.Combine(folder, fileName);
-                    File.Copy(tempPath, newPath, true);
-                    if (!File.Exists(newPath))
-                        throw new ArgumentException($"Failed to find path argument {newPath}");
+                    var pathName = string.Empty;
+                    if (System.IO.Path.HasExtension(tempPath)) // file type
+                    {
+                        if (!File.Exists(tempPath))
+                            throw new ArgumentException($"Failed to find path argument {tempPath}");
+                        var fileName = Path.GetFileName(tempPath);
+                        var newPath = Path.Combine(folder, fileName);
+                        File.Copy(tempPath, newPath, true);
+                        if (!File.Exists(newPath))
+                            throw new ArgumentException($"Failed to find path argument {newPath}");
+
+                        pathName = fileName;
+                    }
+                    else // folder type
+                    {
+                        if (!Directory.Exists(tempPath))
+                            throw new ArgumentException($"Failed to find path argument {tempPath}");
+
+                        // copy all contents from tempPath to folder
+                        var targetDir = folder;
+                        Directory.CreateDirectory(targetDir);
+                        var subDirs = Directory.GetDirectories(tempPath, "*", SearchOption.AllDirectories);
+                        foreach (var dir in subDirs)
+                        {
+                            Directory.CreateDirectory(dir.Replace(tempPath, targetDir));
+                        }
+
+                        var subfiles = Directory.GetFiles(tempPath, "*.*", SearchOption.AllDirectories);
+                        foreach (var f in subfiles)
+                        {
+                            var targetPath = f.Replace(tempPath, targetDir);
+                            File.Copy(f, targetPath, true);
+                        }
+
+                        pathName = folder;
+                    }
+                 
                   
-                    newArgs.Add(new JobPathArgument(p.Name, new ProjectFolder(path: fileName)));
+                    newArgs.Add(new JobPathArgument(p.Name, new ProjectFolder(path: pathName)));
 
                 }
                 else if (item.Obj is JobArgument arg)

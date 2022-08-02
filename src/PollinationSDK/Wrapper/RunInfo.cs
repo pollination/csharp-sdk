@@ -337,13 +337,13 @@ namespace PollinationSDK.Wrapper
                 else if (dup is RunOutputAsset output)
                 {
                     //this.Run
-                    var fd = Directory.GetDirectories(root).FirstOrDefault();
-                    dup.LocalPath = Path.Combine(fd, relativePath);
+                    var file = Directory.GetFiles(root, relativePath, SearchOption.AllDirectories).FirstOrDefault();
+                    dup.LocalPath = file;
                 }
 
 
                 if (!dup.IsSaved())
-                    throw new ArgumentException($"Failed to find asset: {dup.LocalPath}");
+                    throw new ArgumentException($"Failed to find asset: {relativePath} in {root}");
                
 
                 dup.LocalPath = Path.GetFullPath(dup.LocalPath);
