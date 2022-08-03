@@ -70,7 +70,7 @@ namespace PollinationSDK.Test
 
             var jobInfo = new JobInfo(rec);
 
-            var model = Path.GetFullPath(@"../../../TestSample/two_rooms.hbjson");
+            var model = Path.GetFullPath(@"../../../TestSample/HoneybeeModel_RevitHouse.hbjson");
             if (!File.Exists(model))
                 throw new ArgumentException("Input doesn't exist");
             jobInfo.AddArgument(new JobPathArgument("model", new ProjectFolder(path: model)));
@@ -98,13 +98,17 @@ namespace PollinationSDK.Test
             watchTask.Wait();
             var result = watchTask.Result;
 
+            
             Assert.IsTrue(result.Contains("Completed"));
+            Assert.IsTrue(this.ScheduledJob.CloudJob.Status.RunsCompleted == 1);
         }
 
 
         [Test, Order(3)]
         public void CheckJobResultTest()
         {
+            // CreateJobTest();
+            // WatchJobTest();
 
             var savedPath = System.IO.Path.GetTempPath();
 
@@ -131,8 +135,9 @@ namespace PollinationSDK.Test
             var useCachedAssets = false;
 
             // download all assets
+            //runInfo.DownloadRunAssetsAsync(assets, savedPath, UpdateProgressMessage, useCachedAssets).GetAwaiter().GetResult();
             var task = Task.Run(async () => await runInfo.DownloadRunAssetsAsync(assets, savedPath, UpdateProgressMessage, useCachedAssets));
-            task.Wait();
+            task.GetAwaiter().GetResult();
 
             //await Task.Delay(3000);
             if (task.IsFaulted && task.Exception != null)
