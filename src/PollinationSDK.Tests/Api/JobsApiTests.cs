@@ -203,7 +203,7 @@ namespace PollinationSDK.Test
 
             var runApi = new Api.RunsApi();
             // energy simu
-            var run = runApi.GetRun(Helper.CurrentUser.Username, "demo", "908adb92-6339-4e34-8f01-7ddb55c52da2");
+            var run = runApi.ListRuns(Helper.CurrentUser.Username, "demo", status: RunStatusEnum.Succeeded).Resources.FirstOrDefault();
             var runInfo = new RunInfo(proj, run);
 
 
