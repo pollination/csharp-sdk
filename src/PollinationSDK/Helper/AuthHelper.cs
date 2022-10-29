@@ -175,13 +175,13 @@ namespace PollinationSDK
                 }
 
                 var auth = AuthResult.From(request.QueryString);
-                var loggedIn = CheckGetUser(auth, devEnv);
+                var loggedIn = CheckGetUser(auth, out var error, devEnv);
 
                 var message = string.Empty;
                 if (loggedIn)
                     message = $"<h1>Authorization was successful!</h1><h4>{Helper.CurrentUser.Name} ({Helper.CurrentUser.Username})</h4><p>You can close this browser window.</p>";
                 else
-                    message = "<h1>Invalid authorization!</h1><p>Please report the issue with your account to https://discourse.pollination.cloud.</p>";
+                    message = $"<h1>Invalid authorization!</h1><p>{error}</p><p>Please report the issue with your account to https://discourse.pollination.cloud.</p>";
 
                 //sends an HTTP response to the browser.
                 var responseString = string.Format($"<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\"><img src=\"https://app.pollination.cloud/logo.svg\">{message}</body></html>");
@@ -206,8 +206,9 @@ namespace PollinationSDK
           
         }
 
-        private static bool CheckGetUser(AuthResult auth, bool devEnv = false)
+        private static bool CheckGetUser(AuthResult auth, out string errorMessage, bool devEnv = false)
         {
+            errorMessage = string.Empty;
             try
             {
                 Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
@@ -229,6 +230,7 @@ namespace PollinationSDK
                 Configuration.Default.TokenRepo = null;
                 Helper.CurrentUser = null;
                 Helper.Logger?.Error(e, $"CheckGetUser()");
+                errorMessage = e.Message;
                 return false;
                 //throw;
             }
