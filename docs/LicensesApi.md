@@ -5,13 +5,13 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**DeleteActivation**](LicensesApi.md#deleteactivation) | **DELETE** /licenses/pools/{pool_id}/activations/{activation_id} | Delete Activation
-[**GetAvailablePools**](LicensesApi.md#getavailablepools) | **GET** /licenses/pools | Get Available Pools
+[**GetAvailablePools**](LicensesApi.md#getavailablepools) | **GET** /licenses/pools | Cython Function Or Method
 [**GetLicenseActivations**](LicensesApi.md#getlicenseactivations) | **GET** /licenses/pools/{pool_id}/activations | Get Activations
 [**GetPoolLicense**](LicensesApi.md#getpoollicense) | **GET** /licenses/pools/{pool_id}/license | Get Pool License
-[**GrantAccessToPool**](LicensesApi.md#grantaccesstopool) | **PATCH** /licenses/pools/{pool_id}/permissions | Grant Pool Access
-[**RegenerateLicensePool**](LicensesApi.md#regeneratelicensepool) | **POST** /licenses/pools/{pool_id}/regenerate | Regenerate
-[**RevokeAccessToPool**](LicensesApi.md#revokeaccesstopool) | **DELETE** /licenses/pools/{pool_id}/permissions | Delete Pool Access
-[**UpdateLicensePool**](LicensesApi.md#updatelicensepool) | **PUT** /licenses/pools/{pool_id} | Update Pool
+[**GrantAccessToPool**](LicensesApi.md#grantaccesstopool) | **PATCH** /licenses/pools/{pool_id}/permissions | Cython Function Or Method
+[**RegenerateLicensePool**](LicensesApi.md#regeneratelicensepool) | **POST** /licenses/pools/{pool_id}/regenerate | Cython Function Or Method
+[**RevokeAccessToPool**](LicensesApi.md#revokeaccesstopool) | **DELETE** /licenses/pools/{pool_id}/permissions | Cython Function Or Method
+[**UpdateLicensePool**](LicensesApi.md#updatelicensepool) | **PUT** /licenses/pools/{pool_id} | Cython Function Or Method
 
 
 
@@ -39,12 +39,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = poolId_example;  // string | 
@@ -103,7 +101,7 @@ void (empty response body)
 
 > LicensePoolList GetAvailablePools (List<string> owner = null)
 
-Get Available Pools
+Cython Function Or Method
 
 Get license pools available to authenticated user
 
@@ -123,19 +121,17 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var owner = new List<string>(); // List<string> | Owner of the project (optional) 
 
             try
             {
-                // Get Available Pools
+                // Cython Function Or Method
                 LicensePoolList result = apiInstance.GetAvailablePools(owner);
                 Debug.WriteLine(result);
             }
@@ -206,12 +202,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = poolId_example;  // string | 
@@ -289,12 +283,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -352,7 +344,7 @@ Name | Type | Description  | Notes
 
 > LicensePoolPublic GrantAccessToPool (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList)
 
-Grant Pool Access
+Cython Function Or Method
 
 Grant access to the license pool
 
@@ -372,12 +364,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -385,7 +375,7 @@ namespace Example
 
             try
             {
-                // Grant Pool Access
+                // Cython Function Or Method
                 LicensePoolPublic result = apiInstance.GrantAccessToPool(poolId, licensePoolAccessPolicyList);
                 Debug.WriteLine(result);
             }
@@ -437,7 +427,7 @@ Name | Type | Description  | Notes
 
 > AnyType RegenerateLicensePool (Guid poolId)
 
-Regenerate
+Cython Function Or Method
 
 Regenerate the license associated with the pool
 
@@ -457,19 +447,17 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
 
             try
             {
-                // Regenerate
+                // Cython Function Or Method
                 AnyType result = apiInstance.RegenerateLicensePool(poolId);
                 Debug.WriteLine(result);
             }
@@ -520,7 +508,7 @@ Name | Type | Description  | Notes
 
 > LicensePoolPublic RevokeAccessToPool (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList)
 
-Delete Pool Access
+Cython Function Or Method
 
 Revoke access to the license pool
 
@@ -540,12 +528,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -553,7 +539,7 @@ namespace Example
 
             try
             {
-                // Delete Pool Access
+                // Cython Function Or Method
                 LicensePoolPublic result = apiInstance.RevokeAccessToPool(poolId, licensePoolPolicySubjectList);
                 Debug.WriteLine(result);
             }
@@ -605,7 +591,7 @@ Name | Type | Description  | Notes
 
 > AnyType UpdateLicensePool (Guid poolId, LicensePoolUpdate licensePoolUpdate)
 
-Update Pool
+Cython Function Or Method
 
 Update the license pool
 
@@ -625,12 +611,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -638,7 +622,7 @@ namespace Example
 
             try
             {
-                // Update Pool
+                // Cython Function Or Method
                 AnyType result = apiInstance.UpdateLicensePool(poolId, licensePoolUpdate);
                 Debug.WriteLine(result);
             }
