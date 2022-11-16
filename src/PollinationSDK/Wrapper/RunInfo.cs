@@ -336,9 +336,21 @@ namespace PollinationSDK.Wrapper
                 }
                 else if (dup is RunOutputAsset output)
                 {
-                    //this.Run
-                    var file = Directory.GetFiles(root, relativePath, SearchOption.AllDirectories).FirstOrDefault();
-                    dup.LocalPath = file;
+                    var isFile = Path.HasExtension(output.RelativePath);
+                    var relativeOutPath = output.RelativePath.Replace("/", @"\");
+                    relativeOutPath = relativeOutPath.StartsWith(@"\") ? relativeOutPath : $@"\{relativeOutPath}";
+                    if (isFile)
+                    {
+                        var file = Directory.GetFiles(root, "*", SearchOption.AllDirectories).FirstOrDefault(_=>_.EndsWith(relativeOutPath));
+                        dup.LocalPath = file;
+                    }
+                    else
+                    {
+                        //this is an output folder
+                        var dir = Directory.GetDirectories(root, "*", SearchOption.AllDirectories).FirstOrDefault(_ => _.EndsWith(relativeOutPath));
+                        dup.LocalPath = dir;
+                    }
+                  
                 }
 
 
