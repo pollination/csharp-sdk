@@ -5,13 +5,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**IpAddress** | **string** |  | [optional] 
+**City** | **string** |  | [optional] 
 **CountryCode** | **string** |  | [optional] 
 **CountryName** | **string** |  | [optional] 
-**City** | **string** |  | [optional] 
+**IpAddress** | **string** |  | [optional] 
 **Latitude** | **double** |  | [optional] 
 **Longitude** | **double** |  | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "Location"]
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
