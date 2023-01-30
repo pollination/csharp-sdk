@@ -184,7 +184,7 @@ namespace PollinationSDK
                     message = $"<h1>Invalid authorization!</h1><p>{error}</p><p>Please report the issue with your account to https://discourse.pollination.cloud.</p>";
 
                 //sends an HTTP response to the browser.
-                var responseString = string.Format($"<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\"><img src=\"https://app.pollination.cloud/logo.svg\" width=\"128px\">{message}</body></html>");
+                var responseString = $"<html><head></head><body style=\"text-align: center; font-family: Lato, Helvetica, Arial, sans-serif\"><img src=\"https://app.pollination.cloud/logo.svg\" width=\"128px\">{message}</body></html>";
 
                 var buffer = Encoding.UTF8.GetBytes(responseString);
                 response.ContentLength64 = buffer.Length;
