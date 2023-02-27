@@ -16,11 +16,25 @@ namespace ConsoleAppDemo
 
         static void Main(string[] args)
         {
+
+            //RunCloudTests();
+            RunLocalTests();
+            Console.ReadKey();
+
+        }
+
+        public static void RunLocalTests()
+        {
+            LocalDatabase.Test();
+        }
+
+        public static void RunCloudTests()
+        {
             Console.WriteLine("Press any key to sign in...");
             Console.ReadKey();
 
 
-            AuthHelper.SignInAsync( devEnv: false).Wait();
+            AuthHelper.SignInAsync(devEnv: false).Wait();
 
             var me = Helper.CurrentUser;
             Console.WriteLine($"You are: {me.Username}");
@@ -135,9 +149,8 @@ namespace ConsoleAppDemo
 
             //DownloadBigAssetTest();
 
-            Console.ReadKey();
-
         }
+
         public static void DownloadBigAssetTest()
         {
             var owner = "studio-greenaarch";

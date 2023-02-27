@@ -1,6 +1,5 @@
 ﻿using PollinationSDK.Api;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace PollinationSDK.Wrapper
 {
+
     public class JobRunner
     {
 
