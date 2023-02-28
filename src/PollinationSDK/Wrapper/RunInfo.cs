@@ -12,6 +12,7 @@ namespace PollinationSDK.Wrapper
 {
     public class RunInfo
     {
+        public bool IsLocalRun => !Guid.TryParse(this.RunID, out var res);
         public string RunID => this.Run.Id;
         public Run Run { get; private set; }
         public Project Project { get; private set; }
@@ -65,7 +66,7 @@ namespace PollinationSDK.Wrapper
             return $"Status: {s.Status}; {s.Message}";
         }
 
-        public bool IsLocalRun => !Guid.TryParse(this.RunID, out var res);
+      
 
         //public async Task<string> WatchRunStatusAsync(Action<string> progressAction = default, System.Threading.CancellationToken cancelToken = default)
         //{
