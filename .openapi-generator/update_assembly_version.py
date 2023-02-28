@@ -49,6 +49,6 @@ assembly_file = os.path.join(os.getcwd(), 'src', package_name, f'{package_name}.
 with open(assembly_file, encoding='utf-8', mode='r') as csFile:
     s = csFile.read()
 with open(assembly_file, encoding='utf-8', mode='w') as f:
-    s = re.sub(r"(?<=\SVersion\>)\S+(?=\<\/)", new_version, s)
+    s = re.sub(r"(?<=\S<Version\>)\S+(?=\<\/)", new_version, s)
     print(f"Update AssemblyVersion to: {new_version}")
     f.write(s)
