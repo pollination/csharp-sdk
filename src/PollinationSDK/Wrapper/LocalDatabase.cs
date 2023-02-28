@@ -43,8 +43,10 @@ namespace PollinationSDK.Wrapper
             var file = "database.db";
             //C:\Users\mingo\.pollination
             var userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            var dir = Path.Combine(userDir, ".pollination", file);
-            return dir;
+            var dir = Path.Combine(userDir, ".pollination");
+            Directory.CreateDirectory(dir);
+            var filePath = Path.Combine(dir, file);
+            return filePath;
         }
 
         static void InitDatabase()
