@@ -30,15 +30,15 @@ namespace PollinationSDK.Wrapper
             this.Job.Arguments = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
         }
 
-        //public JobInfo(Job job)
-        //{
-        //    //recpie.Source: https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4
-        //    var reciptSource = job.Source;
-        //    this.RecipeOwner = GetRecipeOwnerFromSourceURL(reciptSource);
-        //    this.Recipe = GetRecipe(reciptSource);
-        //    this.Job = job;
-        //    this.Job.Arguments = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
-        //}
+        public JobInfo(Job job)
+        {
+           //recpie.Source: https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4
+           var reciptSource = job.Source;
+           this.RecipeOwner = GetRecipeOwnerFromSourceURL(reciptSource);
+           this.Recipe = GetRecipe(reciptSource);
+           this.Job = job;
+           this.Job.Arguments = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
+        }
 
 
         public void SetLocalJob(string runFolder, int cpuNo)

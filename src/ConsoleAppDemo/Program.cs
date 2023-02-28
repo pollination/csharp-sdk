@@ -17,16 +17,11 @@ namespace ConsoleAppDemo
         static void Main(string[] args)
         {
 
-            //RunCloudTests();
-            RunLocalTests();
+            RunCloudTests();
             Console.ReadKey();
 
         }
 
-        public static void RunLocalTests()
-        {
-            LocalDatabase.Test();
-        }
 
         public static void RunCloudTests()
         {
