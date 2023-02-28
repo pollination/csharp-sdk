@@ -120,7 +120,7 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
                 throw;
             }
             var res = FromJson(json);

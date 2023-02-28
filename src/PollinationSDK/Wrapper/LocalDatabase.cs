@@ -61,6 +61,16 @@ namespace PollinationSDK.Wrapper
         {
             return Add(connection, docId, resultPackage);
         }
+
+        public static bool Add(Guid docId, List<JobResultPackage> resultPackages)
+        {
+            var done = true;
+            foreach (var item in resultPackages)
+            {
+                done &= Add(docId, item);
+            }
+            return done;
+        }
         public static List<JobResultPackage> Get(Guid docId)
         {
             return Get(connection, docId);
