@@ -11,6 +11,9 @@ jobs:
     steps:
       - name: "Checkout Master Branch"
         uses: actions/checkout@v2
+      - uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.102'
 
       - name: Update Assembly Version
         run: |
