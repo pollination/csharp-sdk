@@ -12,6 +12,10 @@ jobs:
       - name: "Checkout Master Branch"
         uses: actions/checkout@v2
 
+      - name: test Build
+        run: |
+          dotnet restore
+          dotnet build 
 
       - name: Update Assembly Version
         run: |
