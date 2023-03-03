@@ -169,12 +169,6 @@ namespace PollinationSDK.Wrapper
             var inputJson = localArg.SaveToFolder(workDir); //save args to input.json file
 
 
-            //save recipe to folder
-            string recipeJson = this.JobInfo.Recipe.ToJson();
-            var path = Path.Combine(workDir, "recipe.json");
-            File.WriteAllText(path, recipeJson);
-
-
             // run the bat file
             try
             {
