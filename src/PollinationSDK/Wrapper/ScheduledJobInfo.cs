@@ -17,10 +17,12 @@ namespace PollinationSDK.Wrapper
         public CloudJob CloudJob { get; private set; }
         public Project CloudProject { get; private set; }
         public string ProjectSlug => IsLocalJob? this.LocalJob.ProjectSlug : CloudProject.Slug;
+        
         public RecipeInterface Recipe { get; private set; }
         public JobInfo LocalJob { get; private set; }
         public bool IsLocalJob => LocalJob != null;
         public string SavedLocalPath { get; private set; }
+        public string JobSlug => $"{ProjectSlug}/{JobID}";
 
         public ScheduledJobInfo(Project proj, CloudJob cloudJob)
         {
