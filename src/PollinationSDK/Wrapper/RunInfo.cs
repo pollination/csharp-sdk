@@ -46,20 +46,26 @@ namespace PollinationSDK.Wrapper
         //}
         public RunInfo(JobInfo localJob)
         {
-            this.Run = new Run(localJob.LocalRunFolder);
+            this.Run = new Run(localJob.LocalRunOutputFolder);
             var proj = localJob.ProjectSlug.Split('/');
             this.ProjectOwner = proj[0];
             this.ProjectName = proj[1];
             this.Recipe = localJob.Recipe;
         }
-        public RunInfo(string localRunFolder)
-        {
-            var localJob = JobResultPackage.LoadFromLocalFolder(localRunFolder, out var recipe);
-            this.Run = new Run(localJob.SavedLocalPath);
-            this.ProjectOwner = localJob.ProjectOwner;
-            this.ProjectName = localJob.ProjectName;
 
-            this.Recipe = recipe;
+        public RunInfo(ScheduledJobInfo localJob)
+        {
+            this.Run = new Run(localJob.SavedLocalPath);
+            var proj = localJob.ProjectSlug.Split('/');
+            this.ProjectOwner = proj[0];
+            this.ProjectName = proj[1];
+            this.Recipe = localJob.Recipe;
+        }
+
+        public RunInfo(string localRunFolder)
+            : this(ScheduledJobInfo.From(localRunFolder))
+        {
+
         }
 
         private static Run GetRun(Project proj, string runID)

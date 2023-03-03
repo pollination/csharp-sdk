@@ -9,7 +9,9 @@ namespace PollinationSDK.Wrapper
     public class LocalDatabase
     {
         private static SqliteConnection _connection;
-        private static SqliteConnection connection { get
+        private static SqliteConnection connection 
+        { 
+            get
             {
                 _connection = _connection ?? CreateConnection();
                 if (_connection.State == System.Data.ConnectionState.Closed)
@@ -40,7 +42,7 @@ namespace PollinationSDK.Wrapper
         }
         public static string GetDatabaseFile()
         {
-            var file = "database.db";
+            var file = "pollination.db";
             //C:\Users\mingo\.pollination
             var userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var dir = Path.Combine(userDir, ".pollination");
@@ -54,22 +56,18 @@ namespace PollinationSDK.Wrapper
             var con = connection;
             var cmd = con.CreateCommand();
 
-            var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, ResultPackage BLOB)";
+            var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, JobInfo BLOB)";
             cmd.CommandText = createTable;
             cmd.ExecuteNonQuery();
         }
 
-        public static bool Add(ScheduledJobInfo jobInfo)
-        {
-            return Add(new JobResultPackage(jobInfo));
-        }
-
-        public static bool Add(JobResultPackage resultPackage)
+     
+        public static bool Add(ScheduledJobInfo resultPackage)
         {
             return Add(connection, resultPackage);
         }
 
-        public static bool Add(List<JobResultPackage> resultPackages)
+        public static bool Add(List<ScheduledJobInfo> resultPackages)
         {
             var done = true;
             foreach (var item in resultPackages)
@@ -83,47 +81,55 @@ namespace PollinationSDK.Wrapper
         /// Get all JobResultPackage
         /// </summary>
         /// <returns></returns>
-        public static List<JobResultPackage> Get()
+        public static List<ScheduledJobInfo> Get()
         {
             return Get(connection, string.Empty);
         }
-        public static List<JobResultPackage> Get(string projSlug)
+      
+        public static List<ScheduledJobInfo> Get(string projSlug)
         {
             var condition = $"ProjSlug = '{projSlug}'";
             return Get(connection, condition);
         }
-        public static JobResultPackage Get(string projSlug, string jobID)
+        public static ScheduledJobInfo Get(string projSlug, string jobID)
         {
             var condition = string.IsNullOrEmpty(jobID) ? $"ProjSlug = '{projSlug}'" : $"ProjSlug = '{projSlug}' AND JobID = '{jobID}'";
             return Get(connection, condition).FirstOrDefault();
         }
 
-        public static bool Delete(JobResultPackage resultPackage)
+        public static bool Delete(ScheduledJobInfo schJob)
         {
-            return Delete(resultPackage.ProjectSlug, resultPackage.JobID);
+            return Delete(schJob.ProjectSlug, schJob.JobID);
         }
 
-        public static bool Delete(string projID, string jobID)
+        public static bool Delete(string projSlug, string jobID)
         {
-            return Delete(connection, projID, jobID);
+            return Delete(connection, projSlug, jobID);
+        }
+        public bool Add(IEnumerable<ScheduledJobInfo> jobResults)
+        {
+            var done = true;
+            foreach (var item in jobResults)
+            {
+                done &= Add(item);
+            }
+            return done;
         }
 
-        static bool Add(SqliteConnection connection, JobResultPackage resultPackage)
+        static bool Add(SqliteConnection connection, ScheduledJobInfo schJob)
         {
             using (var con = connection)
             {
                 var cmd = con.CreateCommand();
                 cmd.CommandText =
     @"
-    INSERT INTO JobTable (ProjSlug, JobID, DateTime, ResultPackage)
-    VALUES ($ProjSlug, $JobID, $DateTime, $ResultPackage)
+    INSERT INTO JobTable (ProjSlug, JobID, DateTime, JobInfo)
+    VALUES ($ProjSlug, $JobID, $DateTime, $JobInfo)
 ";
-                cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Text).Value = resultPackage.ProjectSlug;
-                cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = resultPackage.JobID;
+                cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Text).Value = schJob.ProjectSlug;
+                cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = schJob.JobID;
                 cmd.Parameters.AddWithValue("$DateTime", SqliteType.Text).Value = DateTime.Now;
-                cmd.Parameters.AddWithValue("$ResultPackage", SqliteType.Blob).Value = resultPackage.Serialize_Binary();
-                //cmd.Parameters.AddWithValue("$Recipe", resultPackage.Recipe);
-
+                cmd.Parameters.AddWithValue("$JobInfo", SqliteType.Blob).Value = schJob.Serialize_Binary();
                 var done = cmd.ExecuteNonQuery();
                 con.Close();
                 return done == 1;
@@ -131,16 +137,16 @@ namespace PollinationSDK.Wrapper
             
         }
 
-        static List<JobResultPackage> Get(SqliteConnection connection, string condition)
+        static List<ScheduledJobInfo> Get(SqliteConnection connection, string condition)
         {
-            var res = new List<JobResultPackage>();
+            var res = new List<ScheduledJobInfo>();
             condition = string.IsNullOrEmpty(condition) ? "1=1" : condition; 
             using (var con = connection)
             {
                 var cmd = con.CreateCommand();
                 cmd.CommandText =
 $@"
-    SELECT ResultPackage
+    SELECT JobInfo
     FROM JobTable
     WHERE {condition}
 ";
@@ -149,7 +155,7 @@ $@"
                     while (reader.Read())
                     {
                         var package = (byte[])reader.GetValue(0);
-                        var re = JobResultPackage.Deserialize_Binary(package);
+                        var re = ScheduledJobInfo.Deserialize_Binary(package);
                         res.Add(re);
                     }
                 }
@@ -174,7 +180,7 @@ $@"
                
                 var done =  cmd.ExecuteNonQuery();
                 con.Close();
-                return done == 1;
+                return done >= 1;
             }
         }
     }

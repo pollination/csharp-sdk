@@ -88,108 +88,12 @@ namespace PollinationSDK.Wrapper
             return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.None);
         }
 
-        public byte[] Serialize_Binary()
-        {
-            byte[] result = null;
-
-            try
-            {
-                using (MemoryStream memoryStream = new MemoryStream())
-                {
-                    using BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
-                    var json = this.ToJson();
-                    binaryWriter.Write(json);
-                    binaryWriter.Flush();
-                    binaryWriter.Close();
-                    result = Compress(memoryStream.ToArray());
-                    memoryStream.Dispose();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
-                throw;
-            }
-            return result;
-        }
-
-        public static JobResultPackage Deserialize_Binary(byte[] bytes)
-        {
-            string json = null;
-
-            try
-            {
-                var rawBytes = Decompress(bytes);
-                using (MemoryStream memoryStream = new MemoryStream(rawBytes))
-                {
-                    using BinaryReader reader = new BinaryReader(memoryStream);
-                    json = reader.ReadString();
-                    reader.Close();
-                    memoryStream.Dispose();
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
-                throw;
-            }
-            var res = FromJson(json);
-            return res;
-        }
-
         public static JobResultPackage FromJson(string json)
         {
             return Newtonsoft.Json.JsonConvert.DeserializeObject<JobResultPackage>(json);
         }
 
-        public static List<JobResultPackage> FromJsonArray(string json)
-        {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<JobResultPackage>>(json);
-        }
-
-        private static byte[] Compress(byte[] data)
-        {
-            using MemoryStream memoryStream = new MemoryStream();
-            using DeflateStream deflateStream = new DeflateStream(memoryStream, CompressionMode.Compress);
-            deflateStream.Write(data, 0, data.Length);
-            deflateStream.Flush();
-            deflateStream.Close();
-            return memoryStream.ToArray();
-        }
-        private static byte[] Decompress(byte[] compressedData)
-        {
-            using MemoryStream memoryStream = new MemoryStream();
-            using MemoryStream stream = new MemoryStream(compressedData);
-            using DeflateStream deflateStream = new DeflateStream(stream, CompressionMode.Decompress);
-            deflateStream.CopyTo(memoryStream);
-            memoryStream.Close();
-            return memoryStream.ToArray();
-        }
-
-        /// <summary>
-        /// Load from a local run's folder.
-        /// This folder must contains job.json for JobInfo
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <returns></returns>
-        public static JobResultPackage LoadFromLocalFolder(string runFolder, out RecipeInterface recipe)
-        {
-            if (Directory.Exists(runFolder))
-                throw new System.ArgumentException($"Invalid run folder {runFolder}");
-            var jobJson = Path.Combine(runFolder, "job.json");
-            if (!File.Exists(jobJson))
-                throw new System.ArgumentException($"{runFolder} doesn't have a job.json file!");
-
-            var recipeJson = Path.Combine(runFolder, "recipe.json");
-            if (!File.Exists(recipeJson))
-                throw new System.ArgumentException($"{runFolder} doesn't have a recipe.json file!");
-
-            var jobPackage = JobResultPackage.FromJson(File.ReadAllText(jobJson));
-            recipe = RecipeInterface.FromJson(File.ReadAllText(recipeJson));
-
-            return jobPackage;
-
-        }
+       
 
       
     }

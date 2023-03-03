@@ -1,8 +1,11 @@
-﻿using PollinationSDK.Api;
+﻿using Newtonsoft.Json;
+using PollinationSDK.Api;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 
 namespace PollinationSDK.Wrapper
@@ -12,17 +15,25 @@ namespace PollinationSDK.Wrapper
     /// </summary>
     public class ScheduledJobInfo
     {
-        //public Guid LocalJobID { get; private set; }
-        public string JobID { get; private set; }
-        public CloudJob CloudJob { get; private set; }
-        public Project CloudProject { get; private set; }
-        public string ProjectSlug => IsLocalJob? this.LocalJob.ProjectSlug : CloudProject.Slug;
+        public string JobID { get; set; }
+        public CloudJob CloudJob { get; set; }
+        public Project CloudProject { get; set; }
         
-        public RecipeInterface Recipe { get; private set; }
-        public JobInfo LocalJob { get; private set; }
+        public JobInfo LocalJob { get; set; }
+        public string SavedLocalPath { get; set; }
+
+        [IgnoreDataMember]
         public bool IsLocalJob => LocalJob != null;
-        public string SavedLocalPath { get; private set; }
+        [IgnoreDataMember]
         public string JobSlug => $"{ProjectSlug}/{JobID}";
+        [IgnoreDataMember]
+        public string ProjectSlug => IsLocalJob ? this.LocalJob.ProjectSlug : CloudProject.Slug;
+        [IgnoreDataMember]
+        public RecipeInterface Recipe => IsLocalJob ? this.LocalJob.Recipe : CloudJob.Recipe;
+
+
+        [JsonConstructorAttribute]
+        protected ScheduledJobInfo() { }
 
         public ScheduledJobInfo(Project proj, CloudJob cloudJob)
         {
@@ -30,7 +41,6 @@ namespace PollinationSDK.Wrapper
             this.LocalJob = null;
 
             this.CloudProject = proj;
-            this.Recipe = this.CloudJob.Recipe;
             this.JobID = this.CloudJob.Id;
             this.SavedLocalPath = Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8));
         }
@@ -41,25 +51,46 @@ namespace PollinationSDK.Wrapper
             this.CloudJob = null;
 
             //this.LocalProject = localJob.Project;
-            this.Recipe = localJob.Recipe;
+            //this.Recipe = localJob.Recipe;
             this.JobID = Guid.NewGuid().ToString();
             this.SavedLocalPath = string.IsNullOrEmpty(localDir) 
                 ? Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8)) 
                 : localDir;
         }
 
-        public ScheduledJobInfo(Project proj, string jobID) : this(proj, GetJob(proj, jobID))
+        public static ScheduledJobInfo From(Project proj, string jobID)
         {
+            var schJob = new ScheduledJobInfo(proj, GetJob(proj, jobID));
+            return schJob;
         }
 
-        public ScheduledJobInfo(string projectOwner, string projectName, string jobID)
+        public static ScheduledJobInfo From(string projectOwner, string projectName, string jobID)
         {
             var projApi = new ProjectsApi();
-            this.CloudProject = projApi.GetProject(projectOwner, projectName);
-            this.CloudJob = GetJob(this.CloudProject, jobID);
-            this.Recipe = this.CloudJob.Recipe;
-            this.LocalJob = null;
+            var proj = projApi.GetProject(projectOwner, projectName);
+            var job = GetJob(proj, jobID);
+            var schJob = new ScheduledJobInfo(proj, job);
+            return schJob;
         }
+
+        /// <summary>
+        /// Load from a local run's folder.
+        /// This folder must contains job.json for JobInfo
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        public static ScheduledJobInfo From(string runFolder)
+        {
+            if (!Directory.Exists(runFolder))
+                throw new System.ArgumentException($"Invalid run folder {runFolder}");
+            var jobJson = Path.Combine(runFolder, "job.json");
+            if (!File.Exists(jobJson))
+                throw new System.ArgumentException($"{runFolder} doesn't have a job.json file!");
+
+            var job = ScheduledJobInfo.FromJson(File.ReadAllText(jobJson));
+            return job;
+        }
+
 
         private static CloudJob GetJob(Project proj, string jobID)
         {
@@ -77,7 +108,7 @@ namespace PollinationSDK.Wrapper
 
         public override string ToString()
         {
-            return  this.IsLocalJob ? this.JobID : $"CLOUD:{this.CloudProject.Owner.Name}/{this.CloudProject.Name}/{this.JobID}";
+            return  this.IsLocalJob ? $"LOCAL:{this.JobSlug}@{this.SavedLocalPath}" : $"CLOUD:{this.JobSlug}";
         }
         
 
@@ -187,7 +218,7 @@ namespace PollinationSDK.Wrapper
 
             if (schJobInfo.IsLocalJob)
             {
-                var runInfo = new RunInfo(schJobInfo.LocalJob);
+                var runInfo = new RunInfo(schJobInfo);
                 return runInfo;
             }
             else
@@ -233,5 +264,89 @@ namespace PollinationSDK.Wrapper
            
         }
 
+
+        public string ToJson()
+        {
+            return Newtonsoft.Json.JsonConvert.SerializeObject(this, JsonSetting.AnyOfConvertSetting);
+        }
+        public static ScheduledJobInfo FromJson(string json)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<ScheduledJobInfo>(json, JsonSetting.AnyOfConvertSetting);
+        }
+
+        public static List<ScheduledJobInfo> FromJsonArray(string json)
+        {
+            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<ScheduledJobInfo>>(json, JsonSetting.AnyOfConvertSetting);
+        }
+
+        public byte[] Serialize_Binary()
+        {
+            byte[] result = null;
+
+            try
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    using BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
+                    var json = this.ToJson();
+                    binaryWriter.Write(json);
+                    binaryWriter.Flush();
+                    binaryWriter.Close();
+                    result = Compress(memoryStream.ToArray());
+                    memoryStream.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to serialize. Reason: " + e.Message);
+                throw;
+            }
+            return result;
+        }
+
+        public static ScheduledJobInfo Deserialize_Binary(byte[] bytes)
+        {
+            string json = null;
+
+            try
+            {
+                var rawBytes = Decompress(bytes);
+                using (MemoryStream memoryStream = new MemoryStream(rawBytes))
+                {
+                    using BinaryReader reader = new BinaryReader(memoryStream);
+                    json = reader.ReadString();
+                    reader.Close();
+                    memoryStream.Dispose();
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Failed to deserialize. Reason: " + e.Message);
+                throw;
+            }
+            var res = FromJson(json);
+            return res;
+        }
+
+    
+
+        private static byte[] Compress(byte[] data)
+        {
+            using MemoryStream memoryStream = new MemoryStream();
+            using DeflateStream deflateStream = new DeflateStream(memoryStream, CompressionMode.Compress);
+            deflateStream.Write(data, 0, data.Length);
+            deflateStream.Flush();
+            deflateStream.Close();
+            return memoryStream.ToArray();
+        }
+        private static byte[] Decompress(byte[] compressedData)
+        {
+            using MemoryStream memoryStream = new MemoryStream();
+            using MemoryStream stream = new MemoryStream(compressedData);
+            using DeflateStream deflateStream = new DeflateStream(stream, CompressionMode.Decompress);
+            deflateStream.CopyTo(memoryStream);
+            memoryStream.Close();
+            return memoryStream.ToArray();
+        }
     }
 }

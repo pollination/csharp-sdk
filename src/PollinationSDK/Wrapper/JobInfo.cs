@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace PollinationSDK.Wrapper
 {
@@ -17,6 +18,8 @@ namespace PollinationSDK.Wrapper
         public string ProjectSlug { get; set; } // for cloud and local job, ladybug_tools/demoProject
         public int LocalCPUNumber { get; set; } // for local job only
         public string LocalRunFolder { get; set; } // for local job only
+
+        public string LocalRunOutputFolder => GetLocalRunDir(this.LocalRunFolder, Job);
 
         [JsonConstructorAttribute]
         protected JobInfo() { }
@@ -171,7 +174,17 @@ namespace PollinationSDK.Wrapper
             this.Job.Arguments = newArgSets;
         }
 
+        private static string GetLocalRunDir(string root, Job job)
+        {
+            var workName = job.Name ?? "Unnamed";
+            workName = new String(workName.Where(c => char.IsLetterOrDigit(c)).ToArray());
 
+            var workDir = Path.Combine(root, workName);
+            if (!Directory.Exists(workDir))
+                Directory.CreateDirectory(workDir);
+
+            return workDir;
+        }
 
         //public static void RunJob(string jobInfoJson)
         //{
@@ -204,22 +217,18 @@ namespace PollinationSDK.Wrapper
         {
             if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
                 throw new ArgumentException($"Please call SetLocalJob() before running a job");
-            var workDir = this.LocalRunFolder;
+            var workDir = this.LocalRunOutputFolder;
             var cpuNum = this.LocalCPUNumber;
             var runner = new JobRunner(this);
             var projPath = runner.RunOnLocalMachine(workDir, cpuNum);
             var jobInfo = new ScheduledJobInfo(this, projPath);
 
-            var resPackage = new JobResultPackage(jobInfo);
             //save jobinfo to folder
             var jobPath = Path.Combine(jobInfo.SavedLocalPath, "job.json");
-            File.WriteAllText(jobPath, resPackage.ToJson());
-            //save recipe to folder
-            var recPath = Path.Combine(jobInfo.SavedLocalPath, "recipe.json");
-            File.WriteAllText(recPath, this.Recipe.ToJson());
-
+            File.WriteAllText(jobPath, jobInfo.ToJson());
+            
             // add the record to local database
-            LocalDatabase.Add(resPackage);
+            LocalDatabase.Add(jobInfo);
             return jobInfo;
         }
 
