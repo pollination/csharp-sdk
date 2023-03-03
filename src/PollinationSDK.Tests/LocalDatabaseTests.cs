@@ -12,6 +12,7 @@ namespace PollinationSDK.Test
         [Test]
         public void LocalDataTest()
         {
+            LocalDatabase.DatabaseFile = "test.db";
             LocalDatabase.DeleteDatabase();
          
             var sampleData = Path.GetFullPath(@"../../../TestSample/LocalDatabase.json");
