@@ -8,6 +8,7 @@ namespace PollinationSDK.Wrapper
 {
     public class LocalDatabase
     {
+        public static string DatabaseFile { get; set; } = "pollination.db";
         private static SqliteConnection _connection;
         private static SqliteConnection connection 
         { 
@@ -42,7 +43,7 @@ namespace PollinationSDK.Wrapper
         }
         public static string GetDatabaseFile()
         {
-            var file = "pollination.db";
+            var file = DatabaseFile;
             //C:\Users\mingo\.pollination
             var userDir = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
             var dir = Path.Combine(userDir, ".pollination");
