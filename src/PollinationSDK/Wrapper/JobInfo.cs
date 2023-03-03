@@ -19,6 +19,7 @@ namespace PollinationSDK.Wrapper
         public int LocalCPUNumber { get; set; } // for local job only
         public string LocalRunFolder { get; set; } // for local job only
 
+        [IgnoreDataMember]
         public string LocalRunOutputFolder => GetLocalRunDir(this.LocalRunFolder, Job);
 
         [JsonConstructorAttribute]
