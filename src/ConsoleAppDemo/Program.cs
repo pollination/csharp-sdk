@@ -198,7 +198,7 @@ namespace ConsoleAppDemo
 
                 // run a job
                 jobInfo.SetCloudJob(proj.Owner.Name, proj.Name);
-                var task = jobInfo.RunJobOnCloud((s) => Console.WriteLine(s), token);
+                var task = jobInfo.RunJobAsync((s) => Console.WriteLine(s), token);
 
                 //cts.CancelAfter(60000);
                 var scheduledJob = task.Result;
@@ -221,7 +221,7 @@ namespace ConsoleAppDemo
             try
             {
                 job.SetCloudJob(proj.Owner.Name, proj.Name);
-                var scheduledJobInfo = await job.RunJobOnCloud(msgAction, token);
+                var scheduledJobInfo = await job.RunJobAsync(msgAction, token);
                 msgAction($"Starting the job: {scheduledJobInfo.JobID}");
                 //await scheduledJobInfo.WatchRunStatusAsync(msgAction, token);
 
