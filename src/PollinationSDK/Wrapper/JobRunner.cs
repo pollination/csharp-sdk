@@ -150,7 +150,7 @@ namespace PollinationSDK.Wrapper
             var workName = this.Job.Name ?? "Unnamed";
             workName = new String(workName.Where(c => char.IsLetterOrDigit(c)).ToArray());
          
-            var workDir = Path.Combine(workFolder, workName);
+            var workDir = workFolder;
             if (!string.IsNullOrEmpty( this.JobInfo.SubFolderPath))
                 workDir = Path.Combine(workDir, this.JobInfo.SubFolderPath);
             workDir = Path.GetFullPath(workDir);

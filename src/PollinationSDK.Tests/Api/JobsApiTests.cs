@@ -81,7 +81,7 @@ namespace PollinationSDK.Test
             // run a job
             jobInfo.SetCloudJob(Project.Owner.Name, Project.Name);
 
-            var task = jobInfo.RunJobOnCloud((s) => Console.WriteLine(s));
+            var task = jobInfo.RunJobAsync((s) => Console.WriteLine(s));
 
             //cts.CancelAfter(60000);
             ScheduledJob = task.Result;
@@ -376,7 +376,7 @@ namespace PollinationSDK.Test
             Assert.AreEqual(jobInfo.Recipe.Source, dup.Recipe.Source);
 
             // run a job
-            var task = jobInfo.RunJobOnCloud((s) => Console.WriteLine(s));
+            var task = jobInfo.RunJobAsync((s) => Console.WriteLine(s));
 
             //cts.CancelAfter(60000);
             ScheduledJob = task.Result;

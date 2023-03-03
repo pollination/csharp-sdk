@@ -16,29 +16,28 @@ namespace PollinationSDK.Test
          
             var sampleData = Path.GetFullPath(@"../../../TestSample/LocalDatabase.json");
             var json = File.ReadAllText(sampleData);
-            var res = JobResultPackage.FromJsonArray(json);
+            var jobs = ScheduledJobInfo.FromJsonArray(json);
 
             // test add
-            var docId = Guid.NewGuid(); // 
-            foreach (var item in res)
+            foreach (var item in jobs)
             {
-                var done = LocalDatabase.Add(docId, item);
+                var done = LocalDatabase.Add(item);
                 Assert.IsTrue(done);
             }
 
             // test get all
-            var getRes = LocalDatabase.Get(docId);
+            var getRes = LocalDatabase.Get();
             Assert.AreEqual(getRes.Count, 2);
 
             // test get one
-            var firstRes = res.FirstOrDefault();
-            var getOne = LocalDatabase.Get(docId, firstRes.JobID);
+            var firstRes = jobs.FirstOrDefault();
+            var getOne = LocalDatabase.Get(firstRes.ProjectSlug, firstRes.JobID);
             Assert.AreEqual(getOne.Recipe, firstRes.Recipe);
 
             // test delete one
-            var doneDel = LocalDatabase.Delete(docId, firstRes.JobID);
+            var doneDel = LocalDatabase.Delete(firstRes);
             Assert.IsTrue(doneDel);
-            getRes = LocalDatabase.Get(docId);
+            getRes = LocalDatabase.Get();
             Assert.AreEqual(getRes.Count, 1);
         }
     }
