@@ -9,6 +9,9 @@ using System.Text;
 
 namespace PollinationSDK.Wrapper
 {
+    /// <summary>
+    /// Once a job (ScheduledJobInfo) is completed, use this class to prepare/download/postprocess a run's outputs
+    /// </summary>
     public class JobResultPackage
     {
         public string JobID { get; set; }
@@ -16,8 +19,10 @@ namespace PollinationSDK.Wrapper
         public string JobDescription { get; set; }
         public string Recipe { get; set; }
         public bool IsCloudJob { get; set; }
-        public string CloudProjectOwner { get; set; }
-        public string CloudProjectName { get; set; }
+
+        public string ProjectOwner { get; set; }
+        public string ProjectName { get; set; }
+        public string ProjectSlug => $"{ProjectOwner}/{ProjectName}";
 
         public string SavedLocalPath { get; set; }
         public string SelectedRunID { get; set; }
@@ -46,24 +51,29 @@ namespace PollinationSDK.Wrapper
             this.IsCloudJob = !job.IsLocalJob;
             this.JobID = job.JobID;
 
+        
+     
+            this.Recipe = $"{job.Recipe.Metadata.Name}:{job.Recipe.Metadata.Tag}";
+            this.SavedLocalPath = job.SavedLocalPath;
+
             if (this.IsCloudJob)
             {
                 this.JobName = job.CloudJob.Spec.Name;
                 this.JobDescription = job.CloudJob.Spec.Description;
-                this.Recipe = $"{job.Recipe.Metadata.Name}:{job.Recipe.Metadata.Tag}";
-                this.CloudProjectName = job.Project.Name;
-                this.CloudProjectOwner = job.Project.Owner.Name;
-                this.SavedLocalPath = Path.Combine(Path.GetTempPath(), "Pollination", job.JobID.Substring(0, 8));
+                this.ProjectName = job.CloudProject.Name;
+                this.ProjectOwner = job.CloudProject.Owner.Name;
+
             }
             else
             {
                 this.JobName = job.JobID;
-                this.Recipe = $"{job.Recipe.Metadata.Name}:{job.Recipe.Metadata.Tag}";
-                this.SavedLocalPath = job.JobID.Replace("LOCAL:", "");
+                var projSlug = job.ProjectSlug.Split('/');
+
+                this.ProjectName = projSlug[0];
+                this.ProjectOwner = projSlug[1];
             }
 
             // get all outputs
-
             var run = job.GetRunInfo(0);
             //this.RunInfo = run;
             this.SelectedRunID = run.RunID;
@@ -156,5 +166,31 @@ namespace PollinationSDK.Wrapper
             return memoryStream.ToArray();
         }
 
+        /// <summary>
+        /// Load from a local run's folder.
+        /// This folder must contains job.json for JobInfo
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <returns></returns>
+        public static JobResultPackage LoadFromLocalFolder(string runFolder, out RecipeInterface recipe)
+        {
+            if (Directory.Exists(runFolder))
+                throw new System.ArgumentException($"Invalid run folder {runFolder}");
+            var jobJson = Path.Combine(runFolder, "job.json");
+            if (!File.Exists(jobJson))
+                throw new System.ArgumentException($"{runFolder} doesn't have a job.json file!");
+
+            var recipeJson = Path.Combine(runFolder, "recipe.json");
+            if (!File.Exists(recipeJson))
+                throw new System.ArgumentException($"{runFolder} doesn't have a recipe.json file!");
+
+            var jobPackage = JobResultPackage.FromJson(File.ReadAllText(jobJson));
+            recipe = RecipeInterface.FromJson(File.ReadAllText(recipeJson));
+
+            return jobPackage;
+
+        }
+
+      
     }
 }

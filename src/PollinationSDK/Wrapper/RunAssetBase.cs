@@ -204,7 +204,7 @@ namespace PollinationSDK.Wrapper
             if (this.RunSource.StartsWith("LOCAL:"))
             {
                 var folder = this.RunSource.Substring(6);
-                return RunInfo.LoadFromLocalFolder(folder);
+                return new RunInfo(folder);
             }
             else
             {

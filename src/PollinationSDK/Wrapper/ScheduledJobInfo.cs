@@ -1,48 +1,62 @@
 ﻿using PollinationSDK.Api;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace PollinationSDK.Wrapper
 {
+    /// <summary>
+    /// This is used for watching the running status of a job that has been scheduled/executed.
+    /// </summary>
     public class ScheduledJobInfo
     {
-        public Guid LocalJobID { get; private set; }
-        public string JobID => IsLocalJob? this.LocalJobID.ToString() : this.CloudJob.Id;
+        //public Guid LocalJobID { get; private set; }
+        public string JobID { get; private set; }
         public CloudJob CloudJob { get; private set; }
-        public Project Project { get; private set; }
+        public Project CloudProject { get; private set; }
+        public string ProjectSlug => IsLocalJob? this.LocalJob.ProjectSlug : CloudProject.Slug;
         public RecipeInterface Recipe { get; private set; }
-        public RunInfo LocalJob { get; private set; }
+        public JobInfo LocalJob { get; private set; }
         public bool IsLocalJob => LocalJob != null;
-        //[IgnoreDataMember]
-        //public string Logs { get; set; }
-        public ScheduledJobInfo(Project proj, string jobID): this(proj, GetJob(proj, jobID))
-        {
-        }
+        public string SavedLocalPath { get; private set; }
 
-        public ScheduledJobInfo(Project proj, CloudJob run)
+        public ScheduledJobInfo(Project proj, CloudJob cloudJob)
         {
-            this.CloudJob = run;
-            this.Project = proj;
+            this.CloudJob = cloudJob; 
+            this.LocalJob = null;
+
+            this.CloudProject = proj;
             this.Recipe = this.CloudJob.Recipe;
-            this.LocalJobID = Guid.Empty;
+            this.JobID = this.CloudJob.Id;
+            this.SavedLocalPath = Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8));
         }
 
-        public ScheduledJobInfo(RunInfo localRun)
+        public ScheduledJobInfo(JobInfo localJob, string localDir)
         {
-            this.LocalJob = localRun;
-            this.Recipe = localRun.Recipe;
-            this.LocalJobID = Guid.NewGuid();
+            this.LocalJob = localJob;
+            this.CloudJob = null;
+
+            //this.LocalProject = localJob.Project;
+            this.Recipe = localJob.Recipe;
+            this.JobID = Guid.NewGuid().ToString();
+            this.SavedLocalPath = string.IsNullOrEmpty(localDir) 
+                ? Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8)) 
+                : localDir;
         }
 
-        public ScheduledJobInfo(string clouldProjectName, string projectOwner, string jobID)
+        public ScheduledJobInfo(Project proj, string jobID) : this(proj, GetJob(proj, jobID))
+        {
+        }
+
+        public ScheduledJobInfo(string projectOwner, string projectName, string jobID)
         {
             var projApi = new ProjectsApi();
-            this.Project = projApi.GetProject(projectOwner, clouldProjectName);
-            this.CloudJob = GetJob(this.Project, jobID);
+            this.CloudProject = projApi.GetProject(projectOwner, projectName);
+            this.CloudJob = GetJob(this.CloudProject, jobID);
             this.Recipe = this.CloudJob.Recipe;
-            this.LocalJobID = Guid.Empty;
+            this.LocalJob = null;
         }
 
         private static CloudJob GetJob(Project proj, string jobID)
@@ -61,7 +75,7 @@ namespace PollinationSDK.Wrapper
 
         public override string ToString()
         {
-            return  this.IsLocalJob ? this.JobID : $"CLOUD:{this.Project.Owner.Name}/{this.Project.Name}/{this.JobID}";
+            return  this.IsLocalJob ? this.JobID : $"CLOUD:{this.CloudProject.Owner.Name}/{this.CloudProject.Name}/{this.JobID}";
         }
         
 
@@ -71,7 +85,7 @@ namespace PollinationSDK.Wrapper
             {
                 var api = new JobsApi();
                 //api.ListJobs
-                var proj = this.Project;
+                var proj = this.CloudProject;
                 var jobId = this.JobID;
                 Helper.Logger.Information($"WatchJobStatusAsync: checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
 
@@ -130,7 +144,7 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                Helper.Logger.Error(e, $"WatchJobStatusAsync: failed to watch job [{Project.Owner.Name}/{Project.Name}/{JobID}].");
+                Helper.Logger.Error(e, $"WatchJobStatusAsync: failed to watch job [{CloudProject.Owner.Name}/{CloudProject.Name}/{JobID}].");
                 throw e;
             }
 
@@ -153,7 +167,7 @@ namespace PollinationSDK.Wrapper
 
         public void CancelJob()
         {
-            var proj = this.Project;
+            var proj = this.CloudProject;
             var api = new JobsApi();
             api.CancelJobAsync(proj.Owner.Name, proj.Name, this.JobID);
             Helper.Logger.Information($"CancelJob: [{proj.Owner.Name}/{proj.Name}/{this.JobID}].");
@@ -167,16 +181,17 @@ namespace PollinationSDK.Wrapper
             if (_runInfoCache.ContainsKey(runIndex))
                 return _runInfoCache[runIndex];
 
-            var jobInfo = this;
+            var schJobInfo = this;
 
-            if (jobInfo.IsLocalJob)
+            if (schJobInfo.IsLocalJob)
             {
-                return this.LocalJob;
+                var runInfo = new RunInfo(schJobInfo.LocalJob);
+                return runInfo;
             }
             else
             {
                 // only get the first run asset for now
-                var job = jobInfo.CloudJob;
+                var job = schJobInfo.CloudJob;
 
                 //check run index if valid
                 var page = runIndex + 1;
@@ -197,7 +212,7 @@ namespace PollinationSDK.Wrapper
                 }
 
                 var api = new PollinationSDK.Api.RunsApi();
-                var runs = api.ListRuns(jobInfo.Project.Owner.Name, jobInfo.Project.Name, jobId: new List<string>() { job.Id }, page: page, perPage: 1).Resources;
+                var runs = api.ListRuns(schJobInfo.CloudProject.Owner.Name, schJobInfo.CloudProject.Name, jobId: new List<string>() { job.Id }, page: page, perPage: 1).Resources;
                 var firstRun = runs.FirstOrDefault();
 
                 var isRunFinished = firstRun.Status.FinishedAt > firstRun.Status.StartedAt;
@@ -208,7 +223,7 @@ namespace PollinationSDK.Wrapper
                     throw err;
                 }
 
-                var runInfo = new RunInfo(jobInfo.Project, firstRun);
+                var runInfo = new RunInfo(schJobInfo.CloudProject, firstRun);
 
                 _runInfoCache.Add(runIndex, runInfo);
                 return runInfo;

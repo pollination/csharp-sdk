@@ -54,51 +54,71 @@ namespace PollinationSDK.Wrapper
             var con = connection;
             var cmd = con.CreateCommand();
 
-            var createTable = "CREATE TABLE JobTable (DocID BLOB(36), JobID BLOB(36), DateTime TEXT, ResultPackage BLOB)";
+            var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, ResultPackage BLOB)";
             cmd.CommandText = createTable;
             cmd.ExecuteNonQuery();
         }
 
-        public static bool Add(Guid docId, JobResultPackage resultPackage)
+        public static bool Add(ScheduledJobInfo jobInfo)
         {
-            return Add(connection, docId, resultPackage);
+            return Add(new JobResultPackage(jobInfo));
         }
 
-        public static bool Add(Guid docId, List<JobResultPackage> resultPackages)
+        public static bool Add(JobResultPackage resultPackage)
+        {
+            return Add(connection, resultPackage);
+        }
+
+        public static bool Add(List<JobResultPackage> resultPackages)
         {
             var done = true;
             foreach (var item in resultPackages)
             {
-                done &= Add(docId, item);
+                done &= Add(item);
             }
             return done;
         }
-        public static List<JobResultPackage> Get(Guid docId)
+
+        /// <summary>
+        /// Get all JobResultPackage
+        /// </summary>
+        /// <returns></returns>
+        public static List<JobResultPackage> Get()
         {
-            return Get(connection, docId);
+            return Get(connection, string.Empty);
         }
-        public static JobResultPackage Get(Guid docId, string jobID)
+        public static List<JobResultPackage> Get(string projSlug)
         {
-            return Get(connection, docId, jobID).FirstOrDefault();
+            var condition = $"ProjSlug = '{projSlug}'";
+            return Get(connection, condition);
+        }
+        public static JobResultPackage Get(string projSlug, string jobID)
+        {
+            var condition = string.IsNullOrEmpty(jobID) ? $"ProjSlug = '{projSlug}'" : $"ProjSlug = '{projSlug}' AND JobID = '{jobID}'";
+            return Get(connection, condition).FirstOrDefault();
         }
 
-        public static bool Delete(Guid docId, string jobID)
+        public static bool Delete(JobResultPackage resultPackage)
         {
-            return Delete(connection, docId, jobID);
+            return Delete(resultPackage.ProjectSlug, resultPackage.JobID);
         }
 
-        static bool Add(SqliteConnection connection, Guid docId, JobResultPackage resultPackage)
+        public static bool Delete(string projID, string jobID)
+        {
+            return Delete(connection, projID, jobID);
+        }
+
+        static bool Add(SqliteConnection connection, JobResultPackage resultPackage)
         {
             using (var con = connection)
             {
                 var cmd = con.CreateCommand();
-
                 cmd.CommandText =
     @"
-    INSERT INTO JobTable (DocID, JobID, DateTime, ResultPackage)
-    VALUES ($DocID, $JobID, $DateTime, $ResultPackage)
+    INSERT INTO JobTable (ProjSlug, JobID, DateTime, ResultPackage)
+    VALUES ($ProjSlug, $JobID, $DateTime, $ResultPackage)
 ";
-                cmd.Parameters.AddWithValue("$DocID", SqliteType.Blob).Value = docId;
+                cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Text).Value = resultPackage.ProjectSlug;
                 cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = resultPackage.JobID;
                 cmd.Parameters.AddWithValue("$DateTime", SqliteType.Text).Value = DateTime.Now;
                 cmd.Parameters.AddWithValue("$ResultPackage", SqliteType.Blob).Value = resultPackage.Serialize_Binary();
@@ -108,18 +128,13 @@ namespace PollinationSDK.Wrapper
                 con.Close();
                 return done == 1;
             }
-    
             
         }
 
-        static List<JobResultPackage> Get(SqliteConnection connection, Guid docId)
-        {
-            return Get(connection, docId, string.Empty);
-        }
-        static List<JobResultPackage> Get(SqliteConnection connection, Guid docId, string jobId)
+        static List<JobResultPackage> Get(SqliteConnection connection, string condition)
         {
             var res = new List<JobResultPackage>();
-            var condition = string.IsNullOrEmpty(jobId) ? "DocID = $DocID" : "DocID = $DocID AND JobID = $JobID";
+            condition = string.IsNullOrEmpty(condition) ? "1=1" : condition; 
             using (var con = connection)
             {
                 var cmd = con.CreateCommand();
@@ -129,8 +144,6 @@ $@"
     FROM JobTable
     WHERE {condition}
 ";
-                cmd.Parameters.AddWithValue("$DocID", docId);
-                cmd.Parameters.AddWithValue("$JobID", jobId);
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())
@@ -145,7 +158,7 @@ $@"
             return res;
         }
 
-        static bool Delete(SqliteConnection connection, Guid docId, string jobId)
+        static bool Delete(SqliteConnection connection, string projID, string jobId)
         {
             using (var con = connection)
             {
@@ -154,9 +167,9 @@ $@"
 @"
     DELETE
     FROM JobTable
-    WHERE DocID = $DocID AND JobID = $JobID
+    WHERE ProjSlug = $ProjSlug AND JobID = $JobID
 ";
-                cmd.Parameters.AddWithValue("$DocID", SqliteType.Blob).Value = docId;
+                cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Blob).Value = projID;
                 cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = jobId;
                
                 var done =  cmd.ExecuteNonQuery();

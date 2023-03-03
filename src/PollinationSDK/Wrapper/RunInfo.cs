@@ -15,7 +15,12 @@ namespace PollinationSDK.Wrapper
         public bool IsLocalRun => !Guid.TryParse(this.RunID, out var res);
         public string RunID => this.Run.Id;
         public Run Run { get; private set; }
-        public Project Project { get; private set; }
+        //public Project Project { get; private set; }
+        public UserPermission ProjectCloudPermission { get; private set; } 
+        public string ProjectOwner { get; private set; }
+        public string ProjectName { get; private set; }
+        public string ProjectSlug => $"{ProjectOwner}/{ProjectName}";
+        public string RunSlug => $"{ProjectSlug}/{RunID}";
         public RecipeInterface Recipe { get; private set; }
 
         //[IgnoreDataMember]
@@ -27,14 +32,33 @@ namespace PollinationSDK.Wrapper
         public RunInfo(Project proj, Run run)
         {
             this.Run = run;
-            this.Project = proj;
+            this.ProjectCloudPermission = proj.Permissions;
+            this.ProjectOwner = proj.Owner.Name;
+            this.ProjectName = proj.Name;
             this.Recipe = this.Run.Recipe;
         }
 
-        public RunInfo(RecipeInterface recipe , string localRunPath)
+        //public RunInfo(string projOwner, string projName, RecipeInterface recipe, string localRunPath)
+        //{
+        //    var localPath = Path.GetFullPath(localRunPath);
+        //    this.Run = new Run(localPath);
+        //    this.Recipe = recipe;
+        //}
+        public RunInfo(JobInfo localJob)
         {
-            var localPath = Path.GetFullPath(localRunPath);
-            this.Run = new Run(localPath);
+            this.Run = new Run(localJob.LocalRunFolder);
+            var proj = localJob.ProjectSlug.Split('/');
+            this.ProjectOwner = proj[0];
+            this.ProjectName = proj[1];
+            this.Recipe = localJob.Recipe;
+        }
+        public RunInfo(string localRunFolder)
+        {
+            var localJob = JobResultPackage.LoadFromLocalFolder(localRunFolder, out var recipe);
+            this.Run = new Run(localJob.SavedLocalPath);
+            this.ProjectOwner = localJob.ProjectOwner;
+            this.ProjectName = localJob.ProjectName;
+
             this.Recipe = recipe;
         }
 
@@ -55,7 +79,7 @@ namespace PollinationSDK.Wrapper
         public override string ToString()
         {
             if (!IsLocalRun)
-                return $"CLOUD:{this.Project.Owner.Name}/{this.Project.Name}/{this.RunID}";
+                return $"CLOUD:{this.RunSlug}";
             return $"LOCAL:{this.RunID}";
 
         }
@@ -66,7 +90,6 @@ namespace PollinationSDK.Wrapper
             return $"Status: {s.Status}; {s.Message}";
         }
 
-      
 
         //public async Task<string> WatchRunStatusAsync(Action<string> progressAction = default, System.Threading.CancellationToken cancelToken = default)
         //{
@@ -227,25 +250,19 @@ namespace PollinationSDK.Wrapper
 
         //}
 
-        /// <summary>
-        /// Load a RunInfo from a local run's folder.
-        /// This folder must contains recipe.json for RecipeInterface, and input.json for input arguments
-        /// </summary>
-        /// <param name="folder"></param>
-        /// <returns></returns>
-        public static RunInfo LoadFromLocalFolder(string folder)
+        private static RecipeInterface GetRecipe(string owner, string name, string tag = default)
         {
-            RunInfo runInfo = null;
-            if (Directory.Exists(folder))
+            var api = new Api.RecipesApi();
+            var tagToSearch = tag;
+            if (string.IsNullOrEmpty(tagToSearch) || tagToSearch == "*")
             {
-                var recipeFile = Path.Combine(folder, "recipe.json");
-                var recipeJson = File.ReadAllText(recipeFile);
-                var recipe = RecipeInterface.FromJson(recipeJson);
-                runInfo = new RunInfo(recipe, folder);
+                tagToSearch = "latest";
             }
-            return runInfo;
-           
+
+            var rec = api.GetRecipeByTag(owner, name, tagToSearch);
+            return rec.Manifest;
         }
+
 
 
         public List<Interface.Io.Outputs.IDag> GetOutputs() => this.Recipe.GetOutputs();
@@ -529,9 +546,9 @@ namespace PollinationSDK.Wrapper
                             var url = string.Empty;
 
                             if (isInputAsset)
-                                url = api.DownloadRunArtifact(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, path: asset.RelativePath).ToString();
+                                url = api.DownloadRunArtifact(runInfo.ProjectOwner, runInfo.ProjectName, runInfo.RunID, path: asset.RelativePath).ToString();
                             else
-                                url = api.GetRunOutput(runInfo.Project.Owner.Name, runInfo.Project.Name, runInfo.RunID, assetName).ToString();
+                                url = api.GetRunOutput(runInfo.ProjectOwner, runInfo.ProjectName, runInfo.RunID, assetName).ToString();
 
                             Helper.Logger.Information($"DownloadAssets: downloading {assetName} from \n  -{url}\n");
                             var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress, cancelToken);

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.IO;
 
 namespace PollinationSDK.Wrapper
 {
@@ -13,7 +14,7 @@ namespace PollinationSDK.Wrapper
         public Job Job { get; set; }
         public string SubFolderPath { get; set; }
         public bool IsLocalJob { get; set; }
-        public string CloudProject { get; set; } // for cloud job only
+        public string ProjectSlug { get; set; } // for cloud and local job, ladybug_tools/demoProject
         public int LocalCPUNumber { get; set; } // for local job only
         public string LocalRunFolder { get; set; } // for local job only
 
@@ -41,9 +42,10 @@ namespace PollinationSDK.Wrapper
         }
 
 
-        public void SetLocalJob(string runFolder, int cpuNo)
+        public void SetLocalJob(string projectOwner, string projectName, string runFolder, int cpuNo)
         {
             this.IsLocalJob = true;
+            this.ProjectSlug = $"{projectOwner}/{projectName}";
             this.LocalRunFolder = runFolder;
             this.LocalCPUNumber = cpuNo;
         }
@@ -51,7 +53,7 @@ namespace PollinationSDK.Wrapper
         public void SetCloudJob(string projectOwner, string projectName)
         {
             this.IsLocalJob = false;
-            this.CloudProject = $"{projectOwner}/{projectName}";
+            this.ProjectSlug = $"{projectOwner}/{projectName}";
         }
 
         private static string GetRecipeOwnerFromSourceURL(string url)
@@ -171,20 +173,34 @@ namespace PollinationSDK.Wrapper
 
 
 
-        public static void RunJob(string jobInfoJson)
+        //public static void RunJob(string jobInfoJson)
+        //{
+        //    var job = JobInfo.FromJson(jobInfoJson);
+        //    job.RunJob();
+        //}
+
+        public ScheduledJobInfo RunJob()
         {
-            var job = JobInfo.FromJson(jobInfoJson);
+            return RunJobAsync().GetAwaiter().GetResult();
+        }
+
+        public async Task<ScheduledJobInfo> RunJobAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
+        {
+            var job = this;
+            ScheduledJobInfo jobInfo = null;
             if (job.IsLocalJob)
             {
-                job.RunJobOnLocal();
+                jobInfo = job.RunJobOnLocal();
             }
             else
             {
-                job.RunJobOnCloud();
+                jobInfo = await job.RunJobOnCloud(progressReporting, token);
             }
+
+            return jobInfo;
         }
 
-        public RunInfo RunJobOnLocal()
+        private ScheduledJobInfo RunJobOnLocal()
         {
             if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
                 throw new ArgumentException($"Please call SetLocalJob() before running a job");
@@ -192,18 +208,34 @@ namespace PollinationSDK.Wrapper
             var cpuNum = this.LocalCPUNumber;
             var runner = new JobRunner(this);
             var projPath = runner.RunOnLocalMachine(workDir, cpuNum);
-            return new RunInfo(Recipe, projPath);
+            var jobInfo = new ScheduledJobInfo(this, projPath);
+
+            var resPackage = new JobResultPackage(jobInfo);
+            //save jobinfo to folder
+            var jobPath = Path.Combine(jobInfo.SavedLocalPath, "job.json");
+            File.WriteAllText(jobPath, resPackage.ToJson());
+            //save recipe to folder
+            var recPath = Path.Combine(jobInfo.SavedLocalPath, "recipe.json");
+            File.WriteAllText(recPath, this.Recipe.ToJson());
+
+            // add the record to local database
+            LocalDatabase.Add(resPackage);
+            return jobInfo;
         }
 
-        public async Task<ScheduledJobInfo> RunJobOnCloud(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
+        private async Task<ScheduledJobInfo> RunJobOnCloud(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
         {
-            if (string.IsNullOrEmpty(this.CloudProject) || this.IsLocalJob)
+            if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
                 throw new ArgumentException($"Please call SetCloudJob() before running a job");
 
             var proj = GetWritableProject();
             var runner = new JobRunner(this);
             var cloudJob =  await runner.RunOnCloudAsync(proj, progressReporting, token);
-            return new ScheduledJobInfo(proj, cloudJob);
+            var jobInfo =  new ScheduledJobInfo(proj, cloudJob);
+
+            // add the record to local database
+            LocalDatabase.Add(jobInfo);
+            return jobInfo;
         }
 
         public void AddArgument(JobArgument arg) => this.Job.AddArgument(arg);
@@ -261,7 +293,7 @@ namespace PollinationSDK.Wrapper
         private Project GetWritableProject()
         {
             // ladybug_tools/demoProject
-            var proj = this.CloudProject;
+            var proj = this.ProjectSlug;
             var args = proj.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
             if (args.Count != 2)
                 throw new ArgumentException($"Failed to get a valid project from [{proj}]");
@@ -271,7 +303,7 @@ namespace PollinationSDK.Wrapper
             var p = Helper.GetAProject(projOwner, projName);
             if (!p.Permissions.Write)
                 throw new ArgumentException($"You don't have access to [{p.Slug}] project. Switch to a different project using the SetupRuns component.");
-
+          
             return p;
         }
     }
