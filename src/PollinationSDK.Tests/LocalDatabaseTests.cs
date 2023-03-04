@@ -12,8 +12,9 @@ namespace PollinationSDK.Test
         [Test]
         public void LocalDataTest()
         {
-            LocalDatabase.DatabaseFile = "test.db";
-            LocalDatabase.DeleteDatabase();
+            var db = new LocalDatabase();
+            db.DatabaseFile = "test.db";
+            db.DeleteDatabase();
          
             var sampleData = Path.GetFullPath(@"../../../TestSample/LocalDatabase.json");
             var json = File.ReadAllText(sampleData);
@@ -22,23 +23,23 @@ namespace PollinationSDK.Test
             // test add
             foreach (var item in jobs)
             {
-                var done = LocalDatabase.Add(item);
+                var done = db.Add(item);
                 Assert.IsTrue(done);
             }
 
             // test get all
-            var getRes = LocalDatabase.Get();
+            var getRes = db.Get();
             Assert.AreEqual(getRes.Count, 2);
 
             // test get one
             var firstRes = jobs.FirstOrDefault();
-            var getOne = LocalDatabase.Get(firstRes.ProjectSlug, firstRes.JobID);
+            var getOne = db.Get(firstRes.ProjectSlug, firstRes.JobID);
             Assert.AreEqual(getOne.Recipe, firstRes.Recipe);
 
             // test delete one
-            var doneDel = LocalDatabase.Delete(firstRes);
+            var doneDel = db.Delete(firstRes);
             Assert.IsTrue(doneDel);
-            getRes = LocalDatabase.Get();
+            getRes = db.Get();
             Assert.AreEqual(getRes.Count, 1);
         }
     }

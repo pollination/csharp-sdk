@@ -229,7 +229,7 @@ namespace PollinationSDK.Wrapper
             File.WriteAllText(jobPath, jobInfo.ToJson());
             
             // add the record to local database
-            LocalDatabase.Add(jobInfo);
+            LocalDatabase.Instance.Add(jobInfo);
             return jobInfo;
         }
 
@@ -244,7 +244,7 @@ namespace PollinationSDK.Wrapper
             var jobInfo =  new ScheduledJobInfo(proj, cloudJob);
 
             // add the record to local database
-            LocalDatabase.Add(jobInfo);
+            LocalDatabase.Instance.Add(jobInfo);
             return jobInfo;
         }
 
