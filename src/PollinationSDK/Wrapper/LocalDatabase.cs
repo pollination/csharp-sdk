@@ -40,7 +40,7 @@ namespace PollinationSDK.Wrapper
             var fileExist = File.Exists(file);
             con = new SqliteConnection($"Data Source={file}");
             con.Open();
-            if (!fileExist) InitDatabase();
+            if (!fileExist) InitDatabase(con);
             return con;
         }
 
@@ -62,9 +62,9 @@ namespace PollinationSDK.Wrapper
             return filePath;
         }
 
-        static void InitDatabase()
+        static void InitDatabase(SqliteConnection con)
         {
-            var con = Instance.connection;
+            //var con = Instance.connection;
             var cmd = con.CreateCommand();
 
             var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, JobInfo BLOB)";
