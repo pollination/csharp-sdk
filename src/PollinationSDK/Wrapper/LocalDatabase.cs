@@ -8,9 +8,9 @@ namespace PollinationSDK.Wrapper
 {
     public class LocalDatabase
     {
-        public static string DatabaseFile { get; set; } = "pollination.db";
-        private static SqliteConnection _connection;
-        private static SqliteConnection connection 
+        public string DatabaseFile { get; set; } = "pollination.db";
+        private SqliteConnection _connection;
+        private SqliteConnection connection 
         { 
             get
             {
@@ -18,11 +18,21 @@ namespace PollinationSDK.Wrapper
                 if (_connection.State == System.Data.ConnectionState.Closed)
                     _connection.Open();
                 return _connection;
-            } 
+            }
+        }
+
+        private static LocalDatabase _instance;
+        public static LocalDatabase Instance
+        {
+            get
+            {
+                _instance = (_instance ??= new LocalDatabase());
+                return _instance;
+            }
         }
 
 
-        static SqliteConnection CreateConnection()
+        SqliteConnection CreateConnection()
         {
 
             SqliteConnection con;
@@ -34,14 +44,14 @@ namespace PollinationSDK.Wrapper
             return con;
         }
 
-        public static void DeleteDatabase()
+        public void DeleteDatabase()
         {
             var file = GetDatabaseFile();
             if (File.Exists(file))
                 File.Delete(file);
 
         }
-        public static string GetDatabaseFile()
+        public string GetDatabaseFile()
         {
             var file = DatabaseFile;
             //C:\Users\mingo\.pollination
@@ -54,7 +64,7 @@ namespace PollinationSDK.Wrapper
 
         static void InitDatabase()
         {
-            var con = connection;
+            var con = Instance.connection;
             var cmd = con.CreateCommand();
 
             var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, JobInfo BLOB)";
@@ -63,12 +73,12 @@ namespace PollinationSDK.Wrapper
         }
 
      
-        public static bool Add(ScheduledJobInfo resultPackage)
+        public bool Add(ScheduledJobInfo resultPackage)
         {
             return Add(connection, resultPackage);
         }
-
-        public static bool Add(List<ScheduledJobInfo> resultPackages)
+        
+        public bool Add(List<ScheduledJobInfo> resultPackages)
         {
             var done = true;
             foreach (var item in resultPackages)
@@ -82,28 +92,28 @@ namespace PollinationSDK.Wrapper
         /// Get all JobResultPackage
         /// </summary>
         /// <returns></returns>
-        public static List<ScheduledJobInfo> Get()
+        public List<ScheduledJobInfo> Get()
         {
             return Get(connection, string.Empty);
         }
       
-        public static List<ScheduledJobInfo> Get(string projSlug)
+        public List<ScheduledJobInfo> Get(string projSlug)
         {
             var condition = $"ProjSlug = '{projSlug}'";
             return Get(connection, condition);
         }
-        public static ScheduledJobInfo Get(string projSlug, string jobID)
+        public ScheduledJobInfo Get(string projSlug, string jobID)
         {
             var condition = string.IsNullOrEmpty(jobID) ? $"ProjSlug = '{projSlug}'" : $"ProjSlug = '{projSlug}' AND JobID = '{jobID}'";
             return Get(connection, condition).FirstOrDefault();
         }
 
-        public static bool Delete(ScheduledJobInfo schJob)
+        public bool Delete(ScheduledJobInfo schJob)
         {
             return Delete(schJob.ProjectSlug, schJob.JobID);
         }
 
-        public static bool Delete(string projSlug, string jobID)
+        public bool Delete(string projSlug, string jobID)
         {
             return Delete(connection, projSlug, jobID);
         }
