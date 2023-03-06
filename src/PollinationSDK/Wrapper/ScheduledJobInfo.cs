@@ -99,6 +99,13 @@ namespace PollinationSDK.Wrapper
             return job;
         }
 
+        public void SyncCloudJob()
+        {
+            if (this.IsLocalJob)
+                throw new ArgumentException("This is not a cloud job");
+            this.CloudJob = GetJob(this.CloudProject, this.JobID);
+        }
+
         //private static RecipeInterface GetRecipe(string url)
         //{
         //    Helper.GetRecipeFromRecipeSourceURL(url, out var recipe);
@@ -229,6 +236,14 @@ namespace PollinationSDK.Wrapper
                 //check run index if valid
                 var page = runIndex + 1;
                 var jobStatus = job.Status;
+                if (jobStatus.FinishedAt <= jobStatus.StartedAt)
+                {
+                    // unfinished job, try to update the cloud job from server
+                    schJobInfo.SyncCloudJob();
+                    job = schJobInfo.CloudJob;
+                    jobStatus = job.Status;
+                }
+                        
                 var totalRuns = jobStatus.RunsCompleted + jobStatus.RunsFailed + jobStatus.RunsPending + jobStatus.RunsRunning + jobStatus.RunsCancelled;
                 if (totalRuns == 0)
                 {
