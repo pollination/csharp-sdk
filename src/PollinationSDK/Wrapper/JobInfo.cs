@@ -204,11 +204,11 @@ namespace PollinationSDK.Wrapper
             ScheduledJobInfo jobInfo = null;
             if (job.IsLocalJob)
             {
-                jobInfo = job.RunJobOnLocal();
+                jobInfo = await job.RunJobOnLocalAsync();
             }
             else
             {
-                jobInfo = await job.RunJobOnCloud(progressReporting, token);
+                jobInfo = await job.RunJobOnCloudAsync(progressReporting, token);
             }
 
             return jobInfo;
@@ -216,24 +216,30 @@ namespace PollinationSDK.Wrapper
 
         private ScheduledJobInfo RunJobOnLocal()
         {
+            return RunJobOnLocalAsync().GetAwaiter().GetResult();
+        }
+
+        private async Task<ScheduledJobInfo> RunJobOnLocalAsync()
+        {
             if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
                 throw new ArgumentException($"Please call SetLocalJob() before running a job");
+
             var workDir = this.LocalRunOutputFolder;
             var cpuNum = this.LocalCPUNumber;
             var runner = new JobRunner(this);
-            var projPath = runner.RunOnLocalMachine(workDir, cpuNum);
-            var jobInfo = new ScheduledJobInfo(this, projPath);
+            await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum));
+            var jobInfo = new ScheduledJobInfo(this, workDir);
 
             //save jobinfo to folder
             var jobPath = Path.Combine(jobInfo.SavedLocalPath, "job.json");
             File.WriteAllText(jobPath, jobInfo.ToJson());
-            
+
             // add the record to local database
             LocalDatabase.Instance.Add(jobInfo);
             return jobInfo;
         }
 
-        private async Task<ScheduledJobInfo> RunJobOnCloud(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
+        private async Task<ScheduledJobInfo> RunJobOnCloudAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
         {
             if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
                 throw new ArgumentException($"Please call SetCloudJob() before running a job");
