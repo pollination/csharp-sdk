@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Runtime.InteropServices.ComTypes;
+using System.Runtime.Serialization;
 using System.Text;
 
 namespace PollinationSDK.Wrapper
@@ -25,19 +26,16 @@ namespace PollinationSDK.Wrapper
         public string ProjectSlug => $"{ProjectOwner}/{ProjectName}";
 
         public string SavedLocalPath { get; set; }
+
         public string SelectedRunID { get; set; }
-        //public DateTime DateTime { get; set; }
-
-        //public string LoadAction { get; set; }
-
-        //public List<string> Runs { get; set; }
 
         public List<RunInputAsset> RunInputAssets { get; set; }
         public List<RunOutputAsset> RunOutputAssets { get; set; }
 
-        //[System.Runtime.Serialization.IgnoreDataMember]
-        //public RunInfo RunInfo { get; set; }
+        [IgnoreDataMember]
+        private ScheduledJobInfo SchJobInfo { get; set; }
 
+        [IgnoreDataMember]
         public string DisplayName => this.JobName ?? this.JobID.ToString().Substring(0, 8);
 
 
@@ -73,12 +71,7 @@ namespace PollinationSDK.Wrapper
                 this.ProjectOwner = projSlug[1];
             }
 
-            // get all outputs
-            var run = job.GetRunInfo(0);
-            //this.RunInfo = run;
-            this.SelectedRunID = run.RunID;
-            this.RunInputAssets = run.GetInputAssets();
-            this.RunOutputAssets = run.GetOutputAssets("rhino");
+            this.SchJobInfo = job;
 
             //this.DateTime = DateTime.Now;
         }
@@ -93,8 +86,19 @@ namespace PollinationSDK.Wrapper
             return Newtonsoft.Json.JsonConvert.DeserializeObject<JobResultPackage>(json);
         }
 
-       
+        
 
-      
+       
+        public void UpdateRunAssets(int runIndex = 0, string platform = "rhino")
+        {
+            // get all outputs
+            var run = this.SchJobInfo.GetRunInfo(runIndex);
+            //this.RunInfo = run;
+            this.SelectedRunID = run.RunID;
+            this.RunInputAssets = run.GetInputAssets();
+            this.RunOutputAssets = run.GetOutputAssets(platform);
+        }
+
+
     }
 }
