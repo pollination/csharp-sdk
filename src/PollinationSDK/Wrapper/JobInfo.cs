@@ -18,6 +18,7 @@ namespace PollinationSDK.Wrapper
         public string ProjectSlug { get; set; } // for cloud and local job, ladybug_tools/demoProject
         public int LocalCPUNumber { get; set; } // for local job only
         public string LocalRunFolder { get; set; } // for local job only
+        public string Platform { get; set; } = "unknown"; // rhino, revit, grasshopper
 
         [IgnoreDataMember]
         public string LocalRunOutputFolder => GetLocalRunDir(this.LocalRunFolder, Job);
@@ -58,6 +59,11 @@ namespace PollinationSDK.Wrapper
         {
             this.IsLocalJob = false;
             this.ProjectSlug = $"{projectOwner}/{projectName}";
+        }
+
+        public void SetPlatform(string platform)
+        {
+            this.Platform = platform;
         }
 
         private static string GetRecipeOwnerFromSourceURL(string url)
@@ -250,7 +256,7 @@ namespace PollinationSDK.Wrapper
             var jobInfo =  new ScheduledJobInfo(proj, cloudJob);
 
             // add the record to local database
-            LocalDatabase.Instance.Add(jobInfo);
+            //LocalDatabase.Instance.Add(jobInfo);
             return jobInfo;
         }
 
