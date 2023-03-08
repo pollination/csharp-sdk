@@ -22,6 +22,8 @@ namespace PollinationSDK.Wrapper
         public JobInfo LocalJob { get; set; }
         public string SavedLocalPath { get; set; }
 
+        public string Platform { get; set; } = "unknown"; // rhino, revit, grasshopper
+
         [IgnoreDataMember]
         public bool IsLocalJob => LocalJob != null;
         [IgnoreDataMember]
@@ -56,6 +58,8 @@ namespace PollinationSDK.Wrapper
             this.SavedLocalPath = string.IsNullOrEmpty(localDir) 
                 ? Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8)) 
                 : localDir;
+
+            this.Platform = localJob.Platform;
         }
 
         public static ScheduledJobInfo From(Project proj, string jobID)
