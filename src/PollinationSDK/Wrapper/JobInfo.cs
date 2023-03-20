@@ -201,7 +201,18 @@ namespace PollinationSDK.Wrapper
 
         public ScheduledJobInfo RunJob()
         {
-            return RunJobAsync().GetAwaiter().GetResult();
+            var job = this;
+            ScheduledJobInfo jobInfo = null;
+            if (job.IsLocalJob)
+            {
+                jobInfo = job.RunJobOnLocalAsync().GetAwaiter().GetResult();
+            }
+            else
+            {
+                jobInfo = job.RunJobOnCloudAsync().GetAwaiter().GetResult();
+            }
+
+            return jobInfo;
         }
 
         public async Task<ScheduledJobInfo> RunJobAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
@@ -220,10 +231,7 @@ namespace PollinationSDK.Wrapper
             return jobInfo;
         }
 
-        private ScheduledJobInfo RunJobOnLocal()
-        {
-            return RunJobOnLocalAsync().GetAwaiter().GetResult();
-        }
+      
 
         private async Task<ScheduledJobInfo> RunJobOnLocalAsync()
         {
@@ -233,7 +241,7 @@ namespace PollinationSDK.Wrapper
             var workDir = this.LocalRunOutputFolder;
             var cpuNum = this.LocalCPUNumber;
             var runner = new JobRunner(this);
-            await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum));
+            var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum)).ConfigureAwait(false);
             var jobInfo = new ScheduledJobInfo(this, workDir);
 
             //save jobinfo to folder
