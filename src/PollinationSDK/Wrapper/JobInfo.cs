@@ -50,7 +50,7 @@ namespace PollinationSDK.Wrapper
         public void SetLocalJob(string projectOwner, string projectName, string runFolder, int cpuNo)
         {
             this.IsLocalJob = true;
-            this.ProjectSlug = $"{projectOwner}/{projectName}";
+            this.ProjectSlug = $"{projectOwner}/{projectName}".ToLower();
             this.LocalRunFolder = runFolder;
             this.LocalCPUNumber = cpuNo;
         }
@@ -58,7 +58,7 @@ namespace PollinationSDK.Wrapper
         public void SetCloudJob(string projectOwner, string projectName)
         {
             this.IsLocalJob = false;
-            this.ProjectSlug = $"{projectOwner}/{projectName}";
+            this.ProjectSlug =   $"{projectOwner}/{projectName}".ToLower();
         }
 
         public void SetPlatform(string platform)

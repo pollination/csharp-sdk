@@ -137,7 +137,7 @@ namespace PollinationSDK.Wrapper
     INSERT INTO JobTable (ProjSlug, JobID, DateTime, JobInfo)
     VALUES ($ProjSlug, $JobID, $DateTime, $JobInfo)
 ";
-                cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Text).Value = schJob.ProjectSlug;
+                cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Text).Value = schJob.ProjectSlug.ToLower();
                 cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = schJob.JobID;
                 cmd.Parameters.AddWithValue("$DateTime", SqliteType.Text).Value = DateTime.Now;
                 cmd.Parameters.AddWithValue("$JobInfo", SqliteType.Blob).Value = schJob.Serialize_Binary();
