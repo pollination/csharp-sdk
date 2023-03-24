@@ -10,6 +10,7 @@ namespace PollinationSDK.Wrapper
 {
     public class JobInfo
     {
+        public AccountPublic JobAuthor { get; set; }
         public string RecipeOwner { get; set; }
         public RecipeInterface Recipe { get; set; }
         public Job Job { get; set; }
@@ -53,6 +54,11 @@ namespace PollinationSDK.Wrapper
             this.ProjectSlug = $"{projectOwner}/{projectName}".ToLower();
             this.LocalRunFolder = runFolder;
             this.LocalCPUNumber = cpuNo;
+        }
+
+        public void SetJobAuthor(AccountPublic authorAccount)
+        {
+            this.JobAuthor = authorAccount;
         }
 
         public void SetCloudJob(string projectOwner, string projectName)
