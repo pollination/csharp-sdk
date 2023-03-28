@@ -33,6 +33,8 @@ namespace PollinationSDK.Wrapper
         [IgnoreDataMember]
         public RecipeInterface Recipe => IsLocalJob ? this.LocalJob.Recipe : CloudJob.Recipe;
 
+        [IgnoreDataMember]
+        public string JobStatus => IsLocalJob ? this.LocalJob.LocalJobStatus : CloudJob?.Status?.Status.ToString(); // RunStatusEnum for a local job and JobStausEnum for a cloud job
 
         [JsonConstructorAttribute]
         protected ScheduledJobInfo() { }

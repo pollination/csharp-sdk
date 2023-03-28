@@ -1,4 +1,5 @@
-﻿using PollinationSDK.Api;
+﻿using Newtonsoft.Json.Linq;
+using PollinationSDK.Api;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -197,6 +198,41 @@ namespace PollinationSDK.Wrapper
             }
 
             return workDir;
+        }
+
+        public static RunStatusEnum CheckLocalJobStatus(string workDir)
+        {
+            try
+            {
+                //"C:\Users\mingo\simulation\Unnamed\Unnamed\__logs__\status.json"
+                var logDir = Directory.GetDirectories(workDir, "__logs__").FirstOrDefault();
+                var statusFile = Path.Combine(logDir, "status.json");
+                if (!File.Exists(statusFile))
+                    return RunStatusEnum.Unknown;
+
+                //read status.json
+                var sJson = File.ReadAllText(statusFile);
+                JToken jt = JToken.Parse(sJson);
+                var statusToken = jt["status"];
+
+                if (statusToken == null)
+                    return RunStatusEnum.Unknown;
+
+                var runStatus = statusToken.ToObject<RunStatus>();
+                if (statusToken == null)
+                    return RunStatusEnum.Unknown;
+
+                var st = runStatus.Status;
+                if (st == RunStatusEnum.Succeeded || st == RunStatusEnum.Failed)
+                    return st;
+                else
+                    return RunStatusEnum.Cancelled; // users closed the terminal
+
+            }
+            catch (Exception)
+            {
+                return RunStatusEnum.Unknown;
+            }
         }
 
 
