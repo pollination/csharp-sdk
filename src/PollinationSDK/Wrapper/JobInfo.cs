@@ -20,6 +20,7 @@ namespace PollinationSDK.Wrapper
         public int LocalCPUNumber { get; set; } // for local job only
         public string LocalRunFolder { get; set; } // for local job only
         public string Platform { get; set; } = "unknown"; // rhino, revit, grasshopper
+        public string LocalJobStatus { get; set; } = "unknown"; // RunStatusEnum for a local job
 
         [IgnoreDataMember]
         public string LocalRunOutputFolder => GetLocalRunDir(this.LocalRunFolder, Job);
@@ -248,6 +249,10 @@ namespace PollinationSDK.Wrapper
             var cpuNum = this.LocalCPUNumber;
             var runner = new JobRunner(this);
             var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum)).ConfigureAwait(false);
+            // check local job status
+            var status = JobRunner.CheckLocalJobStatus(runout);
+            this.LocalJobStatus = status.ToString();
+
             var jobInfo = new ScheduledJobInfo(this, workDir);
 
             //save jobinfo to folder
