@@ -205,7 +205,8 @@ namespace PollinationSDK.Wrapper
             try
             {
                 //"C:\Users\mingo\simulation\Unnamed\Unnamed\__logs__\status.json"
-                var logDir = Directory.GetDirectories(workDir, "__logs__").FirstOrDefault();
+                var logDir = Directory.GetDirectories(workDir, "*__logs__*", SearchOption.AllDirectories).FirstOrDefault();
+                
                 var statusFile = Path.Combine(logDir, "status.json");
                 if (!File.Exists(statusFile))
                     return RunStatusEnum.Unknown;
@@ -213,16 +214,12 @@ namespace PollinationSDK.Wrapper
                 //read status.json
                 var sJson = File.ReadAllText(statusFile);
                 JToken jt = JToken.Parse(sJson);
-                var statusToken = jt["status"];
-
+                var statusToken = jt["status"]["status"];
                 if (statusToken == null)
                     return RunStatusEnum.Unknown;
 
-                var runStatus = statusToken.ToObject<RunStatus>();
-                if (statusToken == null)
-                    return RunStatusEnum.Unknown;
-
-                var st = runStatus.Status;
+                var st = statusToken.ToObject<RunStatusEnum>();
+                
                 if (st == RunStatusEnum.Succeeded || st == RunStatusEnum.Failed)
                     return st;
                 else
