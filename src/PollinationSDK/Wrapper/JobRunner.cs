@@ -232,6 +232,25 @@ namespace PollinationSDK.Wrapper
             }
         }
 
+        public static string GetJobErrors(string workDir)
+        {
+            try
+            {
+                var logDir = Directory.GetDirectories(workDir, "*__logs__*", SearchOption.AllDirectories).FirstOrDefault();
+                var errFile = Path.Combine(logDir, "err.log");
+                if (!File.Exists(errFile))
+                    return string.Empty;
+
+                var err = File.ReadAllText(errFile)?.Trim();
+                return err;
+
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
 
 
         private static string CheckRecipeInProject(string recipeSource, Project project)

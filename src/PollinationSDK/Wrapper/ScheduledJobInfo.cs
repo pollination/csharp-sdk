@@ -232,8 +232,14 @@ namespace PollinationSDK.Wrapper
             if (schJobInfo.IsLocalJob)
             {
                 if (schJobInfo.LocalJob.LocalJobStatus != RunStatusEnum.Succeeded.ToString())
-                    throw new ArgumentException($"Failed to load a local job [{schJobInfo.SavedLocalPath}]. Job status is [{schJobInfo.LocalJob.LocalJobStatus}]");
+                {
+                    var err = JobRunner.GetJobErrors(schJobInfo.SavedLocalPath);
+                    if (!string.IsNullOrEmpty(err))
+                        throw new ArgumentException(err);
 
+                    throw new ArgumentException($"Failed to load a local job [{schJobInfo.SavedLocalPath}]. Job status is [{schJobInfo.LocalJob.LocalJobStatus}]");
+                }
+                
                 var runInfo = new RunInfo(schJobInfo);
                 return runInfo;
             }
