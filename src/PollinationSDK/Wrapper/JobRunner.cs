@@ -271,6 +271,25 @@ namespace PollinationSDK.Wrapper
         {
             //// Check if recipe can be used in this project
             var projAPi = new ProjectsApi();
+            var currentFilters = projAPi
+                .GetProjectRecipeFilters(project.Owner.Name, project.Name)?
+                .Resources?
+                .Where(_ => _.Owner == recOwner && _.Name == recName);
+
+            if (currentFilters.Any())
+            {
+                if (!string.IsNullOrEmpty(recTag))
+                {
+                    var found = currentFilters.FirstOrDefault(_ => _.Tag == recTag);
+                    if (found != null)
+                        return found.Name;
+                }
+                else
+                {
+                    return currentFilters.First().Name;
+                }
+            }
+
             var recipeFilter = new ProjectRecipeFilter(recOwner, recName, recTag);
             var result = projAPi.CreateProjectRecipeFilter(project.Owner.Name, project.Name, recipeFilter);
             return result.Name;
