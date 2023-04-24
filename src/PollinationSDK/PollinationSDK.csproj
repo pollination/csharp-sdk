@@ -1,19 +1,18 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net48</TargetFrameworks>
-    <LangVersion>8</LangVersion>
+    <TargetFrameworks>netstandard2.0;net452</TargetFrameworks>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <Version>0.23.0.1-dev</Version>
+    <Version>0.38.0.0</Version>
     <Authors>Ladybug Tools</Authors>
     <Description>This is the .Net version of PollinationSDK</Description>
-    <Copyright>Copyright © 2023 Ladybug Tools LLC</Copyright>
+    <Copyright>Copyright © 2020 Ladybug Tools LLC</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/pollination/csharp-sdk</PackageProjectUrl>
+    <AssemblyVersion>0.38.0.0</AssemblyVersion>
+    <FileVersion>0.38.0.0</FileVersion>
     <RepositoryUrl>https://github.com/pollination/csharp-sdk</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Platforms>AnyCPU;x64</Platforms>
-    <NoWarn>0472;0108</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
@@ -22,11 +21,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="LBT.Newtonsoft.Json" Version="12.0.3.23910" />
-    <PackageReference Include="LBT.RestSharp" Version="106.11.7.1" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.3" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="System.ComponentModel.Annotations" Version="5.0.0" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
+    <PackageReference Include="RestSharp" Version="106.11.4" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.7.0" />
   </ItemGroup>
 
 </Project>

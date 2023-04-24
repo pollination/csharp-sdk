@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CancelRun**](RunsApi.md#cancelrun) | **PUT** /projects/{owner}/{name}/runs/{run_id}/cancel | Cancel a run
 [**DownloadRunArtifact**](RunsApi.md#downloadrunartifact) | **GET** /projects/{owner}/{name}/runs/{run_id}/artifacts/download | Download an artifact from the run folder
+[**GetAllRunSteps**](RunsApi.md#getallrunsteps) | **GET** /projects/{owner}/{name}/runs/{run_id}/all-steps | Query the steps of a run
 [**GetRun**](RunsApi.md#getrun) | **GET** /projects/{owner}/{name}/runs/{run_id} | Get a Run
 [**GetRunOutput**](RunsApi.md#getrunoutput) | **GET** /projects/{owner}/{name}/runs/{run_id}/outputs/{output_name} | Get run output by name
 [**GetRunStepLogs**](RunsApi.md#getrunsteplogs) | **GET** /projects/{owner}/{name}/runs/{run_id}/steps/{step_id}/logs | Get the logs of a specific step of the run
@@ -40,12 +41,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -127,12 +126,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -184,10 +181,95 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
+| **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetAllRunSteps
+
+> List&lt;StepStatus&gt; GetAllRunSteps (string owner, string name, string runId)
+
+Query the steps of a run
+
+list all run steps
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using PollinationSDK.Api;
+using PollinationSDK.Client;
+using PollinationSDK.Model;
+
+namespace Example
+{
+    public class GetAllRunStepsExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+
+            var apiInstance = new RunsApi(Configuration.Default);
+            var owner = owner_example;  // string | 
+            var name = name_example;  // string | 
+            var runId = runId_example;  // string | 
+
+            try
+            {
+                // Query the steps of a run
+                List<StepStatus> result = apiInstance.GetAllRunSteps(owner, name, runId);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling RunsApi.GetAllRunSteps: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **owner** | **string**|  | 
+ **name** | **string**|  | 
+ **runId** | **string**|  | 
+
+### Return type
+
+[**List&lt;StepStatus&gt;**](StepStatus.md)
+
+### Authorization
+
+[APIKeyAuth](../README.md#APIKeyAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Retrieved |  -  |
 | **422** | Validation Error |  -  |
 
 [[Back to top]](#)
@@ -220,12 +302,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -307,12 +387,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -364,11 +442,11 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **404** | Not found |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
@@ -400,12 +478,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -489,12 +565,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -588,12 +662,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -681,12 +753,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -774,12 +844,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RunsApi(Configuration.Default);
             var owner = owner_example;  // string | 
