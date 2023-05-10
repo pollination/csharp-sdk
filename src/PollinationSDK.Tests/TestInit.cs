@@ -10,12 +10,12 @@ namespace PollinationSDK.Test
         [OneTimeSetUp]
         public void Init()
         {
-            var useDevelopmentServer = false;
+            var useDevelopmentServer = true;
             var key = string.Empty;
 
             // for local development tests, you must add Api key to ApiKey.txt
             var keyPath = useDevelopmentServer ? @"../../../ApiKey.txt" : @"../../../ApiKey_production.txt";
-
+            keyPath = System.IO.Path.GetFullPath(keyPath);
             if (System.IO.File.Exists(keyPath))
                 key = System.IO.File.ReadAllText(keyPath);
             else
