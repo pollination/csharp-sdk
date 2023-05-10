@@ -59,7 +59,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RepositoryIndex";
+        public override string Type { get; protected internal set; }  = "RepositoryIndex";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion

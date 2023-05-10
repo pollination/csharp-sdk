@@ -81,7 +81,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Dependency";
+        public override string Type { get; protected internal set; }  = "Dependency";
 
         /// <summary>
         /// Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.

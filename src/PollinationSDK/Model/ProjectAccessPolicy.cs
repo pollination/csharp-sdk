@@ -69,7 +69,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ProjectAccessPolicy";
+        public override string Type { get; protected internal set; }  = "ProjectAccessPolicy";
 
         /// <summary>
         /// The subject of the access policy

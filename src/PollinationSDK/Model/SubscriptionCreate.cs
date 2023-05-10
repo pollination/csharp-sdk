@@ -50,7 +50,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "SubscriptionCreate";
+        public override string Type { get; protected internal set; }  = "SubscriptionCreate";
 
         /// <summary>
         /// The list of recurring price items and the quantity of each to attach to the new subscription

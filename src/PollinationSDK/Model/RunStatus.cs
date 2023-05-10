@@ -100,7 +100,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RunStatus";
+        public override string Type { get; protected internal set; }  = "RunStatus";
 
         /// <summary>
         /// The inputs used for this run.

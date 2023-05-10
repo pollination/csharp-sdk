@@ -190,6 +190,16 @@ def replace_decimal(read_data):
     return data
 
 
+def add_override_to_type_property(read_data):
+    data = read_data
+    replace_source = "public string Type { get; protected set; }"
+    replace_new = "public override string Type { get; protected set; }"
+    rex = replace_source
+    if re.findall(rex, data) != []:
+        data = re.sub(rex, replace_new, data)
+    return data
+
+
 def replace_AnyType(read_data):
     data = read_data
     replace_source = ['AnyType']
@@ -234,6 +244,7 @@ def check_csfiles(source_folder, anyof_types):
         # replace decimal/number to double
         # data = replace_decimal(data)
         data = fix_constructor(data)
+        data = add_override_to_type_property(data)
 
         # remove spec parameter in DAG inputs's Equals
         data = remove_spec_in_equals(data)

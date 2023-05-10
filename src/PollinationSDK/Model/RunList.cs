@@ -71,7 +71,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RunList";
+        public override string Type { get; protected internal set; }  = "RunList";
 
         /// <summary>
         /// The current page the pagination request is on

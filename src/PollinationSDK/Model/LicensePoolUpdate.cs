@@ -50,7 +50,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "LicensePoolUpdate";
+        public override string Type { get; protected internal set; }  = "LicensePoolUpdate";
 
         /// <summary>
         /// The description of the license pool

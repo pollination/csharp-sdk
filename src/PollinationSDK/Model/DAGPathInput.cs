@@ -71,7 +71,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DAGPathInput";
+        public override string Type { get; protected internal set; }  = "DAGPathInput";
 
         /// <summary>
         /// The default source for file if the value is not provided.

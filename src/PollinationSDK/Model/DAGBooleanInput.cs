@@ -69,7 +69,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DAGBooleanInput";
+        public override string Type { get; protected internal set; }  = "DAGBooleanInput";
 
         /// <summary>
         /// Default value to use for an input if a value was not supplied.

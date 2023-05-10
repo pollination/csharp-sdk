@@ -66,7 +66,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ProjectRecipeFilter";
+        public override string Type { get; protected internal set; }  = "ProjectRecipeFilter";
 
         /// <summary>
         /// The name of the account the recipe belongs to

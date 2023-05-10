@@ -65,7 +65,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "PluginConfig";
+        public override string Type { get; protected internal set; }  = "PluginConfig";
 
         /// <summary>
         /// The configuration to use this plugin in a docker container

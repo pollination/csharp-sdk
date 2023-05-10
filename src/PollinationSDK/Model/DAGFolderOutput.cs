@@ -68,7 +68,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DAGFolderOutput";
+        public override string Type { get; protected internal set; }  = "DAGFolderOutput";
 
         /// <summary>
         /// Reference to a folder or a task output. Task output must be folder.

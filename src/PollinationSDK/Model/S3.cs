@@ -70,7 +70,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "S3";
+        public override string Type { get; protected internal set; }  = "S3";
 
         /// <summary>
         /// The path inside the bucket to source artifacts from.

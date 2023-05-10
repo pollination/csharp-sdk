@@ -68,7 +68,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DAGBooleanOutput";
+        public override string Type { get; protected internal set; }  = "DAGBooleanOutput";
 
         /// <summary>
         /// Reference to a file or a task output. Task output must be file.

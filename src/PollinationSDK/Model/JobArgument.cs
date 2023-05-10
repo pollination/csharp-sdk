@@ -66,7 +66,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "JobArgument";
+        public override string Type { get; protected internal set; }  = "JobArgument";
 
         /// <summary>
         /// Argument name. The name must match one of the input names from Job&#39;s DAG template.

@@ -50,7 +50,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "PaymentCreate";
+        public override string Type { get; protected internal set; }  = "PaymentCreate";
 
         /// <summary>
         /// The description of this payment method

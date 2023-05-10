@@ -53,7 +53,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "OrganizationCreate";
+        public override string Type { get; protected internal set; }  = "OrganizationCreate";
 
 
         /// <summary>

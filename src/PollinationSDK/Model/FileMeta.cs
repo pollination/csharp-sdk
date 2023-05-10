@@ -71,7 +71,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "FileMeta";
+        public override string Type { get; protected internal set; }  = "FileMeta";
 
         /// <summary>
         /// Gets or Sets Key

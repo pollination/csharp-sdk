@@ -69,7 +69,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "FunctionNumberInput";
+        public override string Type { get; protected internal set; }  = "FunctionNumberInput";
 
         /// <summary>
         /// Default value to use for an input if a value was not supplied.

@@ -81,7 +81,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "BakedRecipe";
+        public override string Type { get; protected internal set; }  = "BakedRecipe";
 
         /// <summary>
         /// A list of tasks to create a DAG recipe.

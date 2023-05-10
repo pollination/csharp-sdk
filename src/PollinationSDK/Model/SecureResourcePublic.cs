@@ -61,7 +61,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "_SecureResourcePublic";
+        public override string Type { get; protected internal set; }  = "_SecureResourcePublic";
 
         /// <summary>
         /// Secret string to be used to retrieve the resource from the client

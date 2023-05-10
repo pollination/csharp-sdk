@@ -61,7 +61,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Body_post_plugin__owner__plugins_post";
+        public override string Type { get; protected internal set; }  = "Body_post_plugin__owner__plugins_post";
 
         /// <summary>
         /// Gets or Sets Package

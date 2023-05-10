@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace PollinationSDK
 {
-    public abstract class PollinationObject 
+    public abstract class PollinationObject : IPollinationObject
     {
          /// <summary>
         /// Gets or Sets Type
@@ -24,10 +24,44 @@ namespace PollinationSDK
         public abstract string ToString(bool detailed);
 
         public abstract OpenAPIGenBaseModel Duplicate();
-        public string ToJson()
+        
+        public string ToJson(bool indented = false)
         {
-            return JsonConvert.SerializeObject(this, Formatting.Indented, JsonSetting.AnyOfConvertSetting);
+            var format = indented ? Formatting.Indented : Formatting.None;
+            return JsonConvert.SerializeObject(this, format, JsonSetting.AnyOfConvertSetting);
         }
+
+        public static bool operator == (PollinationObject left, PollinationObject right)
+        {
+            if (left is null)
+            {
+                if (right is null)
+                {
+                    return true;
+                }
+
+                // Only the left side is null.
+                return false;
+            }
+            // Equals handles case of null on right side.
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(PollinationObject left, PollinationObject right)
+        {
+            return !(left == right);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+                return false;
+            if (obj is PollinationObject input)
+                return Extension.Equals(this.Type, input.Type);
+            return false;
+        }
+
+       
     }
 }
 

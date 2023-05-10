@@ -10,7 +10,7 @@ namespace PollinationSDK.Test
         [OneTimeSetUp]
         public void Init()
         {
-            var useDevelopmentServer = true;
+            var useDevelopmentServer = false;
             var key = string.Empty;
 
             // for local development tests, you must add Api key to ApiKey.txt

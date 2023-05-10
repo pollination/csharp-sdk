@@ -66,7 +66,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "PriceRecurrence";
+        public override string Type { get; protected internal set; }  = "PriceRecurrence";
 
         /// <summary>
         /// Gets or Sets Interval

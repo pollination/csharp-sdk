@@ -66,7 +66,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "PathOutput";
+        public override string Type { get; protected internal set; }  = "PathOutput";
 
         /// <summary>
         /// Path to the output artifact relative to where the function command is executed.
