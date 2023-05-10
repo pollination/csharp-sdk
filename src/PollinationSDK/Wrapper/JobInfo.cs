@@ -97,12 +97,12 @@ namespace PollinationSDK.Wrapper
         {
             return FromJson(this.ToJson());
         }
-        private List<AnyOf<JobArgument, JobPathArgument>> CheckArgumentsWithHandlers(List<AnyOf<JobArgument, JobPathArgument>> args, string platform, string handlerLanguage)
+
+        private List<AnyOf<JobArgument, JobPathArgument>> CheckArgumentsWithHandlers(List<AnyOf<JobArgument, JobPathArgument>> args, string platform, string handlerLanguage, HandlerChecker handlerChecker)
         {
             //Deal with single run
             var inputs = this.Recipe.InputList;
-            var handlerChecker = DefaultHandlerChecker.Instance;
-
+           
             // create a placeholder
             var job = new Job("invalid");
 
@@ -110,39 +110,21 @@ namespace PollinationSDK.Wrapper
             {
                 var isPath = item.IsPathType();
                 PollinationSDK.Interface.Io.Inputs.IJob currentArg = null;
+                object currentValue = null;
                 if (isPath)
-                    currentArg = args.OfType<JobPathArgument>().FirstOrDefault(_ => _.Name == item.Name);
+                {
+                    var pathArg = args.OfType<JobPathArgument>().FirstOrDefault(_ => _.Name == item.Name);
+                    currentArg = pathArg;
+                    currentValue = pathArg.Source;
+                }
                 else
-                    currentArg = args.OfType<JobArgument>().FirstOrDefault(_ => _.Name == item.Name);
-
-                var dagInputAlias = item.GetAlias(platform);
-                if (dagInputAlias == null) // do nothing is there is no alias
                 {
-                    job.AddArgument(currentArg);
-                    continue;
-                }
-                
-                var linkedAlias = dagInputAlias as PollinationSDK.DAGLinkedInputAlias;
-                object processedData = null;
-                if (linkedAlias?.Handler != null) // linked input
-                {
-                    var handler = linkedAlias.Handler.FirstOrDefault(_ => _.Language == handlerLanguage);
-                    processedData = handlerChecker.CheckLinkedData(handler)?.ToString();
-                }
-                else // other alias
-                {
-                    if (isPath)
-                    {
-                        var a = currentArg as JobPathArgument;
-                        processedData = handlerChecker.CheckWithHandlers(a.Source, dagInputAlias.Handler);
-                    }
-                    else
-                    {
-                        var a = currentArg as JobArgument;
-                        processedData = handlerChecker.CheckWithHandlers(a.Value, dagInputAlias.Handler);
-                    }
+                    var valueArg = args.OfType<JobArgument>().FirstOrDefault(_ => _.Name == item.Name);
+                    currentArg = valueArg;
+                    currentValue = valueArg.Value;
                 }
 
+                var processedData = InputArgumentValidator.CheckAndValidate(item, platform, currentValue, handlerChecker);
                 if (processedData == null)
                 {
                     job.AddArgument(currentArg);
@@ -166,6 +148,11 @@ namespace PollinationSDK.Wrapper
 
         public void CheckArgumentsWithHandlers(string platform, string handlerLanguage)
         {
+            CheckArgumentsWithHandlers(platform, handlerLanguage, DefaultHandlerChecker.Instance);
+        }
+
+        public void CheckArgumentsWithHandlers(string platform, string handlerLanguage, HandlerChecker handlerChecker)
+        {
             if(this.Recipe == null)
             {
                 this.RecipeOwner = GetRecipeOwnerFromSourceURL(this.Job.Source);
@@ -181,7 +168,7 @@ namespace PollinationSDK.Wrapper
             var newArgSets = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
             foreach (var argSet in argSets)
             {
-                var set = CheckArgumentsWithHandlers(argSet, platform, handlerLanguage);
+                var set = CheckArgumentsWithHandlers(argSet, platform, handlerLanguage, handlerChecker);
                 newArgSets.Add(set);
             }
 
