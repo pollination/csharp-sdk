@@ -115,13 +115,13 @@ namespace PollinationSDK.Wrapper
                 {
                     var pathArg = args.OfType<JobPathArgument>().FirstOrDefault(_ => _.Name == item.Name);
                     currentArg = pathArg;
-                    currentValue = pathArg.Source;
+                    currentValue = pathArg?.Source;
                 }
                 else
                 {
                     var valueArg = args.OfType<JobArgument>().FirstOrDefault(_ => _.Name == item.Name);
                     currentArg = valueArg;
-                    currentValue = valueArg.Value;
+                    currentValue = valueArg?.Value;
                 }
 
                 var processedData = InputArgumentValidator.CheckAndValidate(item, platform, currentValue, handlerChecker);
