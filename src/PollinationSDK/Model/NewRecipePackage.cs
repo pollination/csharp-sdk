@@ -64,7 +64,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "NewRecipePackage";
+        public override string Type { get; protected internal set; }  = "NewRecipePackage";
 
         /// <summary>
         /// The Recipe manifest to be created

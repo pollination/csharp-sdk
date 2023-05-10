@@ -71,7 +71,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "IOAliasHandler";
+        public override string Type { get; protected internal set; }  = "IOAliasHandler";
 
         /// <summary>
         /// Declare the language (e.g. python, csharp, etc.). This option allows the recipe to be flexible on handling different programming languages.

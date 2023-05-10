@@ -66,7 +66,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "TaskArgument";
+        public override string Type { get; protected internal set; }  = "TaskArgument";
 
         /// <summary>
         /// Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.

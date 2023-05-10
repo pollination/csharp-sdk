@@ -68,7 +68,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UpdateInvoicePreview";
+        public override string Type { get; protected internal set; }  = "UpdateInvoicePreview";
 
         /// <summary>
         /// The invoice that will be finalized right after changes are applied

@@ -65,7 +65,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Maintainer";
+        public override string Type { get; protected internal set; }  = "Maintainer";
 
         /// <summary>
         /// The name of the author/maintainer person or organization.

@@ -50,7 +50,7 @@ namespace PollinationSDK
         /// </summary>
         /// <value>A base class to use when there is no baseclass available to fall on.</value>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "InvalidType";
+        public override string Type { get; protected internal set; }  = "InvalidType";
 
 
         /// <summary>

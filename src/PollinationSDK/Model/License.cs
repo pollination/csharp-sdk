@@ -65,7 +65,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "License";
+        public override string Type { get; protected internal set; }  = "License";
 
         /// <summary>
         /// The license name used for the package.

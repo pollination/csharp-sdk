@@ -66,7 +66,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ProductFamily";
+        public override string Type { get; protected internal set; }  = "ProductFamily";
 
         /// <summary>
         /// Gets or Sets Prices

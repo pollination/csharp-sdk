@@ -65,7 +65,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DAGGenericOutputAlias";
+        public override string Type { get; protected internal set; }  = "DAGGenericOutputAlias";
 
         /// <summary>
         /// A boolean to indicate if an artifact output is required. A False value makes the artifact optional.

@@ -74,7 +74,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "FunctionFileInput";
+        public override string Type { get; protected internal set; }  = "FunctionFileInput";
 
         /// <summary>
         /// Path to the target location that the input will be copied to.  This path is relative to the working directory where the command is executed.

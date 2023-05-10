@@ -72,7 +72,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "Function";
+        public override string Type { get; protected internal set; }  = "Function";
 
         /// <summary>
         /// Function name. Must be unique within a plugin.

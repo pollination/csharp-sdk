@@ -62,7 +62,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ValueReference";
+        public override string Type { get; protected internal set; }  = "ValueReference";
 
         /// <summary>
         /// A fixed value for this reference.

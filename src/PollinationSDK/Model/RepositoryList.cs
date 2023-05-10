@@ -71,7 +71,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "RepositoryList";
+        public override string Type { get; protected internal set; }  = "RepositoryList";
 
         /// <summary>
         /// The current page the pagination request is on

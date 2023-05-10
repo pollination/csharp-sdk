@@ -76,7 +76,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "DAGTask";
+        public override string Type { get; protected internal set; }  = "DAGTask";
 
         /// <summary>
         /// Name for this task. It must be unique in a DAG.

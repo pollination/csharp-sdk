@@ -58,7 +58,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "SubscriptionUpdate";
+        public override string Type { get; protected internal set; }  = "SubscriptionUpdate";
 
         /// <summary>
         /// The Pollination plan to subscribe to

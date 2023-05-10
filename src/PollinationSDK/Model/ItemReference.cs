@@ -51,7 +51,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "ItemReference";
+        public override string Type { get; protected internal set; }  = "ItemReference";
 
         /// <summary>
         /// The name of the looped item variable (use dot notation for nested json values)

@@ -67,7 +67,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "UserPublic";
+        public override string Type { get; protected internal set; }  = "UserPublic";
 
         /// <summary>
         /// The lowercase account name for this user

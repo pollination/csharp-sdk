@@ -62,7 +62,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "HTTP";
+        public override string Type { get; protected internal set; }  = "HTTP";
 
         /// <summary>
         /// For a HTTP endpoint this can be http://climate.onebuilding.org.

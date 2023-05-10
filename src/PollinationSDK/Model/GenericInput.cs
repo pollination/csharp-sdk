@@ -65,7 +65,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "GenericInput";
+        public override string Type { get; protected internal set; }  = "GenericInput";
 
         /// <summary>
         /// Input name.

@@ -65,7 +65,7 @@ namespace PollinationSDK
         /// Gets or Sets Type
         /// </summary>
         [DataMember(Name = "type", EmitDefaultValue = true)]
-        public string Type { get; protected internal set; }  = "CardPublic";
+        public override string Type { get; protected internal set; }  = "CardPublic";
 
         /// <summary>
         /// The last four digits of the card
