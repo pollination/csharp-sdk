@@ -57,7 +57,7 @@ namespace PollinationSDK
             if (obj == null)
                 return false;
             if (obj is PollinationObject input)
-                return Extension.Equals(this.Type, input.Type);
+                return ModelExtensions.Equals(this.Type, input.Type);
             return false;
         }
 
