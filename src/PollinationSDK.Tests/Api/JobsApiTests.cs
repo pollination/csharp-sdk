@@ -357,20 +357,21 @@ namespace PollinationSDK.Test
         }
 
         [Test]
+        public void TestPathArg()
+        {
+            var jobInfo = CreateTestJobInfo();
+            var model = Path.GetFullPath(@"../../../TestSample/two_rooms.hbjson");
+            var pathArg = jobInfo.Job.Arguments.First().FirstOrDefault().Obj as JobPathArgument;
+            Assert.AreEqual(((pathArg.Source.Obj) as ProjectFolder).Path, model);
+        }
+
+        [Test]
         public void CreateJobFromJobInfoTest()
         {
-            //var jsonFile = @"D:\Dev\Pollination\rhino-plugin\src\bin\jobInfo.json";
-            //var json = System.IO.File.ReadAllText(jsonFile);
-            //var job = PollinationSDK.Wrapper.JobInfo.FromJson(json);
-
-            //job.CheckArgumentsWithHandlers("rhino", "csharp");
-
-            //var dir = @"C:\Users\mingo\simulation\ttt";
-            //job.SetLocalJob(dir, 2);
-
             // create JobInfo
             var jobInfo = CreateTestJobInfo();
             var dup = jobInfo.Duplicate();
+
             Assert.AreEqual(jobInfo.Job.Source, dup.Job.Source);
             Assert.AreEqual(jobInfo.Job.Arguments.Count, dup.Job.Arguments.Count);
             Assert.AreEqual(jobInfo.Recipe.Source, dup.Recipe.Source);
