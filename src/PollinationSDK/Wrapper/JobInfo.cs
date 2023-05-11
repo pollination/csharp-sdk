@@ -114,8 +114,13 @@ namespace PollinationSDK.Wrapper
                 if (isPath)
                 {
                     var pathArg = args.OfType<JobPathArgument>().FirstOrDefault(_ => _.Name == item.Name);
-                    currentArg = pathArg;
-                    currentValue = pathArg?.Source;
+                    
+                    // only validate if a path is ProjectFolder type, there is no way to validate HTTPS or S3 link
+                    if (pathArg?.Source?.Obj is ProjectFolder pf)
+                    {
+                        currentArg = pathArg;
+                        currentValue = pf.Path;
+                    }
                 }
                 else
                 {
@@ -123,6 +128,10 @@ namespace PollinationSDK.Wrapper
                     currentArg = valueArg;
                     currentValue = valueArg?.Value;
                 }
+
+                if (currentArg == null)
+                    continue;
+
 
                 var processedData = InputArgumentValidator.CheckAndValidate(item, platform, currentValue, handlerChecker);
                 if (processedData == null)

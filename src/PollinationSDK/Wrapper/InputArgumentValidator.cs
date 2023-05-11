@@ -48,9 +48,11 @@ namespace PollinationSDK.Wrapper
         public object CheckAndValidate(object value, HandlerChecker handlerChecker)
         {
             if (value == null) return null;
-
+            if (this.DagInputAlias == null) return null;
+            
             // validate Alias input
             if (!this.ValidateWithAliasSpec(value)) return null;
+
             // convert with handlers
             var obj = this.CheckInputWithHandler(value, handlerChecker);
             // validate input specs
