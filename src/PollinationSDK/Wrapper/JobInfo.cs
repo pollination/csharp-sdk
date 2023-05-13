@@ -98,7 +98,7 @@ namespace PollinationSDK.Wrapper
             return FromJson(this.ToJson());
         }
 
-        private List<AnyOf<JobArgument, JobPathArgument>> CheckArgumentsWithHandlers(List<AnyOf<JobArgument, JobPathArgument>> args, string platform, string handlerLanguage, HandlerChecker handlerChecker)
+        private List<AnyOf<JobArgument, JobPathArgument>> CheckArgumentsWithHandlers(List<AnyOf<JobArgument, JobPathArgument>> args, string platform, HandlerChecker handlerChecker)
         {
             //Deal with single run
             var inputs = this.Recipe.InputList;
@@ -155,12 +155,12 @@ namespace PollinationSDK.Wrapper
 
         }
 
-        public void CheckArgumentsWithHandlers(string platform, string handlerLanguage)
+        public void CheckArgumentsWithHandlers(string platform)
         {
-            CheckArgumentsWithHandlers(platform, handlerLanguage, DefaultHandlerChecker.Instance);
+            CheckArgumentsWithHandlers(platform, DefaultHandlerChecker.Instance);
         }
 
-        public void CheckArgumentsWithHandlers(string platform, string handlerLanguage, HandlerChecker handlerChecker)
+        public void CheckArgumentsWithHandlers(string platform, HandlerChecker handlerChecker)
         {
             if(this.Recipe == null)
             {
@@ -177,7 +177,7 @@ namespace PollinationSDK.Wrapper
             var newArgSets = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
             foreach (var argSet in argSets)
             {
-                var set = CheckArgumentsWithHandlers(argSet, platform, handlerLanguage, handlerChecker);
+                var set = CheckArgumentsWithHandlers(argSet, platform, handlerChecker);
                 newArgSets.Add(set);
             }
 
