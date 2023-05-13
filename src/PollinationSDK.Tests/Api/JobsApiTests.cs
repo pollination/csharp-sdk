@@ -347,7 +347,7 @@ namespace PollinationSDK.Test
             jobInfo.SetJobName("A new daylight simulation");
 
             // check handler
-            jobInfo.CheckArgumentsWithHandlers("web", "csharp");
+            jobInfo.CheckArgumentsWithHandlers("web");
 
             // run a job
             jobInfo.SetCloudJob(Project.Owner.Name, Project.Name);
