@@ -24,7 +24,7 @@ namespace PollinationSDK
             object checkedData = null;
             foreach (var item in handlers)
             {
-                Exception err = null;
+                //Exception err = null;
                 try
                 {
                     handled = CheckWithHandler(inputData, item, out var newData);
@@ -32,23 +32,27 @@ namespace PollinationSDK
                 }
                 catch (Exception e)
                 {
-                    err = e;
+                    Helper.Logger?.Error(e, $"PollinationSDK: error.");
+                    errors.Add($"Handler-{item.Language}-{item.Function}: {e}");
                     //throw;
                 }
-
-                if (err == null)
-                    break;
-
-                errors.Add($"Handler-{item.Language}: {err.Message}");
             }
 
-            if (handled)
+            if (errors.Any())
+            {
+                // throw exception
+                var joinedMessage = string.Join(Environment.NewLine, errors);
+                throw new ArgumentException(joinedMessage);
+            }
+            else if (handled)
+            {
                 return checkedData;
+            }
+            else
+            {
+                return inputData;
+            }
 
-
-            // throw exception
-            var joinedMessage = string.Join(Environment.NewLine, errors);
-            throw new ArgumentException(joinedMessage);
 
 
             // local method
@@ -152,6 +156,7 @@ namespace PollinationSDK
             }
             catch (Exception ex)
             {
+                Helper.Logger?.Error(ex, $"PollinationSDK: cannot find handler libraries.");
                 throw new System.IO.FileNotFoundException($"Cannot find handler libraries.\n{ex.Message}");
             }
         }
