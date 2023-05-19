@@ -33,7 +33,7 @@ namespace PollinationSDK
                 catch (Exception e)
                 {
                     Helper.Logger?.Error(e, $"PollinationSDK: error.");
-                    errors.Add($"Handler-{item.Language}-{item.Function}: {e}");
+                    errors.Add($"Handler-{item.Language}-{item.Function}: {e?.Message}");
                     //throw;
                 }
             }
