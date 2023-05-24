@@ -27,13 +27,15 @@ namespace PollinationSDK
                 //Exception err = null;
                 try
                 {
-                    handled = CheckWithHandler(inputData, item, out var newData);
+                    var inData = checkedData ?? inputData; // use the checked data from the previous handler's output if it is available.
+                    handled = CheckWithHandler(inData, item, out var newData);
                     checkedData = newData;
                 }
                 catch (Exception e)
                 {
                     Helper.Logger?.Error(e, $"PollinationSDK: error.");
-                    errors.Add($"Handler-{item.Language}-{item.Function}: {e?.Message}");
+                    errors.Add($"{e?.Message}{Environment.NewLine}From {item.Function}(Handler-{item.Language})");
+                    break;
                     //throw;
                 }
             }
