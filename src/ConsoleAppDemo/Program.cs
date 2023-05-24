@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using PollinationSDK;
 using PollinationSDK.Wrapper;
 using System.Threading;
+using Serilog;
 
 namespace ConsoleAppDemo
 {
@@ -25,15 +26,17 @@ namespace ConsoleAppDemo
 
         public static void RunCloudTests()
         {
-            Console.WriteLine("Press any key to sign in...");
+            Console.WriteLine("Press any key to sign in from the default browser...");
             Console.ReadKey();
-
 
             AuthHelper.SignInAsync(devEnv: false).Wait();
 
             var me = Helper.CurrentUser;
             Console.WriteLine($"You are: {me.Username}");
 
+            Console.WriteLine("What is the Job ID: (\"ProjectOwnerName\"/\"ProjectName\"/\"JobID\". Such as mingbo/demo/1b933dfb-xxxx-4c18-a463-0d273cf42c43)");
+            var jobString = Console.ReadLine();
+            GetJobHttpInfo(jobString);
 
             //Console.WriteLine("--------------------Get recipes-------------------");
             //var api = new RecipesApi();
@@ -63,9 +66,9 @@ namespace ConsoleAppDemo
             //Console.WriteLine($"{rec.Source}/{rec.Metadata.Name}/{rec.Metadata.Tag}");
 
 
-            Console.WriteLine("--------------------Get a project-------------------");
-            var proj = Helper.GetAProject(me.Username, "demo");
-            Console.WriteLine($"Getting the project. \nFound this project {proj.Name} ID: {proj.Id}");
+            //Console.WriteLine("--------------------Get a project-------------------");
+            //var proj = Helper.GetAProject(me.Username, "demo");
+            //Console.WriteLine($"Getting the project. \nFound this project {proj.Name} ID: {proj.Id}");
 
 
             //Console.WriteLine("--------------------Getting Recipe Params-------------------");
@@ -106,8 +109,8 @@ namespace ConsoleAppDemo
 
             //CLOUD:mingbo/demo/1b933dfb-009c-4c18-a463-0d273cf42c43/results#OUT_daylight_factor
 
-            Console.WriteLine("--------------------get simulation assets-------------------");
-            DownloadAssets(proj);
+            //Console.WriteLine("--------------------get simulation assets-------------------");
+            //DownloadAssets(proj);
 
 
             //var output2 = runApi.ListRunArtifacts(proj.Owner.Name, proj.Name, run.Id);
@@ -120,7 +123,7 @@ namespace ConsoleAppDemo
             //}
             //var res = runApi.QueryResults(proj.Owner.Name, proj.Name);
 
-            Console.WriteLine("Done downloading");
+            //Console.WriteLine("Done downloading");
 
 
             //Console.WriteLine("--------------------Download simulation output-------------------");
@@ -143,6 +146,65 @@ namespace ConsoleAppDemo
 
 
             //DownloadBigAssetTest();
+            Console.WriteLine("You can close the console now");
+            Console.ReadLine();
+
+        }
+
+        public static void GetJobHttpInfo(string jobString)
+        {
+
+            try
+            {
+                if (string.IsNullOrEmpty(jobString))
+                    throw new ArgumentException("Invalid Job ID");
+                LogHelper.SetupLogger("logs.DemoApp.txt");
+                Helper.Logger = LogHelper.Log;
+
+                var me = Helper.CurrentUser;
+                PollinationSDK.Helper.Logger.Information($"You are: {me.Username}");
+
+                var texts = jobString.Split('/').Select(_ => _.Trim()).Where(_ => !string.IsNullOrEmpty(_)).ToList();
+
+                var projOwner = texts[0];
+                var projName = texts[1];
+                var jobID = texts[2];
+                Console.WriteLine($"=> Project Owner: {projOwner}");
+                Console.WriteLine($"=> Project Name: {projName}");
+                Console.WriteLine($"=> Job ID: {jobID}");
+                Console.WriteLine($"Log path: {LogHelper.GetTheLatestLog()}");
+
+                PollinationSDK.Helper.Logger.Information($"DemoApp: getting project [{projOwner}/{projName}].");
+                var projApi = new PollinationSDK.Api.ProjectsApi();
+                var proj = projApi.GetProject(projOwner, projName);
+                PollinationSDK.Helper.Logger.Information($"DemoApp: got the project [{proj.Owner.Name}/{proj.Name}].");
+                PollinationSDK.Helper.Logger.Information($"DemoApp: Got the Project: {Environment.NewLine}{proj.ToJson()}");
+                Console.WriteLine($"DemoApp: got the project [{proj.Owner.Name}/{proj.Name}].");
+
+                PollinationSDK.Helper.Logger.Information($"DemoApp: getting job [{proj.Owner.Name}/{proj.Name}/{jobID}].");
+                var api = new PollinationSDK.Api.JobsApi();
+                var jobHttp = api.GetJobWithHttpInfo(proj.Owner.Name, proj.Name, jobID.ToString());
+                PollinationSDK.Helper.Logger.Information($"DemoApp: got job with HTTP info:");
+
+                PollinationSDK.Helper.Logger.Information($"API Response StatusCode: {jobHttp?.StatusCode}.");
+                Console.WriteLine($"API Response StatusCode: {jobHttp?.StatusCode}.");
+                var headers = jobHttp.Headers.Select(_ => $"{_.Key}:{_.Value}");
+                foreach (var item in headers)
+                {
+                    var msg = $"API Response Header: {item}.";
+                    PollinationSDK.Helper.Logger.Information(msg);
+                    Console.WriteLine(msg);
+                }
+
+                PollinationSDK.Helper.Logger.Information($"API Response Data: {jobHttp?.Data?.ToJson()}.");
+                Console.WriteLine($"API Response Data: {jobHttp?.Data?.ToJson()}.");
+
+            }
+            catch (Exception e)
+            {
+                PollinationSDK.Helper.Logger.Error(e, $"DemoApp");
+                Console.WriteLine($"Check the log file for the error.");
+            }
 
         }
 
