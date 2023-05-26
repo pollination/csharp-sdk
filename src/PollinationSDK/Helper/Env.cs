@@ -28,5 +28,18 @@ namespace PollinationSDK
                 return retVal;
             }
         }
+
+
+        private static System.Net.Cache.RequestCachePolicy _cache;
+
+        public static System.Net.Cache.RequestCachePolicy CachePolicy
+        {
+            get
+            {
+                return (_cache = _cache ?? new System.Net.Cache.RequestCachePolicy(System.Net.Cache.RequestCacheLevel.Revalidate));
+            }
+        }
+
+
     }
 }
