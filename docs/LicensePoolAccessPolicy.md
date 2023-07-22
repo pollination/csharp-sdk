@@ -5,9 +5,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Subject** | [**PolicySubject**](PolicySubject.md) | The subject of the access policy | 
 **Permission** | **Permission** | Accessors may only have read access | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "LicensePoolAccessPolicy"]
+**Subject** | [**PolicySubject**](PolicySubject.md) | The subject of the access policy | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
