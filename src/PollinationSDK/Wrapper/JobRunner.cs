@@ -143,7 +143,7 @@ namespace PollinationSDK.Wrapper
         }
 
 
-        public string RunOnLocalMachine(string workFolder, int workerNum)
+        public string RunOnLocalMachine(string workFolder, int workerNum, bool silentMode)
         {
             if (string.IsNullOrEmpty(Utilities.PythonRoot) || !Directory.Exists(Utilities.PythonRoot))
                 throw new ArgumentException("Missing some setting for local simulations, please use Utilities.SetPaths before running any local simulations");
@@ -189,7 +189,7 @@ namespace PollinationSDK.Wrapper
                 File.WriteAllText(scriptFile, script);
 
                 // dealing with both windows and mac
-                Helper.RunScriptFile(scriptFile);
+                Helper.RunScriptFile(scriptFile, silentMode);
             }
             catch (Exception ex)
             {
