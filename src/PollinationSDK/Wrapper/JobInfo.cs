@@ -19,6 +19,7 @@ namespace PollinationSDK.Wrapper
         public string ProjectSlug { get; set; } // for cloud and local job, ladybug_tools/demoProject
         public int LocalCPUNumber { get; set; } // for local job only
         public string LocalRunFolder { get; set; } // for local job only
+        public bool LocalSilentMode { get; set; } // for local job only
         public string Platform { get; set; } = "unknown"; // rhino, revit, grasshopper
         public string LocalJobStatus { get; set; } = "unknown"; // RunStatusEnum for a local job
 
@@ -55,6 +56,15 @@ namespace PollinationSDK.Wrapper
             this.ProjectSlug = $"{projectOwner}/{projectName}".ToLower();
             this.LocalRunFolder = runFolder;
             this.LocalCPUNumber = cpuNo;
+        }
+
+        public void SetLocalSilentMode(bool enableSilent)
+        {
+            if (this.IsLocalJob) 
+                this.LocalSilentMode = enableSilent;
+            else
+                throw new ArgumentException("Silent mode only works with local job! Call SetLocalJob() to set local job settings first!");
+
         }
 
         public void SetJobAuthor(AccountPublic authorAccount)
@@ -243,8 +253,9 @@ namespace PollinationSDK.Wrapper
 
             var workDir = this.LocalRunOutputFolder;
             var cpuNum = this.LocalCPUNumber;
+            var isSilentMode = this.LocalSilentMode;
             var runner = new JobRunner(this);
-            var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum)).ConfigureAwait(false);
+            var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum, isSilentMode)).ConfigureAwait(false);
             // check local job status
             var status = JobRunner.CheckLocalJobStatus(runout);
             this.LocalJobStatus = status.ToString();

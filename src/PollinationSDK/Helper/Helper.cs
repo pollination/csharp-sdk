@@ -485,12 +485,17 @@ namespace PollinationSDK
         /// Execute *.sh file on Mac or *.bat on Windows
         /// </summary>
         /// <param name="scriptFile"></param>
-        public static void RunScriptFile(string scriptFile)
+        public static void RunScriptFile(string scriptFile, bool silentMode)
         {
             if (!Utilities.IsMac)
             {
                 //Windows
-                var p = System.Diagnostics.Process.Start(scriptFile);
+                var pInfo = new System.Diagnostics.ProcessStartInfo(scriptFile);
+                if (silentMode) 
+                    pInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+
+                var p = System.Diagnostics.Process.Start(pInfo);
+                
                 p.WaitForExit();
             }
             else //Mac
