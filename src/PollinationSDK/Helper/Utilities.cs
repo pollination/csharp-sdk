@@ -13,6 +13,7 @@ namespace PollinationSDK
             var apiUrl = $"https://utilities.pollination.cloud/latest-version/{product}";
 
             var request = new RestSharp.RestRequest(RestSharp.Method.GET);
+            request.Timeout = 3000;
             var client = new RestSharp.RestClient(apiUrl);
             var response = client.Execute(request);
             var version = response.Content?.Replace("\"", ""); //"1.2.9"
