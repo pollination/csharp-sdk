@@ -365,13 +365,13 @@ namespace PollinationSDK.Wrapper
                     relativeOutPath = relativeOutPath.StartsWith(@"\") ? relativeOutPath : $@"\{relativeOutPath}";
                     if (isFile)
                     {
-                        var file = Directory.GetFiles(root, "*", SearchOption.AllDirectories).FirstOrDefault(_=>_.EndsWith(relativeOutPath));
+                        var file = Directory.GetFiles(root, "*", SearchOption.AllDirectories).OrderBy(_ => _.Length).FirstOrDefault(_ => _.EndsWith(relativeOutPath));
                         dup.LocalPath = file;
                     }
                     else
                     {
                         //this is an output folder
-                        var dir = Directory.GetDirectories(root, "*", SearchOption.AllDirectories).FirstOrDefault(_ => _.EndsWith(relativeOutPath));
+                        var dir = Directory.GetDirectories(root, "*", SearchOption.AllDirectories).OrderBy(_ => _.Length).FirstOrDefault(_ => _.EndsWith(relativeOutPath));
                         dup.LocalPath = dir;
                     }
                   
