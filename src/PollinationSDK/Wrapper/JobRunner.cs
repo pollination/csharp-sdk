@@ -50,6 +50,44 @@ namespace PollinationSDK.Wrapper
 
         }
 
+        public static async Task<Job> UploadJobAssetsAsync(
+          Project project,
+          Job job,
+          string subfolderPath,
+          Action<string> progressLogAction = default,
+          CancellationToken cancellationToken = default,
+          Action actionWhenDone = default)
+        {
+            // check artifacts 
+            var tempProjectDir = CheckArtifacts(job, subfolderPath);
+
+            // upload artifacts
+            if (!string.IsNullOrEmpty(tempProjectDir))
+            {
+                Action<int> updateMessageProgress = (int p) => {
+                    progressLogAction?.Invoke($"Preparing: [{p}%]");
+                };
+                await Helper.UploadDirectoryAsync(project, tempProjectDir, updateMessageProgress, cancellationToken);
+            }
+
+            // suspended by user
+            var emptyID = Guid.Empty;
+            if (cancellationToken.IsCancellationRequested)
+            {
+                progressLogAction?.Invoke($"Canceled: {cancellationToken.IsCancellationRequested}");
+                Helper.Logger.Information($"ScheduleRunAsync: canceled by user");
+                return null;
+            }
+
+            // update Artifact to cloud's relative path after uploaded.
+            var newJob = UpdateArtifactPath(job, subfolderPath);
+
+            actionWhenDone?.Invoke();
+
+            return newJob;
+        }
+
+
         /// <summary>
         /// Run and monitor the simulation on Pollination
         /// </summary>
@@ -68,38 +106,13 @@ namespace PollinationSDK.Wrapper
         {
             // Get project
             var proj = project;
-            //var job = this._Job;
 
             // Check if recipe can be used in this project
             CheckRecipeInProject(job.Source, proj);
 
             // Upload artifacts
-
-            // check artifacts 
-            var tempProjectDir = CheckArtifacts(job, this.JobInfo.SubFolderPath);
-
-            // upload artifacts
-            if (!string.IsNullOrEmpty(tempProjectDir))
-            {
-                Action<int> updateMessageProgress = (int p) => {
-                    progressLogAction?.Invoke($"Preparing: [{p}%]");
-                };
-                await Helper.UploadDirectoryAsync(proj, tempProjectDir, updateMessageProgress, cancellationToken);
-            }
-
-            // suspended by user
-            var emptyID = Guid.Empty;
-            if (cancellationToken.IsCancellationRequested)
-            {
-                progressLogAction?.Invoke($"Canceled: {cancellationToken.IsCancellationRequested}");
-                Helper.Logger.Information($"ScheduleRunAsync: canceled by user");
-                return null;
-            }
-
-            // update Artifact to cloud's relative path after uploaded.
-            var newJob = UpdateArtifactPath(job, this.JobInfo.SubFolderPath);
-            //var json = newJob.ToJson();
-
+            var newJob = await UploadJobAssetsAsync(project, job, this.JobInfo.SubFolderPath, progressLogAction, cancellationToken);
+            
             // create a new Simulation
             var api = new JobsApi();
             progressLogAction?.Invoke($"Start running.");
@@ -306,7 +319,7 @@ namespace PollinationSDK.Wrapper
             var temp = string.Empty;
             var arg = job.Arguments;
 
-            var artis = arg.SelectMany(_=>_.OfType<JobPathArgument>());
+            var artis = arg.SelectMany(_ => _.OfType<JobPathArgument>()).Where(_ => !_.IsAssetUploaded());
             if (artis == null || !artis.Any()) return temp;
 
             // remove old temp files first
@@ -391,6 +404,13 @@ namespace PollinationSDK.Wrapper
                 {
                     if (item.Obj is JobPathArgument path)
                     {
+                        if (path.IsAssetUploaded())
+                        {
+                            // do nothing
+                            newJob.AddArgument(path);
+                            continue;
+                        }
+
                         // only update the path for ProjectFolderSource for a relative path
                         var projFolderSource = path.Source.Obj as ProjectFolder;
                         if (projFolderSource == null) continue;
@@ -400,6 +420,7 @@ namespace PollinationSDK.Wrapper
                         if (!string.IsNullOrEmpty(subFolderPath)) newFileOrDirname = $"{subFolderPath}/{newFileOrDirname}";
                         var pSource = new ProjectFolder(path: newFileOrDirname);
                         var newPath = new JobPathArgument(path.Name, pSource);
+                        newPath.IsAssetUploaded(true);
 
                         // add it to the last available argument set.
                         newJob.AddArgument(newPath);
@@ -417,6 +438,8 @@ namespace PollinationSDK.Wrapper
 
             return newJob;
         }
+
+      
 
 
 

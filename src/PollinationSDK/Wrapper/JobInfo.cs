@@ -286,6 +286,19 @@ namespace PollinationSDK.Wrapper
             return jobInfo;
         }
 
+        public async Task<Job> UploadJobAssetsAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
+        {
+            if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
+                throw new ArgumentException($"Please call SetCloudJob() before running a job");
+
+            var proj = GetWritableProject();
+            var runner = new JobRunner(this);
+            var newJob = await JobRunner.UploadJobAssetsAsync(proj, this.Job, this.SubFolderPath, progressReporting, token);
+  
+            return newJob;
+        }
+
+
         public void AddArgument(JobArgument arg) => this.Job.AddArgument(arg);
         public void AddArgument(JobPathArgument arg) => this.Job.AddArgument(arg);
 
