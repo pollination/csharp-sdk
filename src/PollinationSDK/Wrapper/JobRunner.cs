@@ -58,6 +58,17 @@ namespace PollinationSDK.Wrapper
           CancellationToken cancellationToken = default,
           Action actionWhenDone = default)
         {
+
+            // check if all cloud path artifacts are within the same project
+            var invalidCloudAssets = job.Arguments.SelectMany(_ => _.OfType<JobPathArgument>()).Where(_ => _.IsAssetUploaded() && _.CloudProjectSlug() != project.Slug).Select(_=> $"{_.ToUserFriendlyString()}@{_.CloudProjectSlug()}").Distinct();
+            if (invalidCloudAssets.Any())
+            {
+                var error = $"Following cloud assets cannot be uploaded to project {project.Slug}:\n\n{string.Join(Environment.NewLine, invalidCloudAssets)}";
+
+                throw new ArgumentException(error);
+            }
+
+
             // check artifacts 
             var tempProjectDir = CheckArtifacts(job, subfolderPath);
 
@@ -78,9 +89,9 @@ namespace PollinationSDK.Wrapper
                 Helper.Logger.Information($"ScheduleRunAsync: canceled by user");
                 return null;
             }
-
+            
             // update Artifact to cloud's relative path after uploaded.
-            var newJob = UpdateArtifactPath(job, subfolderPath);
+            var newJob = UpdateArtifactPath(project.Slug, job, subfolderPath);
 
             actionWhenDone?.Invoke();
 
@@ -393,7 +404,7 @@ namespace PollinationSDK.Wrapper
         /// </summary>
         /// <param name="job"></param>
         /// <returns></returns>
-        private static Job UpdateArtifactPath(Job job, string subFolderPath)
+        private static Job UpdateArtifactPath(string projSlug, Job job, string subFolderPath)
         {
             var argSets = job?.Arguments;
             if (argSets == null)
@@ -428,6 +439,7 @@ namespace PollinationSDK.Wrapper
                         var pSource = new ProjectFolder(path: newFileOrDirname);
                         var newPath = new JobPathArgument(path.Name, pSource);
                         newPath.IsAssetUploaded(true);
+                        newPath.TagCloudProjectSlug(projSlug);
 
                         // add it to the last available argument set.
                         newJob.AddArgument(newPath);
