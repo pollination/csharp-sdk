@@ -27,6 +27,28 @@ namespace PollinationSDK
             return me;
         }
 
+        public static Project GetAProject(string projectSlug)
+        {
+
+            if (PollinationSDK.Helper.CurrentUser == null)
+            {
+                throw new ArgumentException($"Login to Pollination cloud is required!\nPlease right click the component to login first!");
+            }
+
+            var projSlug = projectSlug;
+            if (!projSlug.Contains('/'))
+            {
+                projSlug = $"{PollinationSDK.Helper.CurrentUser.Username}/{projSlug}";
+            }
+
+            var args = projSlug.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
+            if (args.Count != 2)
+                throw new ArgumentException($"Failed to get a valid project from [{projectSlug}]");
+            var projOwner = args.FirstOrDefault();
+            var projName = args.LastOrDefault();
+            return GetAProject(projOwner, projName);
+        }
+
         /// <summary>
         /// Get a project by current user and name. If not found, then create a new project.
         /// </summary>
@@ -56,6 +78,15 @@ namespace PollinationSDK
             }
 
 
+        }
+
+        public static Project GetWritableProject(string projectSlug)
+        {
+            var p = Helper.GetAProject(projectSlug);
+            if (!p.Permissions.Write)
+                throw new ArgumentException($"You don't have access to [{p.Slug}] project. Switch to a different project using the SetupRuns component.");
+
+            return p;
         }
 
         public static async Task<bool> UploadDirectoryAsync(Project project, string directory, Action<int> reportProgressAction = default, CancellationToken cancellationToken = default)

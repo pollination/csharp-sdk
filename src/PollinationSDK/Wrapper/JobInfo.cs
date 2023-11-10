@@ -276,7 +276,7 @@ namespace PollinationSDK.Wrapper
             if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
                 throw new ArgumentException($"Please call SetCloudJob() before running a job");
 
-            var proj = GetWritableProject();
+            var proj = Helper.GetWritableProject(this.ProjectSlug);
             var runner = new JobRunner(this);
             var cloudJob =  await runner.RunOnCloudAsync(proj, progressReporting, token);
             var jobInfo =  new ScheduledJobInfo(proj, cloudJob);
@@ -291,8 +291,7 @@ namespace PollinationSDK.Wrapper
             if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
                 throw new ArgumentException($"Please call SetCloudJob() before running a job");
 
-            var proj = GetWritableProject();
-            var runner = new JobRunner(this);
+            var proj = Helper.GetWritableProject(this.ProjectSlug); 
             var newJob = await JobRunner.UploadJobAssetsAsync(proj, this.Job, this.SubFolderPath, progressReporting, token);
   
             return newJob;
@@ -351,21 +350,6 @@ namespace PollinationSDK.Wrapper
             return rec.Manifest;
         }
 
-        private Project GetWritableProject()
-        {
-            // ladybug_tools/demoProject
-            var proj = this.ProjectSlug;
-            var args = proj.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim()).ToList();
-            if (args.Count != 2)
-                throw new ArgumentException($"Failed to get a valid project from [{proj}]");
-            var projOwner = args.FirstOrDefault();
-            var projName = args.LastOrDefault();
-
-            var p = Helper.GetAProject(projOwner, projName);
-            if (!p.Permissions.Write)
-                throw new ArgumentException($"You don't have access to [{p.Slug}] project. Switch to a different project using the SetupRuns component.");
-          
-            return p;
-        }
+       
     }
 }
