@@ -16,7 +16,7 @@ namespace PollinationSDK.Wrapper
         public LocalRunArguments(List<AnyOf<JobArgument, JobPathArgument>> arguments)
         {
             // check if there are any cloud path artifacts
-            var invalidCloudAssets = arguments.OfType<JobPathArgument>().Where(_ => _.IsAssetUploaded()).Select(_ => $"{_.ToUserFriendlyString()}@{_.CloudProjectSlug()}").Distinct();
+            var invalidCloudAssets = arguments.OfType<JobPathArgument>().Where(_ => _.IsAssetUploaded()).Select(_ => $"{_.ToUserFriendlyString(true)}").Distinct();
             if (invalidCloudAssets.Any())
             {
                 var error = $"Cannot run a local study with cloud assets:\n\n{string.Join(Environment.NewLine, invalidCloudAssets)}";

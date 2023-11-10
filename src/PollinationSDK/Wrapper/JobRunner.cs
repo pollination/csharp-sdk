@@ -60,7 +60,7 @@ namespace PollinationSDK.Wrapper
         {
 
             // check if all cloud path artifacts are within the same project
-            var invalidCloudAssets = job.Arguments.SelectMany(_ => _.OfType<JobPathArgument>()).Where(_ => _.IsAssetUploaded() && _.CloudProjectSlug() != project.Slug).Select(_=> $"{_.ToUserFriendlyString()}@{_.CloudProjectSlug()}").Distinct();
+            var invalidCloudAssets = job.Arguments.SelectMany(_ => _.OfType<JobPathArgument>()).Where(_ => _.IsAssetUploaded() && _.CloudProjectSlug() != project.Slug).Select(_=> $"{_.ToUserFriendlyString(true)}").Distinct();
             if (invalidCloudAssets.Any())
             {
                 var error = $"Following cloud assets cannot be uploaded to project {project.Slug}:\n\n{string.Join(Environment.NewLine, invalidCloudAssets)}";
