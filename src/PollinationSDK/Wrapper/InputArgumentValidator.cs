@@ -34,6 +34,10 @@ namespace PollinationSDK.Wrapper
 
             if (value == null) return null;
 
+            // do nothing for the cloud referenced file path
+            if (value is JobPathArgument path && path.IsAssetUploaded())
+                return path;
+
             var vd = new InputArgumentValidator(dagInput, platform);
             return vd.CheckAndValidate(value, handlerChecker);
         }
