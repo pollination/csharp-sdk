@@ -287,7 +287,8 @@ namespace PollinationSDK.Test
         [Test]
         public void RunInputsTest()
         {
-            var response = api.ListJobs(Helper.CurrentUser.Username, "demo");
+            var owner = "ladybug-tools";
+            var response = api.ListJobs(owner, "demo");
             var jobs = response.Resources.Take(2);
 
        
@@ -296,14 +297,14 @@ namespace PollinationSDK.Test
             foreach (var job in jobs)
             {
                 var jobId = job.Id;
-                var run = runApi.ListRuns(Helper.CurrentUser.Username, "demo", jobId: new List<string>() { jobId }).Resources[0];
+                var run = runApi.ListRuns(owner, "demo", jobId: new List<string>() { jobId }).Resources[0];
                 var inputs = run.Recipe.Inputs.OfType<Interface.Io.Inputs.IDag>();
                 var inputs2 = run.Status.Inputs.OfType<Interface.Io.Inputs.IStep>();
 
                 var sameInputs = inputs.Count() == inputs2.Count();
                 if (!sameInputs)
                 {
-                    Console.WriteLine($"{Helper.CurrentUser.Username}/demo/{jobId}/{run.Id}");
+                    Console.WriteLine($"{owner}/demo/{jobId}/{run.Id}");
 
                     Console.WriteLine($"================Run Recipe Inputs=====================");
 
