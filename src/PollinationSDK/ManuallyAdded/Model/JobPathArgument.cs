@@ -59,12 +59,26 @@
             return null;
         }
 
-        public string ToUserFriendlyString()
+        public string ToUserFriendlyString(bool withProjectSlug)
         {
             var uploaded = this.IsAssetUploaded();
-            var hint = uploaded ? "CLOUD" : "PATH";
+
             var p = (this.Source.Obj as ProjectFolder)?.Path;
-            p = uploaded ? p : System.IO.Path.GetFileName(p);
+            var hint = "PATH";
+            if (uploaded)
+            {
+                hint = "CLOUD";
+                if (withProjectSlug)
+                {
+                    var slug = this.CloudProjectSlug();
+                    hint = string.IsNullOrEmpty(slug) ? hint : $"{hint}:{slug}";
+                }
+            }
+            else
+            {
+                p = System.IO.Path.GetFileName(p);
+            }
+
             return $"#{this.Name}:${hint}/{p}";
 
         }
