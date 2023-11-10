@@ -183,7 +183,7 @@ namespace PollinationSDK.Wrapper
             var inputJson = localArg.SaveToFolder(workDir); //save args to input.json file
 
 
-            // run the bat file
+            // Execute
             try
             {
                 var program = Utilities.IsMac ? Path.Combine(Utilities.PythonRoot, "bin", "queenbee") : Path.Combine(Utilities.PythonRoot, "Scripts", "queenbee");
@@ -195,14 +195,19 @@ namespace PollinationSDK.Wrapper
                 var envArg = Utilities.GetEnvArgForRadiance();
 
                 var arguments = $"local run \"{recipeDir}\" \"{workDir}\" -n \"{name}\" -i \"{inputJons}\" -w {workerNumber} {envArg}";
-                var runFile = Utilities.IsMac ? "run.sh" : "run.bat";
-                var scriptFile = Path.Combine(workDir, runFile);
-                var script = $"\"{program}\" {arguments}";
-                //script = Utilities.IsMac ? script : $"{script}{Environment.NewLine}PAUSE";
-                File.WriteAllText(scriptFile, script);
 
-                // dealing with both windows and mac
-                Helper.RunScriptFile(scriptFile, silentMode);
+                // run the bat file
+
+                //var runFile = Utilities.IsMac ? "run.sh" : "run.bat";
+                //var scriptFile = Path.Combine(workDir, runFile);
+                //var script = $"\"{program}\" {arguments}";
+                //File.WriteAllText(scriptFile, script);
+
+                //// dealing with both windows and mac
+                //Helper.RunScriptFile(scriptFile, silentMode);
+
+                Helper.RunCommand(program, arguments, silentMode, out var result);
+
             }
             catch (Exception ex)
             {
@@ -212,6 +217,8 @@ namespace PollinationSDK.Wrapper
 
             return workDir;
         }
+
+
 
         public static RunStatusEnum CheckLocalJobStatus(string workDir)
         {

@@ -536,5 +536,50 @@ namespace PollinationSDK
         }
 
 
+        public static bool RunCommand(string programPath, string argument, bool silentMode, out string results)
+        {
+            results = string.Empty;
+
+            var stdout = new List<string>();
+            var stdErr = new List<string>();
+            using (var p = new System.Diagnostics.Process())
+            {
+                p.StartInfo.FileName = programPath;
+                p.StartInfo.Arguments = argument;
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = false;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.CreateNoWindow = silentMode;
+                p.Start();
+
+                p.ErrorDataReceived += (s, m) => { if (m.Data != null) stdErr.Add(m.Data); };
+                //p.OutputDataReceived += (s, m) => { if (m.Data != null) stdout.Add(m.Data); };
+                p.BeginErrorReadLine();
+                //p.BeginOutputReadLine();
+
+                p.WaitForExit();
+                
+                if (!p.HasExited)
+                {
+                    p.Kill();
+                }
+
+            }
+
+            stdout.AddRange(stdErr);
+            var msg = string.Join(Environment.NewLine, stdout);
+            var cmd = $"Command:\n{programPath} {argument}";
+
+            if (stdErr.Count > 0)
+            {
+                msg = $"{cmd}\n{msg}";
+                throw new ArgumentException($"{cmd}\n{string.Join(Environment.NewLine, stdErr)}");
+            }
+
+            results = msg;
+            return stdErr.Count == 0;
+        }
+
+
     }
 }
