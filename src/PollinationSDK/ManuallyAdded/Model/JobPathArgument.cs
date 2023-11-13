@@ -79,7 +79,11 @@
                 p = System.IO.Path.GetFileName(p);
             }
 
-            return $"#{this.Name}:${hint}/{p}";
+
+            var text = $"${hint}/{p}";
+            if (!string.IsNullOrEmpty(this.Name))
+                text = $"#{this.Name}:{text}";
+            return text;
 
         }
     }
