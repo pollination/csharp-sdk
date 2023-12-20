@@ -61,7 +61,7 @@ namespace PollinationSDK.Wrapper
             return handlerChecker.CheckWithHandlers(inputData, handlerForPreload);
         }
 
-        public override RunAssetBase Duplicate()
+        public override AssetBase Duplicate()
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.None);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<RunOutputAsset>(json);

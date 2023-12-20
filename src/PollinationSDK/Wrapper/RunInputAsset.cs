@@ -31,11 +31,12 @@ namespace PollinationSDK.Wrapper
             this.RunSource = runSource;
         }
 
-        public override RunAssetBase Duplicate()
+        public override AssetBase Duplicate()
         {
             var json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.None);
             return Newtonsoft.Json.JsonConvert.DeserializeObject<RunInputAsset>(json);
         }
+
 
     }
 

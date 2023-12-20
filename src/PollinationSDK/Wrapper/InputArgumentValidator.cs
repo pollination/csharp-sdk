@@ -34,6 +34,10 @@ namespace PollinationSDK.Wrapper
 
             if (value == null) return null;
 
+            // check CloudReferenceAsset
+            if (value is CloudReferenceAsset cloudRef)
+                value = cloudRef.ToJobPathArgument();
+
             // do nothing for the cloud referenced file path
             if (value is JobPathArgument path && path.IsAssetUploaded())
                 return path;

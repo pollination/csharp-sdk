@@ -13,6 +13,8 @@ namespace PollinationSDK.Wrapper
     public class RunInfo
     {
         public bool IsLocalRun => !Guid.TryParse(this.RunID, out var res);
+        public bool IsCloudRunDone => this.Run.Status.FinishedAt >= this.Run.Status.StartedAt;
+        public string CloudRunStatus => this.Run.Status.Status.ToString();
         public string RunID => this.Run.Id;
         public Run Run { get; private set; }
         //public Project Project { get; private set; }
@@ -346,7 +348,7 @@ namespace PollinationSDK.Wrapper
             var updatedAssets = new List<RunAssetBase>();
             foreach (var item in runAssets)
             {
-                var dup = item.Duplicate();
+                var dup = item.Duplicate() as RunAssetBase;
                 if (!dup.IsPathAsset())
                 {
                     updatedAssets.Add(dup);
@@ -427,45 +429,15 @@ namespace PollinationSDK.Wrapper
                 // check if cached
                 if (useCached)
                 {
-                    allAssets = CheckCached(allAssets, dir).ToList();
+                    allAssets = Helper.CheckCached(allAssets, dir).ToList();
                 }
 
                 cancelToken.ThrowIfCancellationRequested();
                 // assembly download tasks
                 reportingAction?.Invoke("Starting");
                 var tasks = DownloadAssets(this, allAssets, dir, reportingAction, cancelToken);
-                await Task.WhenAll(tasks);
+                downloadedAssets = (await Task.WhenAll(tasks)).ToList();
                 reportingAction?.Invoke("Downloaded");
-
-                // collect all downloaded assets
-                var works = allAssets.Zip(tasks, (asset, saved) => new { asset, saved });
-                foreach (var item in works)
-                {
-                    var dup = item.asset.Duplicate();
-
-                    // get saved path type assets
-                    if (item.asset.IsPathAsset())
-                    {
-                        var savedFolderOrFilePath = await item.saved;
-                        // check folder
-                        if (!Path.HasExtension(savedFolderOrFilePath))
-                        {
-                            var tempDir = new DirectoryInfo(savedFolderOrFilePath);
-                            var subItems = tempDir.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly);
-
-                            if (subItems.Count() == 1)
-                            {
-                                // if there is only one file/folder inside
-                                var f = subItems[0];
-                                if (f.Exists) savedFolderOrFilePath = f.FullName;
-                            }
-                        }
-                        // update saved path
-                        dup.LocalPath = savedFolderOrFilePath;
-                    }
-                    
-                    downloadedAssets.Add(dup);
-                }
 
             }
             catch (Exception e)
@@ -491,26 +463,7 @@ namespace PollinationSDK.Wrapper
             public bool IsValid => Total > 0;
         }
 
-        private static IEnumerable<RunAssetBase> CheckCached(IEnumerable<RunAssetBase> outputAssets, string dir)
-        {
-            var checkedAssets = new List<RunAssetBase>();
-            var inputDir = Path.Combine(dir, "inputs");
-            var outputDir = Path.Combine(dir, "outputs");
-            foreach (var item in outputAssets)
-            {
-                var savedDir = item is RunInputAsset ? inputDir : outputDir;
-                var dupObj = item.Duplicate();
-                var isCached = item.CheckIfAssetCached(savedDir);
-                if (isCached)
-                {
-                    var cachedPath = item.GetCachedAsset(savedDir);
-                    dupObj.LocalPath = cachedPath;
-                }
-
-                checkedAssets.Add(dupObj);
-            }
-            return checkedAssets;
-        }
+       
 
 
         /// <summary>
@@ -519,9 +472,9 @@ namespace PollinationSDK.Wrapper
         /// <param name="runInfo"></param>
         /// <param name="saveAsDir"></param>
         /// <returns></returns>
-        private static List<Task<string>> DownloadAssets(RunInfo runInfo, IEnumerable<RunAssetBase> assets, string saveAsDir, Action<string> reportProgressAction, System.Threading.CancellationToken cancelToken = default)
+        private static List<Task<RunAssetBase>> DownloadAssets(RunInfo runInfo, IEnumerable<RunAssetBase> assets, string saveAsDir, Action<string> reportProgressAction, System.Threading.CancellationToken cancelToken = default)
         {
-            var tasks = new List<Task<string>>();
+            var tasks = new List<Task<RunAssetBase>>();
             if (assets == null || !assets.Any()) return tasks;
             var api = new PollinationSDK.Api.RunsApi();
             var inputDir = Path.Combine(saveAsDir, "inputs");
@@ -559,16 +512,23 @@ namespace PollinationSDK.Wrapper
                             Helper.Logger.Information($"DownloadAssets: downloading {assetName} from \n  -{url}\n");
                             var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress, cancelToken);
                             await t.ConfigureAwait(false);
-                            var path = t.Result;
-                            Helper.Logger.Information($"DownloadAssets: saved {assetName} to {path}");
-                            return path; 
+                            var savedFolderOrFilePath = t.Result;
+                            Helper.Logger.Information($"DownloadAssets: saved {assetName} to {savedFolderOrFilePath}");
+
+                            // check folder with single file 
+                            savedFolderOrFilePath = Helper.CheckPathForDir(savedFolderOrFilePath);
+
+                            // update saved path
+                            var dup = asset.Duplicate() as RunAssetBase;
+                            dup.LocalPath = savedFolderOrFilePath;
+                            return dup;
                         });
                         tasks.Add(task);
-                       
+
                     }
                     else
                     {
-                        tasks.Add(Task.Run(() => asset.LocalPath));
+                        tasks.Add(Task.Run(() => asset));
                         completed++;
                     }
                 }

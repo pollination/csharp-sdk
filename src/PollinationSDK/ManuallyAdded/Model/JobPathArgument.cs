@@ -80,7 +80,7 @@
             }
 
 
-            var text = $"${hint}/{p}";
+            var text = $"{hint}/{p}";
             if (!string.IsNullOrEmpty(this.Name))
                 text = $"#{this.Name}:{text}";
             return text;
