@@ -4,22 +4,20 @@ All URIs are relative to *http://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**DeleteActivation**](LicensesApi.md#deleteactivation) | **DELETE** /licenses/pools/{pool_id}/activations/{activation_id} | Delete Activation
-[**GetAvailablePools**](LicensesApi.md#getavailablepools) | **GET** /licenses/pools | Get Available Pools
-[**GetLicenseActivations**](LicensesApi.md#getlicenseactivations) | **GET** /licenses/pools/{pool_id}/activations | Get Activations
-[**GetPoolLicense**](LicensesApi.md#getpoollicense) | **GET** /licenses/pools/{pool_id}/license | Get Pool License
-[**GrantAccessToPool**](LicensesApi.md#grantaccesstopool) | **PATCH** /licenses/pools/{pool_id}/permissions | Grant Pool Access
-[**RegenerateLicensePool**](LicensesApi.md#regeneratelicensepool) | **POST** /licenses/pools/{pool_id}/regenerate | Regenerate
-[**RevokeAccessToPool**](LicensesApi.md#revokeaccesstopool) | **DELETE** /licenses/pools/{pool_id}/permissions | Delete Pool Access
-[**UpdateLicensePool**](LicensesApi.md#updatelicensepool) | **PUT** /licenses/pools/{pool_id} | Update Pool
+[**DeleteActivation**](LicensesApi.md#deleteactivation) | **DELETE** /licenses/pools/{pool_id}/activations/{activation_id} | Delete the activation
+[**GetAvailablePools**](LicensesApi.md#getavailablepools) | **GET** /licenses/pools | Get license pools available to authenticated user
+[**GetLicenseActivations**](LicensesApi.md#getlicenseactivations) | **GET** /licenses/pools/{pool_id}/activations | Get the activations for the license
+[**GetPoolLicense**](LicensesApi.md#getpoollicense) | **GET** /licenses/pools/{pool_id}/license | Get the license associated with a pool
+[**GrantAccessToPool**](LicensesApi.md#grantaccesstopool) | **PATCH** /licenses/pools/{pool_id}/permissions | Grant access to the license pool
+[**RegenerateLicensePool**](LicensesApi.md#regeneratelicensepool) | **POST** /licenses/pools/{pool_id}/regenerate | Regenerate the license associated with the pool
+[**RevokeAccessToPool**](LicensesApi.md#revokeaccesstopool) | **DELETE** /licenses/pools/{pool_id}/permissions | Revoke access to the license pool
+[**UpdateLicensePool**](LicensesApi.md#updatelicensepool) | **PUT** /licenses/pools/{pool_id} | Update the license pool
 
 
 
 ## DeleteActivation
 
 > void DeleteActivation (string poolId, string activationId)
-
-Delete Activation
 
 Delete the activation
 
@@ -39,12 +37,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = poolId_example;  // string | 
@@ -52,7 +48,7 @@ namespace Example
 
             try
             {
-                // Delete Activation
+                // Delete the activation
                 apiInstance.DeleteActivation(poolId, activationId);
             }
             catch (ApiException e)
@@ -103,8 +99,6 @@ void (empty response body)
 
 > LicensePoolList GetAvailablePools (List<string> owner = null)
 
-Get Available Pools
-
 Get license pools available to authenticated user
 
 ### Example
@@ -123,19 +117,17 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var owner = new List<string>(); // List<string> | Owner of the project (optional) 
 
             try
             {
-                // Get Available Pools
+                // Get license pools available to authenticated user
                 LicensePoolList result = apiInstance.GetAvailablePools(owner);
                 Debug.WriteLine(result);
             }
@@ -186,8 +178,6 @@ Name | Type | Description  | Notes
 
 > ActivationList GetLicenseActivations (string poolId)
 
-Get Activations
-
 Get the activations for the license
 
 ### Example
@@ -206,19 +196,17 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = poolId_example;  // string | 
 
             try
             {
-                // Get Activations
+                // Get the activations for the license
                 ActivationList result = apiInstance.GetLicenseActivations(poolId);
                 Debug.WriteLine(result);
             }
@@ -269,8 +257,6 @@ Name | Type | Description  | Notes
 
 > LicensePublic GetPoolLicense (Guid poolId)
 
-Get Pool License
-
 Get the license associated with a pool
 
 ### Example
@@ -289,19 +275,17 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
 
             try
             {
-                // Get Pool License
+                // Get the license associated with a pool
                 LicensePublic result = apiInstance.GetPoolLicense(poolId);
                 Debug.WriteLine(result);
             }
@@ -352,8 +336,6 @@ Name | Type | Description  | Notes
 
 > LicensePoolPublic GrantAccessToPool (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList)
 
-Grant Pool Access
-
 Grant access to the license pool
 
 ### Example
@@ -372,12 +354,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -385,7 +365,7 @@ namespace Example
 
             try
             {
-                // Grant Pool Access
+                // Grant access to the license pool
                 LicensePoolPublic result = apiInstance.GrantAccessToPool(poolId, licensePoolAccessPolicyList);
                 Debug.WriteLine(result);
             }
@@ -437,8 +417,6 @@ Name | Type | Description  | Notes
 
 > AnyType RegenerateLicensePool (Guid poolId)
 
-Regenerate
-
 Regenerate the license associated with the pool
 
 ### Example
@@ -457,19 +435,17 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
 
             try
             {
-                // Regenerate
+                // Regenerate the license associated with the pool
                 AnyType result = apiInstance.RegenerateLicensePool(poolId);
                 Debug.WriteLine(result);
             }
@@ -520,8 +496,6 @@ Name | Type | Description  | Notes
 
 > LicensePoolPublic RevokeAccessToPool (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList)
 
-Delete Pool Access
-
 Revoke access to the license pool
 
 ### Example
@@ -540,12 +514,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -553,7 +525,7 @@ namespace Example
 
             try
             {
-                // Delete Pool Access
+                // Revoke access to the license pool
                 LicensePoolPublic result = apiInstance.RevokeAccessToPool(poolId, licensePoolPolicySubjectList);
                 Debug.WriteLine(result);
             }
@@ -605,8 +577,6 @@ Name | Type | Description  | Notes
 
 > AnyType UpdateLicensePool (Guid poolId, LicensePoolUpdate licensePoolUpdate)
 
-Update Pool
-
 Update the license pool
 
 ### Example
@@ -625,12 +595,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new LicensesApi(Configuration.Default);
             var poolId = new Guid(); // Guid | 
@@ -638,7 +606,7 @@ namespace Example
 
             try
             {
-                // Update Pool
+                // Update the license pool
                 AnyType result = apiInstance.UpdateLicensePool(poolId, licensePoolUpdate);
                 Debug.WriteLine(result);
             }
