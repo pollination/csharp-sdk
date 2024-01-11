@@ -12,8 +12,8 @@ json1 = os.path.join(doc_folder, 'openapi_inheritance.json')
 
 
 # update version
-# python3 .openapi-generator/pre_gen_script.py ".openapi-docs/openapi_inheritance.json"
-subprocess.call(f"python3 {generator_folder}/pre_gen_script.py {json1}", shell=True)
+# python .openapi-generator/pre_gen_script.py ".openapi-docs/openapi_inheritance.json"
+subprocess.call(f"python {generator_folder}/pre_gen_script.py {json1}", shell=True)
 
 
 # run openapi tool to generate schema
@@ -26,22 +26,22 @@ subprocess.call(f"npx @openapitools/openapi-generator-cli generate -i {json1} -t
 
 
 # post process files
-# python3 .openapi-generator/post_gen_script.py ".openapi-docs/openapi_inheritance.json"
+# python .openapi-generator/post_gen_script.py ".openapi-docs/openapi_inheritance.json"
 time.sleep(3)
-subprocess.call(f"python3 {generator_folder}/post_gen_script.py {json1}", shell=True)
+subprocess.call(f"python {generator_folder}/post_gen_script.py {json1}", shell=True)
 
 
 # update assembly version
 time.sleep(1)
-# python3 .openapi-generator/update_assembly_version.py
-subprocess.call(f"python3 {generator_folder}/update_assembly_version.py", shell=True)
+# python .openapi-generator/update_assembly_version.py
+subprocess.call(f"python {generator_folder}/update_assembly_version.py", shell=True)
 
 
 # remove honeybee files
 time.sleep(1)
-# python3 .openapi-generator/create_interface.py ".openapi-docs/openapi_mapper.json"
+# python .openapi-generator/create_interface.py ".openapi-docs/openapi_mapper.json"
 mapper = os.path.join(doc_folder, 'openapi_mapper.json')
-subprocess.call(f"python3 {generator_folder}/create_interface.py {mapper}", shell=True)
+subprocess.call(f"python {generator_folder}/create_interface.py {mapper}", shell=True)
 
 
 # test to build the project
