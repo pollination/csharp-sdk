@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// Type of items in an array. All the items in an array must be from the same type.
         /// </summary>
         /// <value>Type of items in an array. All the items in an array must be from the same type.</value>
-        [DataMember(Name="items_type", EmitDefaultValue=false)]
+        [DataMember(Name="items_type")]
         public ItemType ItemsType { get; set; } = ItemType.String;
         /// <summary>
         /// Initializes a new instance of the <see cref="StepArrayInput" /> class.
@@ -61,7 +61,7 @@ namespace PollinationSDK
         (
             string name, List<object> value, // Required parameters
             Dictionary<string, string> annotations= default, string description= default, List<object> _default= default, List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> alias= default, bool required = false, Object spec= default, ItemType itemsType= ItemType.String // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description )// BaseClass
         {
             // to ensure "value" is required (not null)
             this.Value = value ?? throw new ArgumentNullException("value is a required property for StepArrayInput and cannot be null");
@@ -79,37 +79,37 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "StepArrayInput";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "StepArrayInput";
 
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
-        [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "value", IsRequired = true)]
         public List<object> Value { get; set; } 
         /// <summary>
         /// Default value to use for an input if a value was not supplied.
         /// </summary>
         /// <value>Default value to use for an input if a value was not supplied.</value>
-        [DataMember(Name = "default", EmitDefaultValue = false)]
+        [DataMember(Name = "default")]
         public List<object> Default { get; set; } 
         /// <summary>
         /// A list of aliases for this input in different platforms.
         /// </summary>
         /// <value>A list of aliases for this input in different platforms.</value>
-        [DataMember(Name = "alias", EmitDefaultValue = false)]
+        [DataMember(Name = "alias")]
         public List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> Alias { get; set; } 
         /// <summary>
         /// A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.
         /// </summary>
         /// <value>A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.</value>
-        [DataMember(Name = "required", EmitDefaultValue = true)]
+        [DataMember(Name = "required")]
         public bool Required { get; set; }  = false;
         /// <summary>
         /// An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.
         /// </summary>
         /// <value>An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.</value>
-        [DataMember(Name = "spec", EmitDefaultValue = false)]
+        [DataMember(Name = "spec")]
         public Object Spec { get; set; } 
 
         /// <summary>
@@ -132,16 +132,16 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("StepArrayInput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
-            sb.Append("  Default: ").Append(Default).Append("\n");
-            sb.Append("  Alias: ").Append(Alias).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
-            sb.Append("  Spec: ").Append(Spec).Append("\n");
-            sb.Append("  ItemsType: ").Append(ItemsType).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Value: ").Append(this.Value).Append("\n");
+            sb.Append("  Default: ").Append(this.Default).Append("\n");
+            sb.Append("  Alias: ").Append(this.Alias).Append("\n");
+            sb.Append("  Required: ").Append(this.Required).Append("\n");
+            sb.Append("  Spec: ").Append(this.Spec).Append("\n");
+            sb.Append("  ItemsType: ").Append(this.ItemsType).Append("\n");
             return sb.ToString();
         }
   
@@ -207,37 +207,20 @@ namespace PollinationSDK
             return base.Equals(input) && 
                 (
                     this.Value == input.Value ||
-                    this.Value != null &&
-                    input.Value != null &&
-                    this.Value.SequenceEqual(input.Value)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Value, input.Value)
+                ) && 
                 (
                     this.Default == input.Default ||
-                    this.Default != null &&
-                    input.Default != null &&
-                    this.Default.SequenceEqual(input.Default)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Default, input.Default)
+                ) && 
                 (
                     this.Alias == input.Alias ||
-                    this.Alias != null &&
-                    input.Alias != null &&
-                    this.Alias.SequenceEqual(input.Alias)
-                ) && base.Equals(input) && 
-                (
-                    this.Required == input.Required ||
-                    (this.Required != null &&
-                    this.Required.Equals(input.Required))
-                ) && base.Equals(input) && 
-                (
-                    this.ItemsType == input.ItemsType ||
-                    (this.ItemsType != null &&
-                    this.ItemsType.Equals(input.ItemsType))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Alias, input.Alias)
+                ) && 
+                    Extension.Equals(this.Required, input.Required) && 
+                    Extension.Equals(this.Spec, input.Spec) && 
+                    Extension.Equals(this.ItemsType, input.ItemsType) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -279,7 +262,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^StepArrayInput$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

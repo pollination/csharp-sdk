@@ -47,11 +47,13 @@ namespace PollinationSDK
         /// <param name="owner">The account that owns the license (required).</param>
         /// <param name="permissions">permissions (required).</param>
         /// <param name="product">The pollination product to which this pool provides access (required).</param>
+        /// <param name="totalActivations">The number of current activations for this license (required).</param>
+        /// <param name="allowedActivations">The number of allowable activations for this license (required).</param>
         /// <param name="accessors">The entities that can access the license though the pool.</param>
         /// <param name="description">The description of the pool.</param>
         public LicensePoolPublic
         (
-           Guid id, string licenseId, AccountPublic owner, UserPermission permissions, string product, // Required parameters
+           Guid id, string licenseId, AccountPublic owner, UserPermission permissions, string product, int totalActivations, int allowedActivations, // Required parameters
            List<Accessor> accessors= default, string description= default // Optional parameters
         ) : base()// BaseClass
         {
@@ -64,6 +66,8 @@ namespace PollinationSDK
             this.Permissions = permissions ?? throw new ArgumentNullException("permissions is a required property for LicensePoolPublic and cannot be null");
             // to ensure "product" is required (not null)
             this.Product = product ?? throw new ArgumentNullException("product is a required property for LicensePoolPublic and cannot be null");
+            this.TotalActivations = totalActivations;
+            this.AllowedActivations = allowedActivations;
             this.Accessors = accessors;
             this.Description = description;
 
@@ -75,49 +79,61 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "LicensePoolPublic";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "LicensePoolPublic";
 
         /// <summary>
         /// The ID of the pool
         /// </summary>
         /// <value>The ID of the pool</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public Guid Id { get; set; } 
         /// <summary>
         /// The ID of the license to which the pool provides access
         /// </summary>
         /// <value>The ID of the license to which the pool provides access</value>
-        [DataMember(Name = "license_id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "license_id", IsRequired = true)]
         public string LicenseId { get; set; } 
         /// <summary>
         /// The account that owns the license
         /// </summary>
         /// <value>The account that owns the license</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "owner", IsRequired = true)]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// Gets or Sets Permissions
         /// </summary>
-        [DataMember(Name = "permissions", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "permissions", IsRequired = true)]
         public UserPermission Permissions { get; set; } 
         /// <summary>
         /// The pollination product to which this pool provides access
         /// </summary>
         /// <value>The pollination product to which this pool provides access</value>
-        [DataMember(Name = "product", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "product", IsRequired = true)]
         public string Product { get; set; } 
+        /// <summary>
+        /// The number of current activations for this license
+        /// </summary>
+        /// <value>The number of current activations for this license</value>
+        [DataMember(Name = "total_activations", IsRequired = true)]
+        public int TotalActivations { get; set; } 
+        /// <summary>
+        /// The number of allowable activations for this license
+        /// </summary>
+        /// <value>The number of allowable activations for this license</value>
+        [DataMember(Name = "allowed_activations", IsRequired = true)]
+        public int AllowedActivations { get; set; } 
         /// <summary>
         /// The entities that can access the license though the pool
         /// </summary>
         /// <value>The entities that can access the license though the pool</value>
-        [DataMember(Name = "accessors", EmitDefaultValue = false)]
+        [DataMember(Name = "accessors")]
         public List<Accessor> Accessors { get; set; } 
         /// <summary>
         /// The description of the pool
         /// </summary>
         /// <value>The description of the pool</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
 
         /// <summary>
@@ -140,14 +156,16 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("LicensePoolPublic:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  LicenseId: ").Append(LicenseId).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Permissions: ").Append(Permissions).Append("\n");
-            sb.Append("  Product: ").Append(Product).Append("\n");
-            sb.Append("  Accessors: ").Append(Accessors).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  LicenseId: ").Append(this.LicenseId).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Permissions: ").Append(this.Permissions).Append("\n");
+            sb.Append("  Product: ").Append(this.Product).Append("\n");
+            sb.Append("  TotalActivations: ").Append(this.TotalActivations).Append("\n");
+            sb.Append("  AllowedActivations: ").Append(this.AllowedActivations).Append("\n");
+            sb.Append("  Accessors: ").Append(this.Accessors).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
             return sb.ToString();
         }
   
@@ -211,47 +229,19 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.LicenseId == input.LicenseId ||
-                    (this.LicenseId != null &&
-                    this.LicenseId.Equals(input.LicenseId))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Permissions == input.Permissions ||
-                    (this.Permissions != null &&
-                    this.Permissions.Equals(input.Permissions))
-                ) && base.Equals(input) && 
-                (
-                    this.Product == input.Product ||
-                    (this.Product != null &&
-                    this.Product.Equals(input.Product))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.LicenseId, input.LicenseId) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Permissions, input.Permissions) && 
+                    Extension.Equals(this.Product, input.Product) && 
+                    Extension.Equals(this.TotalActivations, input.TotalActivations) && 
+                    Extension.Equals(this.AllowedActivations, input.AllowedActivations) && 
                 (
                     this.Accessors == input.Accessors ||
-                    this.Accessors != null &&
-                    input.Accessors != null &&
-                    this.Accessors.SequenceEqual(input.Accessors)
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Accessors, input.Accessors)
+                ) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -273,6 +263,10 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.Permissions.GetHashCode();
                 if (this.Product != null)
                     hashCode = hashCode * 59 + this.Product.GetHashCode();
+                if (this.TotalActivations != null)
+                    hashCode = hashCode * 59 + this.TotalActivations.GetHashCode();
+                if (this.AllowedActivations != null)
+                    hashCode = hashCode * 59 + this.AllowedActivations.GetHashCode();
                 if (this.Accessors != null)
                     hashCode = hashCode * 59 + this.Accessors.GetHashCode();
                 if (this.Description != null)
@@ -295,7 +289,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^LicensePoolPublic$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

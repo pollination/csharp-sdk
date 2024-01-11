@@ -32,7 +32,7 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name="type", EmitDefaultValue=false)]
+        [DataMember(Name="license_type")]
         public LicenseType LicenseType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="LicensePublic" /> class.
@@ -68,9 +68,9 @@ namespace PollinationSDK
         /// <param name="url">A URL to the license used for the package..</param>
         public LicensePublic
         (
-            string id, DateTime createdAt, DateTime updatedAt, string key, bool revoked, bool suspended, int totalActivations, int totalDeactivations, int validity, int allowedActivations, int serverSyncGracePeriod, int serverSyncInterval, int leaseDuration, string productId, List<LicenseMetadata> metadata, LicenseType type, // Required parameters
+            string name, string id, DateTime createdAt, DateTime updatedAt, string key, bool revoked, bool suspended, int totalActivations, int totalDeactivations, int validity, int allowedActivations, int serverSyncGracePeriod, int serverSyncInterval, int leaseDuration, string productId, List<Metadata> metadata, LicenseType type, // Required parameters
             Dictionary<string, string> annotations= default, string url= default, string notes= default// Optional parameters
-        ) : base(annotations: annotations, url: url)// BaseClass
+        ) : base(name: name, annotations: annotations, url: url )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for LicensePublic and cannot be null");
@@ -101,83 +101,83 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// Gets or Sets CreatedAt
         /// </summary>
-        [DataMember(Name = "created_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "created_at", IsRequired = true)]
         public DateTime CreatedAt { get; set; } 
         /// <summary>
         /// Gets or Sets UpdatedAt
         /// </summary>
-        [DataMember(Name = "updated_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "updated_at", IsRequired = true)]
         public DateTime UpdatedAt { get; set; } 
         /// <summary>
         /// The key used to activate this license. Treat this like a password.
         /// </summary>
         /// <value>The key used to activate this license. Treat this like a password.</value>
-        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "key", IsRequired = true)]
         public string Key { get; set; } 
         /// <summary>
         /// Gets or Sets Revoked
         /// </summary>
-        [DataMember(Name = "revoked", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "revoked", IsRequired = true)]
         public bool Revoked { get; set; } 
         /// <summary>
         /// Gets or Sets Suspended
         /// </summary>
-        [DataMember(Name = "suspended", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "suspended", IsRequired = true)]
         public bool Suspended { get; set; } 
         /// <summary>
         /// Gets or Sets TotalActivations
         /// </summary>
-        [DataMember(Name = "total_activations", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "total_activations", IsRequired = true)]
         public int TotalActivations { get; set; } 
         /// <summary>
         /// Gets or Sets TotalDeactivations
         /// </summary>
-        [DataMember(Name = "total_deactivations", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "total_deactivations", IsRequired = true)]
         public int TotalDeactivations { get; set; } 
         /// <summary>
         /// Gets or Sets Validity
         /// </summary>
-        [DataMember(Name = "validity", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "validity", IsRequired = true)]
         public int Validity { get; set; } 
         /// <summary>
         /// Gets or Sets AllowedActivations
         /// </summary>
-        [DataMember(Name = "allowed_activations", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "allowed_activations", IsRequired = true)]
         public int AllowedActivations { get; set; } 
         /// <summary>
         /// Gets or Sets ServerSyncGracePeriod
         /// </summary>
-        [DataMember(Name = "server_sync_grace_period", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "server_sync_grace_period", IsRequired = true)]
         public int ServerSyncGracePeriod { get; set; } 
         /// <summary>
         /// Gets or Sets ServerSyncInterval
         /// </summary>
-        [DataMember(Name = "server_sync_interval", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "server_sync_interval", IsRequired = true)]
         public int ServerSyncInterval { get; set; } 
         /// <summary>
         /// Gets or Sets LeaseDuration
         /// </summary>
-        [DataMember(Name = "lease_duration", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "lease_duration", IsRequired = true)]
         public int LeaseDuration { get; set; } 
         /// <summary>
         /// Gets or Sets ProductId
         /// </summary>
-        [DataMember(Name = "product_id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "product_id", IsRequired = true)]
         public string ProductId { get; set; } 
         /// <summary>
         /// Gets or Sets Metadata
         /// </summary>
-        [DataMember(Name = "metadata", IsRequired = true, EmitDefaultValue = false)]
-        public List<LicenseMetadata> Metadata { get; set; } 
+        [DataMember(Name = "metadata", IsRequired = true)]
+        public List<Metadata> Metadata { get; set; } 
         /// <summary>
         /// Gets or Sets Notes
         /// </summary>
-        [DataMember(Name = "notes", EmitDefaultValue = false)]
+        [DataMember(Name = "notes")]
         public string Notes { get; set; } 
 
         /// <summary>
@@ -200,26 +200,26 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("LicensePublic:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Url: ").Append(Url).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
-            sb.Append("  UpdatedAt: ").Append(UpdatedAt).Append("\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  Revoked: ").Append(Revoked).Append("\n");
-            sb.Append("  Suspended: ").Append(Suspended).Append("\n");
-            sb.Append("  TotalActivations: ").Append(TotalActivations).Append("\n");
-            sb.Append("  TotalDeactivations: ").Append(TotalDeactivations).Append("\n");
-            sb.Append("  Validity: ").Append(Validity).Append("\n");
-            sb.Append("  AllowedActivations: ").Append(AllowedActivations).Append("\n");
-            sb.Append("  ServerSyncGracePeriod: ").Append(ServerSyncGracePeriod).Append("\n");
-            sb.Append("  ServerSyncInterval: ").Append(ServerSyncInterval).Append("\n");
-            sb.Append("  LeaseDuration: ").Append(LeaseDuration).Append("\n");
-            sb.Append("  ProductId: ").Append(ProductId).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  Notes: ").Append(Notes).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Url: ").Append(this.Url).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  CreatedAt: ").Append(this.CreatedAt).Append("\n");
+            sb.Append("  UpdatedAt: ").Append(this.UpdatedAt).Append("\n");
+            sb.Append("  Key: ").Append(this.Key).Append("\n");
+            sb.Append("  Revoked: ").Append(this.Revoked).Append("\n");
+            sb.Append("  Suspended: ").Append(this.Suspended).Append("\n");
+            sb.Append("  TotalActivations: ").Append(this.TotalActivations).Append("\n");
+            sb.Append("  TotalDeactivations: ").Append(this.TotalDeactivations).Append("\n");
+            sb.Append("  Validity: ").Append(this.Validity).Append("\n");
+            sb.Append("  AllowedActivations: ").Append(this.AllowedActivations).Append("\n");
+            sb.Append("  ServerSyncGracePeriod: ").Append(this.ServerSyncGracePeriod).Append("\n");
+            sb.Append("  ServerSyncInterval: ").Append(this.ServerSyncInterval).Append("\n");
+            sb.Append("  LeaseDuration: ").Append(this.LeaseDuration).Append("\n");
+            sb.Append("  ProductId: ").Append(this.ProductId).Append("\n");
+            sb.Append("  Metadata: ").Append(this.Metadata).Append("\n");
+            sb.Append("  Notes: ").Append(this.Notes).Append("\n");
             return sb.ToString();
         }
   
@@ -283,92 +283,26 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.CreatedAt == input.CreatedAt ||
-                    (this.CreatedAt != null &&
-                    this.CreatedAt.Equals(input.CreatedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.UpdatedAt == input.UpdatedAt ||
-                    (this.UpdatedAt != null &&
-                    this.UpdatedAt.Equals(input.UpdatedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
-                ) && base.Equals(input) && 
-                (
-                    this.Revoked == input.Revoked ||
-                    (this.Revoked != null &&
-                    this.Revoked.Equals(input.Revoked))
-                ) && base.Equals(input) && 
-                (
-                    this.Suspended == input.Suspended ||
-                    (this.Suspended != null &&
-                    this.Suspended.Equals(input.Suspended))
-                ) && base.Equals(input) && 
-                (
-                    this.TotalActivations == input.TotalActivations ||
-                    (this.TotalActivations != null &&
-                    this.TotalActivations.Equals(input.TotalActivations))
-                ) && base.Equals(input) && 
-                (
-                    this.TotalDeactivations == input.TotalDeactivations ||
-                    (this.TotalDeactivations != null &&
-                    this.TotalDeactivations.Equals(input.TotalDeactivations))
-                ) && base.Equals(input) && 
-                (
-                    this.Validity == input.Validity ||
-                    (this.Validity != null &&
-                    this.Validity.Equals(input.Validity))
-                ) && base.Equals(input) && 
-                (
-                    this.AllowedActivations == input.AllowedActivations ||
-                    (this.AllowedActivations != null &&
-                    this.AllowedActivations.Equals(input.AllowedActivations))
-                ) && base.Equals(input) && 
-                (
-                    this.ServerSyncGracePeriod == input.ServerSyncGracePeriod ||
-                    (this.ServerSyncGracePeriod != null &&
-                    this.ServerSyncGracePeriod.Equals(input.ServerSyncGracePeriod))
-                ) && base.Equals(input) && 
-                (
-                    this.ServerSyncInterval == input.ServerSyncInterval ||
-                    (this.ServerSyncInterval != null &&
-                    this.ServerSyncInterval.Equals(input.ServerSyncInterval))
-                ) && base.Equals(input) && 
-                (
-                    this.LeaseDuration == input.LeaseDuration ||
-                    (this.LeaseDuration != null &&
-                    this.LeaseDuration.Equals(input.LeaseDuration))
-                ) && base.Equals(input) && 
-                (
-                    this.ProductId == input.ProductId ||
-                    (this.ProductId != null &&
-                    this.ProductId.Equals(input.ProductId))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.CreatedAt, input.CreatedAt) && 
+                    Extension.Equals(this.UpdatedAt, input.UpdatedAt) && 
+                    Extension.Equals(this.Key, input.Key) && 
+                    Extension.Equals(this.Revoked, input.Revoked) && 
+                    Extension.Equals(this.Suspended, input.Suspended) && 
+                    Extension.Equals(this.TotalActivations, input.TotalActivations) && 
+                    Extension.Equals(this.TotalDeactivations, input.TotalDeactivations) && 
+                    Extension.Equals(this.Validity, input.Validity) && 
+                    Extension.Equals(this.AllowedActivations, input.AllowedActivations) && 
+                    Extension.Equals(this.ServerSyncGracePeriod, input.ServerSyncGracePeriod) && 
+                    Extension.Equals(this.ServerSyncInterval, input.ServerSyncInterval) && 
+                    Extension.Equals(this.LeaseDuration, input.LeaseDuration) && 
+                    Extension.Equals(this.ProductId, input.ProductId) && 
                 (
                     this.Metadata == input.Metadata ||
-                    this.Metadata != null &&
-                    input.Metadata != null &&
-                    this.Metadata.SequenceEqual(input.Metadata)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
-                (
-                    this.Notes == input.Notes ||
-                    (this.Notes != null &&
-                    this.Notes.Equals(input.Notes))
-                );
+                    Extension.AllEquals(this.Metadata, input.Metadata)
+                ) && 
+                    Extension.Equals(this.Type, input.Type) && 
+                    Extension.Equals(this.Notes, input.Notes);
         }
 
         /// <summary>

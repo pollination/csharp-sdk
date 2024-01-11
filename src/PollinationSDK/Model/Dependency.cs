@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// The kind of dependency. It can be a recipe or an plugin.
         /// </summary>
         /// <value>The kind of dependency. It can be a recipe or an plugin.</value>
-        [DataMember(Name="kind", EmitDefaultValue=false)]
+        [DataMember(Name="kind")]
         public DependencyKind Kind { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="Dependency" /> class.
@@ -80,44 +80,44 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Dependency";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Dependency";
 
         /// <summary>
         /// Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.
         /// </summary>
         /// <value>Workflow name. This name should be unique among all the resources in your resource. Use an alias if this is not the case.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// Tag of the resource.
         /// </summary>
         /// <value>Tag of the resource.</value>
-        [DataMember(Name = "tag", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "tag", IsRequired = true)]
         public string Tag { get; set; } 
         /// <summary>
         /// URL to a repository where this resource can be found.
         /// </summary>
         /// <value>URL to a repository where this resource can be found.</value>
-        [DataMember(Name = "source", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "source", IsRequired = true)]
         public string Source { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The digest hash of the dependency when retrieved from its source. This is locked when the resource dependencies are downloaded.
         /// </summary>
         /// <value>The digest hash of the dependency when retrieved from its source. This is locked when the resource dependencies are downloaded.</value>
-        [DataMember(Name = "hash", EmitDefaultValue = false)]
+        [DataMember(Name = "hash")]
         public string Hash { get; set; } 
         /// <summary>
         /// An optional alias to refer to this dependency. Useful if the name is already used somewhere else.
         /// </summary>
         /// <value>An optional alias to refer to this dependency. Useful if the name is already used somewhere else.</value>
-        [DataMember(Name = "alias", EmitDefaultValue = false)]
+        [DataMember(Name = "alias")]
         public string Alias { get; set; } 
 
         /// <summary>
@@ -140,14 +140,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Dependency:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Kind: ").Append(Kind).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Tag: ").Append(Tag).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Hash: ").Append(Hash).Append("\n");
-            sb.Append("  Alias: ").Append(Alias).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Kind: ").Append(this.Kind).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Tag: ").Append(this.Tag).Append("\n");
+            sb.Append("  Source: ").Append(this.Source).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Hash: ").Append(this.Hash).Append("\n");
+            sb.Append("  Alias: ").Append(this.Alias).Append("\n");
             return sb.ToString();
         }
   
@@ -211,47 +211,17 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Kind == input.Kind ||
-                    (this.Kind != null &&
-                    this.Kind.Equals(input.Kind))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Tag == input.Tag ||
-                    (this.Tag != null &&
-                    this.Tag.Equals(input.Tag))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Kind, input.Kind) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Tag, input.Tag) && 
+                    Extension.Equals(this.Source, input.Source) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Hash == input.Hash ||
-                    (this.Hash != null &&
-                    this.Hash.Equals(input.Hash))
-                ) && base.Equals(input) && 
-                (
-                    this.Alias == input.Alias ||
-                    (this.Alias != null &&
-                    this.Alias.Equals(input.Alias))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Hash, input.Hash) && 
+                    Extension.Equals(this.Alias, input.Alias);
         }
 
         /// <summary>
@@ -295,7 +265,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Dependency$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

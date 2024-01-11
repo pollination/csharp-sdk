@@ -300,7 +300,7 @@ namespace Example
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
-            var type = type_example;  // string |  (optional)  (default to "Body_post_plugin__owner__plugins_post")
+            var type = type_example;  // string |  (optional)  (default to "Body_cython_function_or_method__owner__plugins_post")
             var package = BINARY_DATA_HERE;  // System.IO.Stream |  (optional) 
 
             try
@@ -326,7 +326,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **owner** | **string**|  | 
- **type** | **string**|  | [optional] [default to &quot;Body_post_plugin__owner__plugins_post&quot;]
+ **type** | **string**|  | [optional] [default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;]
  **package** | **System.IO.Stream**|  | [optional] 
 
 ### Return type

@@ -51,7 +51,7 @@ namespace PollinationSDK
         (
             string name, string path, // Required parameters
             Dictionary<string, string> annotations= default, string description= default, bool required = true // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description )// BaseClass
         {
             // to ensure "path" is required (not null)
             this.Path = path ?? throw new ArgumentNullException("path is a required property for PathOutput and cannot be null");
@@ -65,20 +65,20 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "PathOutput";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "PathOutput";
 
         /// <summary>
         /// Path to the output artifact relative to where the function command is executed.
         /// </summary>
         /// <value>Path to the output artifact relative to where the function command is executed.</value>
-        [DataMember(Name = "path", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "path", IsRequired = true)]
         public string Path { get; set; } 
         /// <summary>
         /// A boolean to indicate if an artifact output is required. A False value makes the artifact optional.
         /// </summary>
         /// <value>A boolean to indicate if an artifact output is required. A False value makes the artifact optional.</value>
-        [DataMember(Name = "required", EmitDefaultValue = true)]
+        [DataMember(Name = "required")]
         public bool Required { get; set; }  = true;
 
         /// <summary>
@@ -101,12 +101,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("PathOutput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Path: ").Append(Path).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Path: ").Append(this.Path).Append("\n");
+            sb.Append("  Required: ").Append(this.Required).Append("\n");
             return sb.ToString();
         }
   
@@ -170,21 +170,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Path == input.Path ||
-                    (this.Path != null &&
-                    this.Path.Equals(input.Path))
-                ) && base.Equals(input) && 
-                (
-                    this.Required == input.Required ||
-                    (this.Required != null &&
-                    this.Required.Equals(input.Required))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Path, input.Path) && 
+                    Extension.Equals(this.Required, input.Required) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -228,7 +216,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^PathOutput$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

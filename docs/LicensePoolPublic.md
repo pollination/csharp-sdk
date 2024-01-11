@@ -10,6 +10,8 @@ Name | Type | Description | Notes
 **Owner** | [**AccountPublic**](AccountPublic.md) | The account that owns the license | 
 **Permissions** | [**UserPermission**](UserPermission.md) |  | 
 **Product** | **string** | The pollination product to which this pool provides access | 
+**TotalActivations** | **int** | The number of current activations for this license | 
+**AllowedActivations** | **int** | The number of allowable activations for this license | 
 **Accessors** | [**List&lt;Accessor&gt;**](Accessor.md) | The entities that can access the license though the pool | [optional] 
 **Description** | **string** | The description of the pool | [optional] 
 **Type** | **string** |  | [optional] [readonly] [default to "LicensePoolPublic"]

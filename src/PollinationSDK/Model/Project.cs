@@ -54,7 +54,7 @@ namespace PollinationSDK
         (
             string name, string id, AccountPublic owner, UserPermission permissions, string slug, // Required parameters
             string description = "", bool _public = true, Usage usage= default // Optional parameters
-        ) : base(name: name, description: description, _public: _public)// BaseClass
+        ) : base(name: name, description: description, _public: _public )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Project and cannot be null");
@@ -74,37 +74,37 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Project";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Project";
 
         /// <summary>
         /// The project ID
         /// </summary>
         /// <value>The project ID</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// The project owner
         /// </summary>
         /// <value>The project owner</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "owner", IsRequired = true)]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// Gets or Sets Permissions
         /// </summary>
-        [DataMember(Name = "permissions", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "permissions", IsRequired = true)]
         public UserPermission Permissions { get; set; } 
         /// <summary>
         /// The project name in slug format
         /// </summary>
         /// <value>The project name in slug format</value>
-        [DataMember(Name = "slug", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "slug", IsRequired = true)]
         public string Slug { get; set; } 
         /// <summary>
         /// The resource consumption of this project
         /// </summary>
         /// <value>The resource consumption of this project</value>
-        [DataMember(Name = "usage", EmitDefaultValue = false)]
+        [DataMember(Name = "usage")]
         public Usage Usage { get; set; } 
 
         /// <summary>
@@ -127,15 +127,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Project:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Permissions: ").Append(Permissions).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
-            sb.Append("  Usage: ").Append(Usage).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Public: ").Append(this.Public).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Permissions: ").Append(this.Permissions).Append("\n");
+            sb.Append("  Slug: ").Append(this.Slug).Append("\n");
+            sb.Append("  Usage: ").Append(this.Usage).Append("\n");
             return sb.ToString();
         }
   
@@ -199,36 +199,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Permissions == input.Permissions ||
-                    (this.Permissions != null &&
-                    this.Permissions.Equals(input.Permissions))
-                ) && base.Equals(input) && 
-                (
-                    this.Slug == input.Slug ||
-                    (this.Slug != null &&
-                    this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
-                (
-                    this.Usage == input.Usage ||
-                    (this.Usage != null &&
-                    this.Usage.Equals(input.Usage))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Permissions, input.Permissions) && 
+                    Extension.Equals(this.Slug, input.Slug) && 
+                    Extension.Equals(this.Usage, input.Usage) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -268,7 +244,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Project$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

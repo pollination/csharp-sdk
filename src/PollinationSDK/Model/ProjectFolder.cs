@@ -36,9 +36,9 @@ namespace PollinationSDK
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         public ProjectFolder
         (
-           // Required parameters
+            // Required parameters
             Dictionary<string, string> annotations= default, string path= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+        ) : base(annotations: annotations )// BaseClass
         {
             this.Path = path;
 
@@ -50,14 +50,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "ProjectFolder";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "ProjectFolder";
 
         /// <summary>
         /// The path to a folder where files and folders can be sourced. For a local filesystem this can be \&quot;C:\\Users\\me\\jobs\\test\&quot;.
         /// </summary>
         /// <value>The path to a folder where files and folders can be sourced. For a local filesystem this can be \&quot;C:\\Users\\me\\jobs\\test\&quot;.</value>
-        [DataMember(Name = "path", EmitDefaultValue = false)]
+        [DataMember(Name = "path")]
         public string Path { get; set; } 
 
         /// <summary>
@@ -80,9 +80,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ProjectFolder:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Path: ").Append(Path).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Path: ").Append(this.Path).Append("\n");
             return sb.ToString();
         }
   
@@ -146,16 +146,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Path == input.Path ||
-                    (this.Path != null &&
-                    this.Path.Equals(input.Path))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Path, input.Path) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -187,7 +179,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^ProjectFolder$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

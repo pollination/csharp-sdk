@@ -30,6 +30,12 @@ namespace PollinationSDK
     public partial class TemplateFunction : OpenAPIGenBaseModel, IEquatable<TemplateFunction>, IValidatableObject
     {
         /// <summary>
+        /// Programming language of the script. Currently only Python is supported.
+        /// </summary>
+        /// <value>Programming language of the script. Currently only Python is supported.</value>
+        [DataMember(Name="language")]
+        public ScriptingLanguages Language { get; set; } = ScriptingLanguages.Python;
+        /// <summary>
         /// Initializes a new instance of the <see cref="TemplateFunction" /> class.
         /// </summary>
         [JsonConstructorAttribute]
@@ -43,28 +49,31 @@ namespace PollinationSDK
         /// Initializes a new instance of the <see cref="TemplateFunction" /> class.
         /// </summary>
         /// <param name="name">Function name. Must be unique within a plugin. (required).</param>
-        /// <param name="command">Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using | (required).</param>
         /// <param name="config">The plugin config to use for this function (required).</param>
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         /// <param name="inputs">Input arguments for this function..</param>
         /// <param name="outputs">List of output arguments..</param>
         /// <param name="description">Function description. A short human readable description for this function..</param>
+        /// <param name="command">Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using |.</param>
+        /// <param name="language">Programming language of the script. Currently only Python is supported..</param>
+        /// <param name="source">Source contains the source code of the script to execute..</param>
         public TemplateFunction
         (
-           string name, string command, PluginConfig config, // Required parameters
-           Dictionary<string, string> annotations= default, List<AnyOf<FunctionStringInput,FunctionIntegerInput,FunctionNumberInput,FunctionBooleanInput,FunctionFolderInput,FunctionFileInput,FunctionPathInput,FunctionArrayInput,FunctionJSONObjectInput>> inputs= default, List<AnyOf<FunctionStringOutput,FunctionIntegerOutput,FunctionNumberOutput,FunctionBooleanOutput,FunctionFolderOutput,FunctionFileOutput,FunctionPathOutput,FunctionArrayOutput,FunctionJSONObjectOutput>> outputs= default, string description= default // Optional parameters
+           string name, PluginConfig config, // Required parameters
+           Dictionary<string, string> annotations= default, List<AnyOf<FunctionStringInput,FunctionIntegerInput,FunctionNumberInput,FunctionBooleanInput,FunctionFolderInput,FunctionFileInput,FunctionPathInput,FunctionArrayInput,FunctionJSONObjectInput>> inputs= default, List<AnyOf<FunctionStringOutput,FunctionIntegerOutput,FunctionNumberOutput,FunctionBooleanOutput,FunctionFolderOutput,FunctionFileOutput,FunctionPathOutput,FunctionArrayOutput,FunctionJSONObjectOutput>> outputs= default, string description= default, string command= default, ScriptingLanguages language= ScriptingLanguages.Python, string source= default // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for TemplateFunction and cannot be null");
-            // to ensure "command" is required (not null)
-            this.Command = command ?? throw new ArgumentNullException("command is a required property for TemplateFunction and cannot be null");
             // to ensure "config" is required (not null)
             this.Config = config ?? throw new ArgumentNullException("config is a required property for TemplateFunction and cannot be null");
             this.Annotations = annotations;
             this.Inputs = inputs;
             this.Outputs = outputs;
             this.Description = description;
+            this.Command = command;
+            this.Language = language;
+            this.Source = source;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "TemplateFunction";
@@ -74,51 +83,57 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "TemplateFunction";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "TemplateFunction";
 
         /// <summary>
         /// Function name. Must be unique within a plugin.
         /// </summary>
         /// <value>Function name. Must be unique within a plugin.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
-        /// <summary>
-        /// Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using |
-        /// </summary>
-        /// <value>Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using |</value>
-        [DataMember(Name = "command", IsRequired = true, EmitDefaultValue = false)]
-        public string Command { get; set; } 
         /// <summary>
         /// The plugin config to use for this function
         /// </summary>
         /// <value>The plugin config to use for this function</value>
-        [DataMember(Name = "config", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "config", IsRequired = true)]
         public PluginConfig Config { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Input arguments for this function.
         /// </summary>
         /// <value>Input arguments for this function.</value>
-        [DataMember(Name = "inputs", EmitDefaultValue = false)]
+        [DataMember(Name = "inputs")]
         public List<AnyOf<FunctionStringInput,FunctionIntegerInput,FunctionNumberInput,FunctionBooleanInput,FunctionFolderInput,FunctionFileInput,FunctionPathInput,FunctionArrayInput,FunctionJSONObjectInput>> Inputs { get; set; } 
         /// <summary>
         /// List of output arguments.
         /// </summary>
         /// <value>List of output arguments.</value>
-        [DataMember(Name = "outputs", EmitDefaultValue = false)]
+        [DataMember(Name = "outputs")]
         public List<AnyOf<FunctionStringOutput,FunctionIntegerOutput,FunctionNumberOutput,FunctionBooleanOutput,FunctionFolderOutput,FunctionFileOutput,FunctionPathOutput,FunctionArrayOutput,FunctionJSONObjectOutput>> Outputs { get; set; } 
         /// <summary>
         /// Function description. A short human readable description for this function.
         /// </summary>
         /// <value>Function description. A short human readable description for this function.</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
+        /// <summary>
+        /// Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using |
+        /// </summary>
+        /// <value>Full shell command for this function. Each function accepts only one command. The command will be executed as a shell command in plugin. For running several commands after each other use &amp;&amp; between the commands or pipe data from one to another using |</value>
+        [DataMember(Name = "command")]
+        public string Command { get; set; } 
+        /// <summary>
+        /// Source contains the source code of the script to execute.
+        /// </summary>
+        /// <value>Source contains the source code of the script to execute.</value>
+        [DataMember(Name = "source")]
+        public string Source { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -140,14 +155,16 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("TemplateFunction:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Command: ").Append(Command).Append("\n");
-            sb.Append("  Config: ").Append(Config).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Config: ").Append(this.Config).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Inputs: ").Append(this.Inputs).Append("\n");
+            sb.Append("  Outputs: ").Append(this.Outputs).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Command: ").Append(this.Command).Append("\n");
+            sb.Append("  Language: ").Append(this.Language).Append("\n");
+            sb.Append("  Source: ").Append(this.Source).Append("\n");
             return sb.ToString();
         }
   
@@ -211,49 +228,25 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Command == input.Command ||
-                    (this.Command != null &&
-                    this.Command.Equals(input.Command))
-                ) && base.Equals(input) && 
-                (
-                    this.Config == input.Config ||
-                    (this.Config != null &&
-                    this.Config.Equals(input.Config))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Config, input.Config) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
                 (
                     this.Inputs == input.Inputs ||
-                    this.Inputs != null &&
-                    input.Inputs != null &&
-                    this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Inputs, input.Inputs)
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
-                    this.Outputs != null &&
-                    input.Outputs != null &&
-                    this.Outputs.SequenceEqual(input.Outputs)
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Outputs, input.Outputs)
+                ) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Command, input.Command) && 
+                    Extension.Equals(this.Language, input.Language) && 
+                    Extension.Equals(this.Source, input.Source) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -267,8 +260,6 @@ namespace PollinationSDK
                 int hashCode = base.GetHashCode();
                 if (this.Name != null)
                     hashCode = hashCode * 59 + this.Name.GetHashCode();
-                if (this.Command != null)
-                    hashCode = hashCode * 59 + this.Command.GetHashCode();
                 if (this.Config != null)
                     hashCode = hashCode * 59 + this.Config.GetHashCode();
                 if (this.Annotations != null)
@@ -279,6 +270,12 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.Outputs.GetHashCode();
                 if (this.Description != null)
                     hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Command != null)
+                    hashCode = hashCode * 59 + this.Command.GetHashCode();
+                if (this.Language != null)
+                    hashCode = hashCode * 59 + this.Language.GetHashCode();
+                if (this.Source != null)
+                    hashCode = hashCode * 59 + this.Source.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -297,7 +294,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^TemplateFunction$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

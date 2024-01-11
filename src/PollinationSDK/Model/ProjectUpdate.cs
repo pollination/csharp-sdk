@@ -37,7 +37,7 @@ namespace PollinationSDK
         /// <param name="_public">Whether or not a project is publicly viewable.</param>
         public ProjectUpdate
         (
-           // Required parameters
+            // Required parameters
            string name= default, string description= default, bool _public= default // Optional parameters
         ) : base()// BaseClass
         {
@@ -53,26 +53,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "ProjectUpdate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "ProjectUpdate";
 
         /// <summary>
         /// The name of the project. Must be unique to a given owner
         /// </summary>
         /// <value>The name of the project. Must be unique to a given owner</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name")]
         public string Name { get; set; } 
         /// <summary>
         /// A description of the project
         /// </summary>
         /// <value>A description of the project</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
         /// <summary>
         /// Whether or not a project is publicly viewable
         /// </summary>
         /// <value>Whether or not a project is publicly viewable</value>
-        [DataMember(Name = "public", EmitDefaultValue = false)]
+        [DataMember(Name = "public")]
         public bool Public { get; set; } 
 
         /// <summary>
@@ -95,10 +95,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ProjectUpdate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Public: ").Append(this.Public).Append("\n");
             return sb.ToString();
         }
   
@@ -162,26 +162,10 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Public == input.Public ||
-                    (this.Public != null &&
-                    this.Public.Equals(input.Public))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Public, input.Public) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -217,7 +201,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^ProjectUpdate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

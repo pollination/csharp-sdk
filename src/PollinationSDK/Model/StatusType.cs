@@ -51,10 +51,16 @@ namespace PollinationSDK
         Loop = 3,
 
         /// <summary>
+        /// Enum Container for value: Container
+        /// </summary>
+        [EnumMember(Value = "Container")]
+        Container = 4,
+
+        /// <summary>
         /// Enum Unknown for value: Unknown
         /// </summary>
         [EnumMember(Value = "Unknown")]
-        Unknown = 4
+        Unknown = 5
 
     }
 

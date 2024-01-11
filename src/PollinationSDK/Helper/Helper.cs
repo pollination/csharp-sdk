@@ -537,7 +537,7 @@ namespace PollinationSDK
             try
             {
                 var api = new PollinationSDK.Api.RunsApi();
-                var files = api.ListRunArtifacts(simu.ProjectOwner, simu.ProjectName, simu.RunID, page: 1, perPage: 100);
+                var files = api.ListRunArtifacts(simu.ProjectOwner, simu.ProjectName, simu.RunID, page: 1, perPage: 100).Resources;
                 var found = files.FirstOrDefault(_ => _.FileName == artifact.Name);
                 if (found == null) throw new ArgumentException($"{artifact.Name} doesn't exist in {simu.RunSlug}");
 
@@ -570,7 +570,7 @@ namespace PollinationSDK
                 else if (artfact.Type == "folder")
                 {
                     dir = Path.Combine(dir, artfact.FileName);
-                    var files = api.ListRunArtifacts(owner, projName, simuID, page: 1, perPage: 100, path: new[] { artifact.Name }.ToList());
+                    var files = api.ListRunArtifacts(owner, projName, simuID, page: 1, perPage: 100, path: new[] { artifact.Name }.ToList()).Resources;
                     foreach (var item in files)
                     {
                         // get all files in folder

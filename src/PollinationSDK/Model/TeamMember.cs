@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// The role the user has within the team
         /// </summary>
         /// <value>The role the user has within the team</value>
-        [DataMember(Name="role", EmitDefaultValue=false)]
+        [DataMember(Name="role")]
         public TeamRoleEnum Role { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="TeamMember" /> class.
@@ -53,7 +53,7 @@ namespace PollinationSDK
         public TeamMember
         (
            UserPublic user, TeamRoleEnum role// Required parameters
-           // Optional parameters
+            // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "user" is required (not null)
@@ -68,14 +68,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "TeamMember";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "TeamMember";
 
         /// <summary>
         /// The team member
         /// </summary>
         /// <value>The team member</value>
-        [DataMember(Name = "user", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "user", IsRequired = true)]
         public UserPublic User { get; set; } 
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("TeamMember:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  User: ").Append(User).Append("\n");
-            sb.Append("  Role: ").Append(Role).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  User: ").Append(this.User).Append("\n");
+            sb.Append("  Role: ").Append(this.Role).Append("\n");
             return sb.ToString();
         }
   
@@ -164,21 +164,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.User == input.User ||
-                    (this.User != null &&
-                    this.User.Equals(input.User))
-                ) && base.Equals(input) && 
-                (
-                    this.Role == input.Role ||
-                    (this.Role != null &&
-                    this.Role.Equals(input.Role))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.User, input.User) && 
+                    Extension.Equals(this.Role, input.Role) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -212,7 +200,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^TeamMember$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

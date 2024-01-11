@@ -6,6 +6,7 @@ Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CancelRun**](RunsApi.md#cancelrun) | **PUT** /projects/{owner}/{name}/runs/{run_id}/cancel | Cancel a run
 [**DownloadRunArtifact**](RunsApi.md#downloadrunartifact) | **GET** /projects/{owner}/{name}/runs/{run_id}/artifacts/download | Download an artifact from the run folder
+[**GetAllRunSteps**](RunsApi.md#getallrunsteps) | **GET** /projects/{owner}/{name}/runs/{run_id}/all-steps | Query the steps of a run
 [**GetRun**](RunsApi.md#getrun) | **GET** /projects/{owner}/{name}/runs/{run_id} | Get a Run
 [**GetRunOutput**](RunsApi.md#getrunoutput) | **GET** /projects/{owner}/{name}/runs/{run_id}/outputs/{output_name} | Get run output by name
 [**GetRunStepLogs**](RunsApi.md#getrunsteplogs) | **GET** /projects/{owner}/{name}/runs/{run_id}/steps/{step_id}/logs | Get the logs of a specific step of the run
@@ -13,12 +14,13 @@ Method | HTTP request | Description
 [**ListRunArtifacts**](RunsApi.md#listrunartifacts) | **GET** /projects/{owner}/{name}/runs/{run_id}/artifacts | List artifacts in a run folder
 [**ListRuns**](RunsApi.md#listruns) | **GET** /projects/{owner}/{name}/runs | List runs
 [**QueryResults**](RunsApi.md#queryresults) | **GET** /projects/{owner}/{name}/results | Query run results
+[**RetryRun**](RunsApi.md#retryrun) | **PUT** /projects/{owner}/{name}/runs/{run_id}/retry | Retry a run
 
 
 
 ## CancelRun
 
-> AnyType CancelRun (string owner, string name, string runId)
+> Run CancelRun (string owner, string name, string runId)
 
 Cancel a run
 
@@ -55,7 +57,7 @@ namespace Example
             try
             {
                 // Cancel a run
-                AnyType result = apiInstance.CancelRun(owner, name, runId);
+                Run result = apiInstance.CancelRun(owner, name, runId);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -80,7 +82,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**AnyType**](AnyType.md)
+[**Run**](Run.md)
 
 ### Authorization
 
@@ -188,6 +190,93 @@ Name | Type | Description  | Notes
 | **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
 | **404** | Not found |  -  |
+| **422** | Validation Error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## GetAllRunSteps
+
+> List&lt;StepStatus&gt; GetAllRunSteps (string owner, string name, string runId)
+
+Query the steps of a run
+
+list all run steps
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using PollinationSDK.Api;
+using PollinationSDK.Client;
+using PollinationSDK.Model;
+
+namespace Example
+{
+    public class GetAllRunStepsExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost";
+            // Configure API key authorization: APIKeyAuth
+            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
+            // Configure HTTP bearer authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+
+            var apiInstance = new RunsApi(Configuration.Default);
+            var owner = owner_example;  // string | 
+            var name = name_example;  // string | 
+            var runId = runId_example;  // string | 
+
+            try
+            {
+                // Query the steps of a run
+                List<StepStatus> result = apiInstance.GetAllRunSteps(owner, name, runId);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling RunsApi.GetAllRunSteps: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **owner** | **string**|  | 
+ **name** | **string**|  | 
+ **runId** | **string**|  | 
+
+### Return type
+
+[**List&lt;StepStatus&gt;**](StepStatus.md)
+
+### Authorization
+
+[APIKeyAuth](../README.md#APIKeyAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Retrieved |  -  |
 | **422** | Validation Error |  -  |
 
 [[Back to top]](#)
@@ -566,7 +655,7 @@ Name | Type | Description  | Notes
 
 ## ListRunArtifacts
 
-> List&lt;FileMeta&gt; ListRunArtifacts (string owner, string name, string runId, List<string> path = null, int? page = null, int? perPage = null)
+> FileMetaList ListRunArtifacts (string owner, string name, string runId, List<string> path = null, int? page = null, int? perPage = null)
 
 List artifacts in a run folder
 
@@ -606,7 +695,7 @@ namespace Example
             try
             {
                 // List artifacts in a run folder
-                List<FileMeta> result = apiInstance.ListRunArtifacts(owner, name, runId, path, page, perPage);
+                FileMetaList result = apiInstance.ListRunArtifacts(owner, name, runId, path, page, perPage);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -634,7 +723,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List&lt;FileMeta&gt;**](FileMeta.md)
+[**FileMetaList**](FileMetaList.md)
 
 ### Authorization
 
@@ -835,6 +924,95 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
+| **422** | Validation Error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## RetryRun
+
+> Run RetryRun (string owner, string name, string runId, RetryConfig retryConfig)
+
+Retry a run
+
+Retry a run.
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using PollinationSDK.Api;
+using PollinationSDK.Client;
+using PollinationSDK.Model;
+
+namespace Example
+{
+    public class RetryRunExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost";
+            // Configure API key authorization: APIKeyAuth
+            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
+            // Configure HTTP bearer authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+
+            var apiInstance = new RunsApi(Configuration.Default);
+            var owner = owner_example;  // string | 
+            var name = name_example;  // string | 
+            var runId = runId_example;  // string | 
+            var retryConfig = new RetryConfig(); // RetryConfig | 
+
+            try
+            {
+                // Retry a run
+                Run result = apiInstance.RetryRun(owner, name, runId, retryConfig);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling RunsApi.RetryRun: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **owner** | **string**|  | 
+ **name** | **string**|  | 
+ **runId** | **string**|  | 
+ **retryConfig** | [**RetryConfig**](RetryConfig.md)|  | 
+
+### Return type
+
+[**Run**](Run.md)
+
+### Authorization
+
+[APIKeyAuth](../README.md#APIKeyAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+- **Content-Type**: application/json
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **202** | Accepted |  -  |
 | **422** | Validation Error |  -  |
 
 [[Back to top]](#)

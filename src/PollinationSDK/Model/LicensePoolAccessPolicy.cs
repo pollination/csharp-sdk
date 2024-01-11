@@ -33,8 +33,8 @@ namespace PollinationSDK
         /// Accessors may only have read access
         /// </summary>
         /// <value>Accessors may only have read access</value>
-        [DataMember(Name="permission", EmitDefaultValue=false)]
-        public Permission Permission { get; set; }   
+        [DataMember(Name="permission")]
+        public Permission Permission { get; set; } = Permission.Read;
         /// <summary>
         /// Initializes a new instance of the <see cref="LicensePoolAccessPolicy" /> class.
         /// </summary>
@@ -53,7 +53,7 @@ namespace PollinationSDK
         public LicensePoolAccessPolicy
         (
            PolicySubject subject, // Required parameters
-           Permission permission= default // Optional parameters
+           Permission permission= Permission.Read // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "subject" is required (not null)
@@ -68,14 +68,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "LicensePoolAccessPolicy";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "LicensePoolAccessPolicy";
 
         /// <summary>
         /// The subject of the access policy
         /// </summary>
         /// <value>The subject of the access policy</value>
-        [DataMember(Name = "subject", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "subject", IsRequired = true)]
         public PolicySubject Subject { get; set; } 
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("LicensePoolAccessPolicy:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Subject: ").Append(Subject).Append("\n");
-            sb.Append("  Permission: ").Append(Permission).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Subject: ").Append(this.Subject).Append("\n");
+            sb.Append("  Permission: ").Append(this.Permission).Append("\n");
             return sb.ToString();
         }
   
@@ -164,21 +164,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Subject == input.Subject ||
-                    (this.Subject != null &&
-                    this.Subject.Equals(input.Subject))
-                ) && base.Equals(input) && 
-                (
-                    this.Permission == input.Permission ||
-                    (this.Permission != null &&
-                    this.Permission.Equals(input.Permission))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Subject, input.Subject) && 
+                    Extension.Equals(this.Permission, input.Permission) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -212,7 +200,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^LicensePoolAccessPolicy$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

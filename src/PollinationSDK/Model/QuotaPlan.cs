@@ -24,11 +24,17 @@ using System.ComponentModel.DataAnnotations;
 namespace PollinationSDK
 {
     /// <summary>
-    /// A quota plan
+    /// QuotaPlan
     /// </summary>
     [DataContract(Name = "QuotaPlan")]
     public partial class QuotaPlan : OpenAPIGenBaseModel, IEquatable<QuotaPlan>, IValidatableObject
     {
+        /// <summary>
+        /// The name of the quota
+        /// </summary>
+        /// <value>The name of the quota</value>
+        [DataMember(Name="quota_type")]
+        public QuotaType QuotaType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="QuotaPlan" /> class.
         /// </summary>
@@ -36,63 +42,78 @@ namespace PollinationSDK
         protected QuotaPlan() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "QuotaPlan";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="QuotaPlan" /> class.
         /// </summary>
-        /// <param name="name">The name of the quota (required).</param>
         /// <param name="resets">Whether consumption is reset to 0 every month (default to false).</param>
         /// <param name="limit">The maximum amount of a resource that a subscription allows.</param>
         /// <param name="enforced">Whether the limit is triggers a blocking response from the server (default to false).</param>
+        /// <param name="maxLimit">The maximum amount of a resource that a subscription allows.</param>
+        /// <param name="displayName">The human-readable name.</param>
+        /// <param name="description">The description.</param>
+        /// <param name="unit">The unit in which the usage and limit are measured.</param>
         public QuotaPlan
         (
-           string name, // Required parameters
-           bool resets = false, double limit= default, bool enforced = false // Optional parameters
+           // Required parameters
+           bool resets = false, double limit= default, bool enforced = false, double maxLimit= default, string displayName= default, string description= default, string unit= default// Optional parameters
         ) : base()// BaseClass
         {
-            // to ensure "name" is required (not null)
-            this.Name = name ?? throw new ArgumentNullException("name is a required property for QuotaPlan and cannot be null");
             this.Resets = resets;
             this.Limit = limit;
             this.Enforced = enforced;
+            this.MaxLimit = maxLimit;
+            this.DisplayName = displayName;
+            this.Description = description;
+            this.Unit = unit;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "QuotaPlan";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "QuotaPlan";
 
-        /// <summary>
-        /// The name of the quota
-        /// </summary>
-        /// <value>The name of the quota</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
-        public string Name { get; set; } 
         /// <summary>
         /// Whether consumption is reset to 0 every month
         /// </summary>
         /// <value>Whether consumption is reset to 0 every month</value>
-        [DataMember(Name = "resets", EmitDefaultValue = true)]
+        [DataMember(Name = "resets")]
         public bool Resets { get; set; }  = false;
         /// <summary>
         /// The maximum amount of a resource that a subscription allows
         /// </summary>
         /// <value>The maximum amount of a resource that a subscription allows</value>
-        [DataMember(Name = "limit", EmitDefaultValue = false)]
+        [DataMember(Name = "limit")]
         public double Limit { get; set; } 
         /// <summary>
         /// Whether the limit is triggers a blocking response from the server
         /// </summary>
         /// <value>Whether the limit is triggers a blocking response from the server</value>
-        [DataMember(Name = "enforced", EmitDefaultValue = true)]
+        [DataMember(Name = "enforced")]
         public bool Enforced { get; set; }  = false;
+        /// <summary>
+        /// The maximum amount of a resource that a subscription allows
+        /// </summary>
+        /// <value>The maximum amount of a resource that a subscription allows</value>
+        [DataMember(Name = "max_limit")]
+        public double MaxLimit { get; set; } 
+        /// <summary>
+        /// The human-readable name
+        /// </summary>
+        /// <value>The human-readable name</value>
+        [DataMember(Name = "display_name")]
+        public string DisplayName { get; set; } 
+        /// <summary>
+        /// The description
+        /// </summary>
+        /// <value>The description</value>
+        [DataMember(Name = "description")]
+        public string Description { get; set; } 
+        /// <summary>
+        /// The unit in which the usage and limit are measured
+        /// </summary>
+        /// <value>The unit in which the usage and limit are measured</value>
+        [DataMember(Name = "unit")]
+        public string Unit { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -114,11 +135,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("QuotaPlan:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Resets: ").Append(Resets).Append("\n");
-            sb.Append("  Limit: ").Append(Limit).Append("\n");
-            sb.Append("  Enforced: ").Append(Enforced).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Resets: ").Append(this.Resets).Append("\n");
+            sb.Append("  Limit: ").Append(this.Limit).Append("\n");
+            sb.Append("  Enforced: ").Append(this.Enforced).Append("\n");
+            sb.Append("  MaxLimit: ").Append(this.MaxLimit).Append("\n");
+            sb.Append("  DisplayName: ").Append(this.DisplayName).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Unit: ").Append(this.Unit).Append("\n");
             return sb.ToString();
         }
   
@@ -182,31 +206,14 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Resets == input.Resets ||
-                    (this.Resets != null &&
-                    this.Resets.Equals(input.Resets))
-                ) && base.Equals(input) && 
-                (
-                    this.Limit == input.Limit ||
-                    (this.Limit != null &&
-                    this.Limit.Equals(input.Limit))
-                ) && base.Equals(input) && 
-                (
-                    this.Enforced == input.Enforced ||
-                    (this.Enforced != null &&
-                    this.Enforced.Equals(input.Enforced))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Type, input.Type) && 
+                    Extension.Equals(this.Resets, input.Resets) && 
+                    Extension.Equals(this.Limit, input.Limit) && 
+                    Extension.Equals(this.Enforced, input.Enforced) && 
+                    Extension.Equals(this.MaxLimit, input.MaxLimit) && 
+                    Extension.Equals(this.DisplayName, input.DisplayName) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Unit, input.Unit);
         }
 
         /// <summary>
@@ -218,16 +225,22 @@ namespace PollinationSDK
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = base.GetHashCode();
-                if (this.Name != null)
-                    hashCode = hashCode * 59 + this.Name.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 if (this.Resets != null)
                     hashCode = hashCode * 59 + this.Resets.GetHashCode();
                 if (this.Limit != null)
                     hashCode = hashCode * 59 + this.Limit.GetHashCode();
                 if (this.Enforced != null)
                     hashCode = hashCode * 59 + this.Enforced.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.MaxLimit != null)
+                    hashCode = hashCode * 59 + this.MaxLimit.GetHashCode();
+                if (this.DisplayName != null)
+                    hashCode = hashCode * 59 + this.DisplayName.GetHashCode();
+                if (this.Description != null)
+                    hashCode = hashCode * 59 + this.Description.GetHashCode();
+                if (this.Unit != null)
+                    hashCode = hashCode * 59 + this.Unit.GetHashCode();
                 return hashCode;
             }
         }
@@ -240,15 +253,6 @@ namespace PollinationSDK
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
             foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^QuotaPlan$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

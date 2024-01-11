@@ -50,7 +50,7 @@ namespace PollinationSDK
         (
             string name, string pictureUrl, string username, // Required parameters
             string description = "" // Optional parameters
-        ) : base(name: name, pictureUrl: pictureUrl, description: description)// BaseClass
+        ) : base(name: name, pictureUrl: pictureUrl, description: description )// BaseClass
         {
             // to ensure "username" is required (not null)
             this.Username = username ?? throw new ArgumentNullException("username is a required property for UserCreate and cannot be null");
@@ -63,14 +63,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "UserCreate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "UserCreate";
 
         /// <summary>
         /// The unique name of the user in small case without spaces
         /// </summary>
         /// <value>The unique name of the user in small case without spaces</value>
-        [DataMember(Name = "username", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "username", IsRequired = true)]
         public string Username { get; set; } 
 
         /// <summary>
@@ -93,11 +93,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UserCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Username: ").Append(Username).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  PictureUrl: ").Append(this.PictureUrl).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Username: ").Append(this.Username).Append("\n");
             return sb.ToString();
         }
   
@@ -161,16 +161,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Username == input.Username ||
-                    (this.Username != null &&
-                    this.Username.Equals(input.Username))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Username, input.Username) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -202,7 +194,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^UserCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

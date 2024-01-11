@@ -35,7 +35,7 @@ namespace PollinationSDK
         /// <param name="annotations">An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries..</param>
         public LocalConfig
         (
-           // Required parameters
+            // Required parameters
            Dictionary<string, string> annotations= default// Optional parameters
         ) : base()// BaseClass
         {
@@ -49,14 +49,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "LocalConfig";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "LocalConfig";
 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("LocalConfig:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
             return sb.ToString();
         }
   
@@ -144,16 +144,10 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
+                    Extension.AllEquals(this.Annotations, input.Annotations)
                 );
         }
 
@@ -186,7 +180,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^LocalConfig", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -35,7 +35,7 @@ namespace PollinationSDK
         /// <param name="resources">The list of policies granting access to the pool.</param>
         public LicensePoolAccessPolicyList
         (
-           // Required parameters
+            // Required parameters
            List<LicensePoolAccessPolicy> resources= default // Optional parameters
         ) : base()// BaseClass
         {
@@ -49,14 +49,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "LicensePoolAccessPolicyList";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "LicensePoolAccessPolicyList";
 
         /// <summary>
         /// The list of policies granting access to the pool
         /// </summary>
         /// <value>The list of policies granting access to the pool</value>
-        [DataMember(Name = "resources", EmitDefaultValue = false)]
+        [DataMember(Name = "resources")]
         public List<LicensePoolAccessPolicy> Resources { get; set; } 
 
         /// <summary>
@@ -79,8 +79,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("LicensePoolAccessPolicyList:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Resources: ").Append(Resources).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Resources: ").Append(this.Resources).Append("\n");
             return sb.ToString();
         }
   
@@ -146,15 +146,9 @@ namespace PollinationSDK
             return base.Equals(input) && 
                 (
                     this.Resources == input.Resources ||
-                    this.Resources != null &&
-                    input.Resources != null &&
-                    this.Resources.SequenceEqual(input.Resources)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Resources, input.Resources)
+                ) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -186,7 +180,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^LicensePoolAccessPolicyList$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -65,26 +65,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "ProjectRecipeFilter";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "ProjectRecipeFilter";
 
         /// <summary>
         /// The name of the account the recipe belongs to
         /// </summary>
         /// <value>The name of the account the recipe belongs to</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "owner", IsRequired = true)]
         public string Owner { get; set; } 
         /// <summary>
         /// The name of the recipe
         /// </summary>
         /// <value>The name of the recipe</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// The specific recipe tag
         /// </summary>
         /// <value>The specific recipe tag</value>
-        [DataMember(Name = "tag", EmitDefaultValue = false)]
+        [DataMember(Name = "tag")]
         public string Tag { get; set; } 
 
         /// <summary>
@@ -107,10 +107,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ProjectRecipeFilter:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Tag: ").Append(Tag).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Tag: ").Append(this.Tag).Append("\n");
             return sb.ToString();
         }
   
@@ -174,26 +174,10 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Tag == input.Tag ||
-                    (this.Tag != null &&
-                    this.Tag.Equals(input.Tag))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Tag, input.Tag) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -229,7 +213,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^ProjectRecipeFilter$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

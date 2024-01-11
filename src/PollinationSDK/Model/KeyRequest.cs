@@ -46,7 +46,7 @@ namespace PollinationSDK
         public KeyRequest
         (
            string key// Required parameters
-           // Optional parameters
+            // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "key" is required (not null)
@@ -60,13 +60,13 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "KeyRequest";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "KeyRequest";
 
         /// <summary>
         /// Gets or Sets Key
         /// </summary>
-        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "key", IsRequired = true)]
         public string Key { get; set; } 
 
         /// <summary>
@@ -89,8 +89,8 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("KeyRequest:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Key: ").Append(this.Key).Append("\n");
             return sb.ToString();
         }
   
@@ -154,16 +154,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Key, input.Key) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -195,7 +187,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^KeyRequest$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

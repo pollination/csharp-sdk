@@ -72,50 +72,50 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Run";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Run";
 
         /// <summary>
         /// The unique ID for this run
         /// </summary>
         /// <value>The unique ID for this run</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// author
         /// </summary>
         /// <value>author</value>
-        [DataMember(Name = "author", EmitDefaultValue = false)]
+        [DataMember(Name = "author")]
         public AccountPublic Author { get; set; } 
         /// <summary>
         /// owner
         /// </summary>
         /// <value>owner</value>
-        [DataMember(Name = "owner", EmitDefaultValue = false)]
+        [DataMember(Name = "owner")]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// The recipe used to generate this 
         /// </summary>
         /// <value>The recipe used to generate this </value>
-        [DataMember(Name = "recipe", EmitDefaultValue = false)]
+        [DataMember(Name = "recipe")]
         public RecipeInterface Recipe { get; set; } 
         /// <summary>
         /// The generation of this run
         /// </summary>
         /// <value>The generation of this run</value>
-        [DataMember(Name = "generation", EmitDefaultValue = false)]
+        [DataMember(Name = "generation")]
         public double Generation { get; set; } 
         /// <summary>
         /// The status of the run
         /// </summary>
         /// <value>The status of the run</value>
-        [DataMember(Name = "status", EmitDefaultValue = false)]
+        [DataMember(Name = "status")]
         public RunStatus Status { get; set; } 
         /// <summary>
         /// Extra metadata about the run
         /// </summary>
         /// <value>Extra metadata about the run</value>
-        [DataMember(Name = "meta", EmitDefaultValue = false)]
+        [DataMember(Name = "meta")]
         public RunMeta Meta { get; set; } 
 
         /// <summary>
@@ -138,14 +138,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Run:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Author: ").Append(Author).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Recipe: ").Append(Recipe).Append("\n");
-            sb.Append("  Generation: ").Append(Generation).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  Meta: ").Append(Meta).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Author: ").Append(this.Author).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Recipe: ").Append(this.Recipe).Append("\n");
+            sb.Append("  Generation: ").Append(this.Generation).Append("\n");
+            sb.Append("  Status: ").Append(this.Status).Append("\n");
+            sb.Append("  Meta: ").Append(this.Meta).Append("\n");
             return sb.ToString();
         }
   
@@ -209,46 +209,14 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Author == input.Author ||
-                    (this.Author != null &&
-                    this.Author.Equals(input.Author))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Recipe == input.Recipe ||
-                    (this.Recipe != null &&
-                    this.Recipe.Equals(input.Recipe))
-                ) && base.Equals(input) && 
-                (
-                    this.Generation == input.Generation ||
-                    (this.Generation != null &&
-                    this.Generation.Equals(input.Generation))
-                ) && base.Equals(input) && 
-                (
-                    this.Status == input.Status ||
-                    (this.Status != null &&
-                    this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
-                (
-                    this.Meta == input.Meta ||
-                    (this.Meta != null &&
-                    this.Meta.Equals(input.Meta))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Author, input.Author) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Recipe, input.Recipe) && 
+                    Extension.Equals(this.Generation, input.Generation) && 
+                    Extension.Equals(this.Status, input.Status) && 
+                    Extension.Equals(this.Meta, input.Meta) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -292,7 +260,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Run$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

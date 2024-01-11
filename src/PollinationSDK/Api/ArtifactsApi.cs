@@ -115,8 +115,8 @@ namespace PollinationSDK.Api
         /// <param name="path">The path to an file within a project folder (optional)</param>
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
-        /// <returns>List&lt;FileMeta&gt;</returns>
-        List<FileMeta> ListArtifacts (string owner, string name, List<string> path = default, int? page = default, int? perPage = default);
+        /// <returns>FileMetaList</returns>
+        FileMetaList ListArtifacts (string owner, string name, List<string> path = default, int? page = default, int? perPage = default);
 
         /// <summary>
         /// List artifacts in a project folder
@@ -130,8 +130,8 @@ namespace PollinationSDK.Api
         /// <param name="path">The path to an file within a project folder (optional)</param>
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
-        /// <returns>ApiResponse of List&lt;FileMeta&gt;</returns>
-        ApiResponse<List<FileMeta>> ListArtifactsWithHttpInfo (string owner, string name, List<string> path = default, int? page = default, int? perPage = default);
+        /// <returns>ApiResponse of FileMetaList</returns>
+        ApiResponse<FileMetaList> ListArtifactsWithHttpInfo (string owner, string name, List<string> path = default, int? page = default, int? perPage = default);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -232,8 +232,8 @@ namespace PollinationSDK.Api
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of List&lt;FileMeta&gt;</returns>
-        System.Threading.Tasks.Task<List<FileMeta>> ListArtifactsAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of FileMetaList</returns>
+        System.Threading.Tasks.Task<FileMetaList> ListArtifactsAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// List artifacts in a project folder
@@ -248,8 +248,8 @@ namespace PollinationSDK.Api
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (List&lt;FileMeta&gt;)</returns>
-        System.Threading.Tasks.Task<ApiResponse<List<FileMeta>>> ListArtifactsWithHttpInfoAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken));
+        /// <returns>Task of ApiResponse (FileMetaList)</returns>
+        System.Threading.Tasks.Task<ApiResponse<FileMetaList>> ListArtifactsWithHttpInfoAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -895,10 +895,10 @@ namespace PollinationSDK.Api
         /// <param name="path">The path to an file within a project folder (optional)</param>
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
-        /// <returns>List&lt;FileMeta&gt;</returns>
-        public List<FileMeta> ListArtifacts (string owner, string name, List<string> path = default, int? page = default, int? perPage = default)
+        /// <returns>FileMetaList</returns>
+        public FileMetaList ListArtifacts (string owner, string name, List<string> path = default, int? page = default, int? perPage = default)
         {
-             ApiResponse<List<FileMeta>> localVarResponse = ListArtifactsWithHttpInfo(owner, name, path, page, perPage);
+             ApiResponse<FileMetaList> localVarResponse = ListArtifactsWithHttpInfo(owner, name, path, page, perPage);
              return localVarResponse.Data;
         }
 
@@ -911,8 +911,8 @@ namespace PollinationSDK.Api
         /// <param name="path">The path to an file within a project folder (optional)</param>
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
-        /// <returns>ApiResponse of List&lt;FileMeta&gt;</returns>
-        public ApiResponse<List<FileMeta>> ListArtifactsWithHttpInfo (string owner, string name, List<string> path = default, int? page = default, int? perPage = default)
+        /// <returns>ApiResponse of FileMetaList</returns>
+        public ApiResponse<FileMetaList> ListArtifactsWithHttpInfo (string owner, string name, List<string> path = default, int? page = default, int? perPage = default)
         {
             // verify the required parameter 'owner' is set
             if (owner == null)
@@ -973,9 +973,9 @@ namespace PollinationSDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<FileMeta>>(localVarStatusCode,
+            return new ApiResponse<FileMetaList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (List<FileMeta>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<FileMeta>)));
+                (FileMetaList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(FileMetaList)));
         }
 
         /// <summary>
@@ -988,10 +988,10 @@ namespace PollinationSDK.Api
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of List&lt;FileMeta&gt;</returns>
-        public async System.Threading.Tasks.Task<List<FileMeta>> ListArtifactsAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of FileMetaList</returns>
+        public async System.Threading.Tasks.Task<FileMetaList> ListArtifactsAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<List<FileMeta>> localVarResponse = await ListArtifactsWithHttpInfoAsync(owner, name, path, page, perPage, cancellationToken);
+             ApiResponse<FileMetaList> localVarResponse = await ListArtifactsWithHttpInfoAsync(owner, name, path, page, perPage, cancellationToken);
              return localVarResponse.Data;
 
         }
@@ -1006,8 +1006,8 @@ namespace PollinationSDK.Api
         /// <param name="page">Page number starting from 1 (optional, default to 1)</param>
         /// <param name="perPage">Number of items per page (optional, default to 25)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
-        /// <returns>Task of ApiResponse (List&lt;FileMeta&gt;)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<List<FileMeta>>> ListArtifactsWithHttpInfoAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken))
+        /// <returns>Task of ApiResponse (FileMetaList)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<FileMetaList>> ListArtifactsWithHttpInfoAsync (string owner, string name, List<string> path = default, int? page = default, int? perPage = default, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'owner' is set
             if (owner == null)
@@ -1068,9 +1068,9 @@ namespace PollinationSDK.Api
                 if (exception != null) throw exception;
             }
 
-            return new ApiResponse<List<FileMeta>>(localVarStatusCode,
+            return new ApiResponse<FileMetaList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (List<FileMeta>) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(List<FileMeta>)));
+                (FileMetaList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(FileMetaList)));
         }
 
     }

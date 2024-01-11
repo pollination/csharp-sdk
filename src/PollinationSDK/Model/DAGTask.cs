@@ -75,56 +75,56 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DAGTask";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DAGTask";
 
         /// <summary>
         /// Name for this task. It must be unique in a DAG.
         /// </summary>
         /// <value>Name for this task. It must be unique in a DAG.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// Template name. A template is a Function or a DAG. This template must be available in the dependencies.
         /// </summary>
         /// <value>Template name. A template is a Function or a DAG. This template must be available in the dependencies.</value>
-        [DataMember(Name = "template", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "template", IsRequired = true)]
         public string Template { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// List of DAG tasks that this task depends on and needs to be executed before this task.
         /// </summary>
         /// <value>List of DAG tasks that this task depends on and needs to be executed before this task.</value>
-        [DataMember(Name = "needs", EmitDefaultValue = false)]
+        [DataMember(Name = "needs")]
         public List<string> Needs { get; set; } 
         /// <summary>
         /// The input arguments for this task.
         /// </summary>
         /// <value>The input arguments for this task.</value>
-        [DataMember(Name = "arguments", EmitDefaultValue = false)]
+        [DataMember(Name = "arguments")]
         public List<AnyOf<TaskArgument,TaskPathArgument>> Arguments { get; set; } 
         /// <summary>
         /// Loop configuration for this task.
         /// </summary>
         /// <value>Loop configuration for this task.</value>
-        [DataMember(Name = "loop", EmitDefaultValue = false)]
+        [DataMember(Name = "loop")]
         public DAGTaskLoop Loop { get; set; } 
         /// <summary>
         /// A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder.
         /// </summary>
         /// <value>A path relative to the current folder context where artifacts should be saved. This is useful when performing a loop or invoking another workflow and wanting to save results in a specific sub_folder.</value>
-        [DataMember(Name = "sub_folder", EmitDefaultValue = false)]
+        [DataMember(Name = "sub_folder")]
         public string SubFolder { get; set; } 
         /// <summary>
         /// List of task returns.
         /// </summary>
         /// <value>List of task returns.</value>
-        [DataMember(Name = "returns", EmitDefaultValue = false)]
+        [DataMember(Name = "returns")]
         public List<AnyOf<TaskReturn,TaskPathReturn>> Returns { get; set; } 
 
         /// <summary>
@@ -147,15 +147,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGTask:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Template: ").Append(Template).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Needs: ").Append(Needs).Append("\n");
-            sb.Append("  Arguments: ").Append(Arguments).Append("\n");
-            sb.Append("  Loop: ").Append(Loop).Append("\n");
-            sb.Append("  SubFolder: ").Append(SubFolder).Append("\n");
-            sb.Append("  Returns: ").Append(Returns).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Template: ").Append(this.Template).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Needs: ").Append(this.Needs).Append("\n");
+            sb.Append("  Arguments: ").Append(this.Arguments).Append("\n");
+            sb.Append("  Loop: ").Append(this.Loop).Append("\n");
+            sb.Append("  SubFolder: ").Append(this.SubFolder).Append("\n");
+            sb.Append("  Returns: ").Append(this.Returns).Append("\n");
             return sb.ToString();
         }
   
@@ -219,54 +219,26 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Template == input.Template ||
-                    (this.Template != null &&
-                    this.Template.Equals(input.Template))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Template, input.Template) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
                 (
                     this.Needs == input.Needs ||
-                    this.Needs != null &&
-                    input.Needs != null &&
-                    this.Needs.SequenceEqual(input.Needs)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Needs, input.Needs)
+                ) && 
                 (
                     this.Arguments == input.Arguments ||
-                    this.Arguments != null &&
-                    input.Arguments != null &&
-                    this.Arguments.SequenceEqual(input.Arguments)
-                ) && base.Equals(input) && 
-                (
-                    this.Loop == input.Loop ||
-                    (this.Loop != null &&
-                    this.Loop.Equals(input.Loop))
-                ) && base.Equals(input) && 
-                (
-                    this.SubFolder == input.SubFolder ||
-                    (this.SubFolder != null &&
-                    this.SubFolder.Equals(input.SubFolder))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Arguments, input.Arguments)
+                ) && 
+                    Extension.Equals(this.Loop, input.Loop) && 
+                    Extension.Equals(this.SubFolder, input.SubFolder) && 
                 (
                     this.Returns == input.Returns ||
-                    this.Returns != null &&
-                    input.Returns != null &&
-                    this.Returns.SequenceEqual(input.Returns)
+                    Extension.AllEquals(this.Returns, input.Returns)
                 );
         }
 
@@ -313,7 +285,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DAGTask$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

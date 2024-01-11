@@ -70,43 +70,43 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "OrganizationMemberList";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "OrganizationMemberList";
 
         /// <summary>
         /// The current page the pagination request is on
         /// </summary>
         /// <value>The current page the pagination request is on</value>
-        [DataMember(Name = "page", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "page", IsRequired = true)]
         public int Page { get; set; } 
         /// <summary>
         /// The number of pages per pagination request
         /// </summary>
         /// <value>The number of pages per pagination request</value>
-        [DataMember(Name = "per_page", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "per_page", IsRequired = true)]
         public int PerPage { get; set; } 
         /// <summary>
         /// The total number of pages
         /// </summary>
         /// <value>The total number of pages</value>
-        [DataMember(Name = "page_count", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "page_count", IsRequired = true)]
         public int PageCount { get; set; } 
         /// <summary>
         /// The total number of resources matching the list request
         /// </summary>
         /// <value>The total number of resources matching the list request</value>
-        [DataMember(Name = "total_count", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "total_count", IsRequired = true)]
         public int TotalCount { get; set; } 
         /// <summary>
         /// Gets or Sets Resources
         /// </summary>
-        [DataMember(Name = "resources", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "resources", IsRequired = true)]
         public List<OrganizationMember> Resources { get; set; } 
         /// <summary>
         /// The next page, if this on is not the last
         /// </summary>
         /// <value>The next page, if this on is not the last</value>
-        [DataMember(Name = "next_page", EmitDefaultValue = false)]
+        [DataMember(Name = "next_page")]
         public int NextPage { get; set; } 
 
         /// <summary>
@@ -129,13 +129,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("OrganizationMemberList:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Page: ").Append(Page).Append("\n");
-            sb.Append("  PerPage: ").Append(PerPage).Append("\n");
-            sb.Append("  PageCount: ").Append(PageCount).Append("\n");
-            sb.Append("  TotalCount: ").Append(TotalCount).Append("\n");
-            sb.Append("  Resources: ").Append(Resources).Append("\n");
-            sb.Append("  NextPage: ").Append(NextPage).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Page: ").Append(this.Page).Append("\n");
+            sb.Append("  PerPage: ").Append(this.PerPage).Append("\n");
+            sb.Append("  PageCount: ").Append(this.PageCount).Append("\n");
+            sb.Append("  TotalCount: ").Append(this.TotalCount).Append("\n");
+            sb.Append("  Resources: ").Append(this.Resources).Append("\n");
+            sb.Append("  NextPage: ").Append(this.NextPage).Append("\n");
             return sb.ToString();
         }
   
@@ -199,42 +199,16 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Page == input.Page ||
-                    (this.Page != null &&
-                    this.Page.Equals(input.Page))
-                ) && base.Equals(input) && 
-                (
-                    this.PerPage == input.PerPage ||
-                    (this.PerPage != null &&
-                    this.PerPage.Equals(input.PerPage))
-                ) && base.Equals(input) && 
-                (
-                    this.PageCount == input.PageCount ||
-                    (this.PageCount != null &&
-                    this.PageCount.Equals(input.PageCount))
-                ) && base.Equals(input) && 
-                (
-                    this.TotalCount == input.TotalCount ||
-                    (this.TotalCount != null &&
-                    this.TotalCount.Equals(input.TotalCount))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Page, input.Page) && 
+                    Extension.Equals(this.PerPage, input.PerPage) && 
+                    Extension.Equals(this.PageCount, input.PageCount) && 
+                    Extension.Equals(this.TotalCount, input.TotalCount) && 
                 (
                     this.Resources == input.Resources ||
-                    this.Resources != null &&
-                    input.Resources != null &&
-                    this.Resources.SequenceEqual(input.Resources)
-                ) && base.Equals(input) && 
-                (
-                    this.NextPage == input.NextPage ||
-                    (this.NextPage != null &&
-                    this.NextPage.Equals(input.NextPage))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Resources, input.Resources)
+                ) && 
+                    Extension.Equals(this.NextPage, input.NextPage) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -276,7 +250,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^OrganizationMemberList$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -32,7 +32,7 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets SubjectType
         /// </summary>
-        [DataMember(Name="subject_type", EmitDefaultValue=false)]
+        [DataMember(Name="subject_type")]
         public SubjectType SubjectType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="PolicySubject" /> class.
@@ -52,7 +52,7 @@ namespace PollinationSDK
         public PolicySubject
         (
            SubjectType subjectType, string name// Required parameters
-           // Optional parameters
+            // Optional parameters
         ) : base()// BaseClass
         {
             this.SubjectType = subjectType;
@@ -67,14 +67,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "PolicySubject";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "PolicySubject";
 
         /// <summary>
         /// The name of the policy subject
         /// </summary>
         /// <value>The name of the policy subject</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("PolicySubject:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  SubjectType: ").Append(SubjectType).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  SubjectType: ").Append(this.SubjectType).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
             return sb.ToString();
         }
   
@@ -163,21 +163,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.SubjectType == input.SubjectType ||
-                    (this.SubjectType != null &&
-                    this.SubjectType.Equals(input.SubjectType))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.SubjectType, input.SubjectType) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -221,7 +209,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^PolicySubject$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

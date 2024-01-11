@@ -68,38 +68,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Recipe";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Recipe";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
-        [DataMember(Name = "api_version", EmitDefaultValue = true)]
-        public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        [DataMember(Name = "api_version")]
+        public string ApiVersion { get; protected set; }  = "v1beta1";
 
         /// <summary>
         /// A list of tasks to create a DAG recipe.
         /// </summary>
         /// <value>A list of tasks to create a DAG recipe.</value>
-        [DataMember(Name = "flow", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "flow", IsRequired = true)]
         public List<DAG> Flow { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Recipe metadata information.
         /// </summary>
         /// <value>Recipe metadata information.</value>
-        [DataMember(Name = "metadata", EmitDefaultValue = false)]
+        [DataMember(Name = "metadata")]
         public MetaData Metadata { get; set; } 
         /// <summary>
         /// A list of plugins and other recipes this recipe depends on.
         /// </summary>
         /// <value>A list of plugins and other recipes this recipe depends on.</value>
-        [DataMember(Name = "dependencies", EmitDefaultValue = false)]
+        [DataMember(Name = "dependencies")]
         public List<Dependency> Dependencies { get; set; } 
 
         /// <summary>
@@ -122,12 +122,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Recipe:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Flow: ").Append(Flow).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  Dependencies: ").Append(Dependencies).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Flow: ").Append(this.Flow).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  ApiVersion: ").Append(this.ApiVersion).Append("\n");
+            sb.Append("  Metadata: ").Append(this.Metadata).Append("\n");
+            sb.Append("  Dependencies: ").Append(this.Dependencies).Append("\n");
             return sb.ToString();
         }
   
@@ -193,36 +193,18 @@ namespace PollinationSDK
             return base.Equals(input) && 
                 (
                     this.Flow == input.Flow ||
-                    this.Flow != null &&
-                    input.Flow != null &&
-                    this.Flow.SequenceEqual(input.Flow)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Flow, input.Flow)
+                ) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.ApiVersion == input.ApiVersion ||
-                    (this.ApiVersion != null &&
-                    this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.Metadata == input.Metadata ||
-                    (this.Metadata != null &&
-                    this.Metadata.Equals(input.Metadata))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.ApiVersion, input.ApiVersion) && 
+                    Extension.Equals(this.Metadata, input.Metadata) && 
                 (
                     this.Dependencies == input.Dependencies ||
-                    this.Dependencies != null &&
-                    input.Dependencies != null &&
-                    this.Dependencies.SequenceEqual(input.Dependencies)
+                    Extension.AllEquals(this.Dependencies, input.Dependencies)
                 );
         }
 
@@ -263,7 +245,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Recipe$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
@@ -272,7 +254,7 @@ namespace PollinationSDK
             
             // ApiVersion (string) pattern
             Regex regexApiVersion = new Regex(@"^v1beta1$", RegexOptions.CultureInvariant);
-            if (false == regexApiVersion.Match(this.ApiVersion).Success)
+            if (this.ApiVersion != null && false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
             }

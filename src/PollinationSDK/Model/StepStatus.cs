@@ -33,13 +33,13 @@ namespace PollinationSDK
         /// The type of step this status is for. Can be \&quot;Function\&quot;, \&quot;DAG\&quot; or \&quot;Loop\&quot;
         /// </summary>
         /// <value>The type of step this status is for. Can be \&quot;Function\&quot;, \&quot;DAG\&quot; or \&quot;Loop\&quot;</value>
-        [DataMember(Name="status_type", EmitDefaultValue=false)]
+        [DataMember(Name="status_type")]
         public StatusType StatusType { get; set; }   
         /// <summary>
         /// The status of this step.
         /// </summary>
         /// <value>The status of this step.</value>
-        [DataMember(Name="status", EmitDefaultValue=false)]
+        [DataMember(Name="status")]
         public StepStatusEnum Status { get; set; } = StepStatusEnum.Unknown;
         /// <summary>
         /// Initializes a new instance of the <see cref="StepStatus" /> class.
@@ -108,92 +108,92 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "StepStatus";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "StepStatus";
 
         /// <summary>
         /// The inputs used by this step.
         /// </summary>
         /// <value>The inputs used by this step.</value>
-        [DataMember(Name = "inputs", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "inputs", IsRequired = true)]
         public List<AnyOf<StepStringInput,StepIntegerInput,StepNumberInput,StepBooleanInput,StepFolderInput,StepFileInput,StepPathInput,StepArrayInput,StepJSONObjectInput>> Inputs { get; set; } 
         /// <summary>
         /// The outputs produced by this step.
         /// </summary>
         /// <value>The outputs produced by this step.</value>
-        [DataMember(Name = "outputs", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "outputs", IsRequired = true)]
         public List<AnyOf<StepStringOutput,StepIntegerOutput,StepNumberOutput,StepBooleanOutput,StepFolderOutput,StepFileOutput,StepPathOutput,StepArrayOutput,StepJSONObjectOutput>> Outputs { get; set; } 
         /// <summary>
         /// The time at which the task was started
         /// </summary>
         /// <value>The time at which the task was started</value>
-        [DataMember(Name = "started_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "started_at", IsRequired = true)]
         public DateTime StartedAt { get; set; } 
         /// <summary>
         /// The step unique ID
         /// </summary>
         /// <value>The step unique ID</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// A human readable name for the step. Usually defined by the DAG task name but can be extended if the step is part of a loop for example. This name is unique within the boundary of the DAG/Job that generated it.
         /// </summary>
         /// <value>A human readable name for the step. Usually defined by the DAG task name but can be extended if the step is part of a loop for example. This name is unique within the boundary of the DAG/Job that generated it.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// The name of the template that spawned this step
         /// </summary>
         /// <value>The name of the template that spawned this step</value>
-        [DataMember(Name = "template_ref", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "template_ref", IsRequired = true)]
         public string TemplateRef { get; set; } 
         /// <summary>
         /// A list of child step IDs
         /// </summary>
         /// <value>A list of child step IDs</value>
-        [DataMember(Name = "children_ids", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "children_ids", IsRequired = true)]
         public List<string> ChildrenIds { get; set; } 
         /// <summary>
         /// A list of the last step to ran in the context of this step. In the case of a DAG or a job this will be the last step that has been executed. It will remain empty for functions.
         /// </summary>
         /// <value>A list of the last step to ran in the context of this step. In the case of a DAG or a job this will be the last step that has been executed. It will remain empty for functions.</value>
-        [DataMember(Name = "outbound_steps", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "outbound_steps", IsRequired = true)]
         public List<string> OutboundSteps { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Any message produced by the task. Usually error/debugging hints.
         /// </summary>
         /// <value>Any message produced by the task. Usually error/debugging hints.</value>
-        [DataMember(Name = "message", EmitDefaultValue = false)]
+        [DataMember(Name = "message")]
         public string Message { get; set; } 
         /// <summary>
         /// The time at which the task was completed
         /// </summary>
         /// <value>The time at which the task was completed</value>
-        [DataMember(Name = "finished_at", EmitDefaultValue = false)]
+        [DataMember(Name = "finished_at")]
         public DateTime FinishedAt { get; set; } 
         /// <summary>
         /// Source url for the status object. It can be a recipe or a function.
         /// </summary>
         /// <value>Source url for the status object. It can be a recipe or a function.</value>
-        [DataMember(Name = "source", EmitDefaultValue = false)]
+        [DataMember(Name = "source")]
         public string Source { get; set; } 
         /// <summary>
         /// The command used to run this step. Only applies to Function steps.
         /// </summary>
         /// <value>The command used to run this step. Only applies to Function steps.</value>
-        [DataMember(Name = "command", EmitDefaultValue = false)]
+        [DataMember(Name = "command")]
         public string Command { get; set; } 
         /// <summary>
         /// This indicates the step ID of the associated template root             step in which this step belongs to. A DAG step will have the id of the             parent DAG for example.
         /// </summary>
         /// <value>This indicates the step ID of the associated template root             step in which this step belongs to. A DAG step will have the id of the             parent DAG for example.</value>
-        [DataMember(Name = "boundary_id", EmitDefaultValue = false)]
+        [DataMember(Name = "boundary_id")]
         public string BoundaryId { get; set; } 
 
         /// <summary>
@@ -216,23 +216,23 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("StepStatus:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
-            sb.Append("  StartedAt: ").Append(StartedAt).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  StatusType: ").Append(StatusType).Append("\n");
-            sb.Append("  TemplateRef: ").Append(TemplateRef).Append("\n");
-            sb.Append("  ChildrenIds: ").Append(ChildrenIds).Append("\n");
-            sb.Append("  OutboundSteps: ").Append(OutboundSteps).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
-            sb.Append("  FinishedAt: ").Append(FinishedAt).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  Command: ").Append(Command).Append("\n");
-            sb.Append("  BoundaryId: ").Append(BoundaryId).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Inputs: ").Append(this.Inputs).Append("\n");
+            sb.Append("  Outputs: ").Append(this.Outputs).Append("\n");
+            sb.Append("  StartedAt: ").Append(this.StartedAt).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  StatusType: ").Append(this.StatusType).Append("\n");
+            sb.Append("  TemplateRef: ").Append(this.TemplateRef).Append("\n");
+            sb.Append("  ChildrenIds: ").Append(this.ChildrenIds).Append("\n");
+            sb.Append("  OutboundSteps: ").Append(this.OutboundSteps).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Message: ").Append(this.Message).Append("\n");
+            sb.Append("  FinishedAt: ").Append(this.FinishedAt).Append("\n");
+            sb.Append("  Source: ").Append(this.Source).Append("\n");
+            sb.Append("  Status: ").Append(this.Status).Append("\n");
+            sb.Append("  Command: ").Append(this.Command).Append("\n");
+            sb.Append("  BoundaryId: ").Append(this.BoundaryId).Append("\n");
             return sb.ToString();
         }
   
@@ -298,94 +298,36 @@ namespace PollinationSDK
             return base.Equals(input) && 
                 (
                     this.Inputs == input.Inputs ||
-                    this.Inputs != null &&
-                    input.Inputs != null &&
-                    this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Inputs, input.Inputs)
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
-                    this.Outputs != null &&
-                    input.Outputs != null &&
-                    this.Outputs.SequenceEqual(input.Outputs)
-                ) && base.Equals(input) && 
-                (
-                    this.StartedAt == input.StartedAt ||
-                    (this.StartedAt != null &&
-                    this.StartedAt.Equals(input.StartedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.StatusType == input.StatusType ||
-                    (this.StatusType != null &&
-                    this.StatusType.Equals(input.StatusType))
-                ) && base.Equals(input) && 
-                (
-                    this.TemplateRef == input.TemplateRef ||
-                    (this.TemplateRef != null &&
-                    this.TemplateRef.Equals(input.TemplateRef))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Outputs, input.Outputs)
+                ) && 
+                    Extension.Equals(this.StartedAt, input.StartedAt) && 
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.StatusType, input.StatusType) && 
+                    Extension.Equals(this.TemplateRef, input.TemplateRef) && 
                 (
                     this.ChildrenIds == input.ChildrenIds ||
-                    this.ChildrenIds != null &&
-                    input.ChildrenIds != null &&
-                    this.ChildrenIds.SequenceEqual(input.ChildrenIds)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.ChildrenIds, input.ChildrenIds)
+                ) && 
                 (
                     this.OutboundSteps == input.OutboundSteps ||
-                    this.OutboundSteps != null &&
-                    input.OutboundSteps != null &&
-                    this.OutboundSteps.SequenceEqual(input.OutboundSteps)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.OutboundSteps, input.OutboundSteps)
+                ) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Message == input.Message ||
-                    (this.Message != null &&
-                    this.Message.Equals(input.Message))
-                ) && base.Equals(input) && 
-                (
-                    this.FinishedAt == input.FinishedAt ||
-                    (this.FinishedAt != null &&
-                    this.FinishedAt.Equals(input.FinishedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Status == input.Status ||
-                    (this.Status != null &&
-                    this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
-                (
-                    this.Command == input.Command ||
-                    (this.Command != null &&
-                    this.Command.Equals(input.Command))
-                ) && base.Equals(input) && 
-                (
-                    this.BoundaryId == input.BoundaryId ||
-                    (this.BoundaryId != null &&
-                    this.BoundaryId.Equals(input.BoundaryId))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Message, input.Message) && 
+                    Extension.Equals(this.FinishedAt, input.FinishedAt) && 
+                    Extension.Equals(this.Source, input.Source) && 
+                    Extension.Equals(this.Status, input.Status) && 
+                    Extension.Equals(this.Command, input.Command) && 
+                    Extension.Equals(this.BoundaryId, input.BoundaryId) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -447,7 +389,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^StepStatus$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

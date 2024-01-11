@@ -46,7 +46,7 @@ namespace PollinationSDK
         public ValidationError
         (
            List<string> loc, string msg// Required parameters
-           // Optional parameters
+            // Optional parameters
         )// BaseClass
         {
             // to ensure "loc" is required (not null)
@@ -61,18 +61,18 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", IsRequired = true, EmitDefaultValue = false)]
-        public override string Type { get; protected internal set; } 
+        [DataMember(Name = "type", IsRequired = true)]
+        public override string Type { get; protected set; } 
 
         /// <summary>
         /// Gets or Sets Loc
         /// </summary>
-        [DataMember(Name = "loc", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "loc", IsRequired = true)]
         public List<string> Loc { get; set; } 
         /// <summary>
         /// Gets or Sets Msg
         /// </summary>
-        [DataMember(Name = "msg", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "msg", IsRequired = true)]
         public string Msg { get; set; } 
 
         /// <summary>
@@ -95,9 +95,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("ValidationError:\n");
-            sb.Append("  Loc: ").Append(Loc).Append("\n");
-            sb.Append("  Msg: ").Append(Msg).Append("\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Loc: ").Append(this.Loc).Append("\n");
+            sb.Append("  Msg: ").Append(this.Msg).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
             return sb.ToString();
         }
   
@@ -152,23 +152,13 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return 
+            return base.Equals(input) && 
                 (
                     this.Loc == input.Loc ||
-                    this.Loc != null &&
-                    input.Loc != null &&
-                    this.Loc.SequenceEqual(input.Loc)
+                    Extension.AllEquals(this.Loc, input.Loc)
                 ) && 
-                (
-                    this.Msg == input.Msg ||
-                    (this.Msg != null &&
-                    this.Msg.Equals(input.Msg))
-                ) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Msg, input.Msg) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>

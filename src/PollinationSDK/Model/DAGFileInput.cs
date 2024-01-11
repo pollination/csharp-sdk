@@ -54,7 +54,7 @@ namespace PollinationSDK
         (
             string name, // Required parameters
             Dictionary<string, string> annotations= default, string description= default, AnyOf<HTTP,S3,ProjectFolder> _default= default, List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> alias= default, bool required = false, Object spec= default, List<string> extensions= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description )// BaseClass
         {
             this.Default = _default;
             this.Alias = alias;
@@ -70,38 +70,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DAGFileInput";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DAGFileInput";
 
         /// <summary>
         /// The default source for file if the value is not provided.
         /// </summary>
         /// <value>The default source for file if the value is not provided.</value>
-        [DataMember(Name = "default", EmitDefaultValue = false)]
+        [DataMember(Name = "default")]
         public AnyOf<HTTP,S3,ProjectFolder> Default { get; set; } 
         /// <summary>
         /// A list of aliases for this input in different platforms.
         /// </summary>
         /// <value>A list of aliases for this input in different platforms.</value>
-        [DataMember(Name = "alias", EmitDefaultValue = false)]
+        [DataMember(Name = "alias")]
         public List<AnyOf<DAGGenericInputAlias,DAGStringInputAlias,DAGIntegerInputAlias,DAGNumberInputAlias,DAGBooleanInputAlias,DAGFolderInputAlias,DAGFileInputAlias,DAGPathInputAlias,DAGArrayInputAlias,DAGJSONObjectInputAlias,DAGLinkedInputAlias>> Alias { get; set; } 
         /// <summary>
         /// A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.
         /// </summary>
         /// <value>A field to indicate if this input is required. This input needs to be set explicitly even when a default value is provided.</value>
-        [DataMember(Name = "required", EmitDefaultValue = true)]
+        [DataMember(Name = "required")]
         public bool Required { get; set; }  = false;
         /// <summary>
         /// An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.
         /// </summary>
         /// <value>An optional JSON Schema specification to validate the input value. You can use validate_spec method to validate a value against the spec.</value>
-        [DataMember(Name = "spec", EmitDefaultValue = false)]
+        [DataMember(Name = "spec")]
         public Object Spec { get; set; } 
         /// <summary>
         /// Optional list of extensions for file. The check for extension is case-insensitive.
         /// </summary>
         /// <value>Optional list of extensions for file. The check for extension is case-insensitive.</value>
-        [DataMember(Name = "extensions", EmitDefaultValue = false)]
+        [DataMember(Name = "extensions")]
         public List<string> Extensions { get; set; } 
 
         /// <summary>
@@ -124,15 +124,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGFileInput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Default: ").Append(Default).Append("\n");
-            sb.Append("  Alias: ").Append(Alias).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
-            sb.Append("  Spec: ").Append(Spec).Append("\n");
-            sb.Append("  Extensions: ").Append(Extensions).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Default: ").Append(this.Default).Append("\n");
+            sb.Append("  Alias: ").Append(this.Alias).Append("\n");
+            sb.Append("  Required: ").Append(this.Required).Append("\n");
+            sb.Append("  Spec: ").Append(this.Spec).Append("\n");
+            sb.Append("  Extensions: ").Append(this.Extensions).Append("\n");
             return sb.ToString();
         }
   
@@ -196,33 +196,18 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Default == input.Default ||
-                    (this.Default != null &&
-                    this.Default.Equals(input.Default))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Default, input.Default) && 
                 (
                     this.Alias == input.Alias ||
-                    this.Alias != null &&
-                    input.Alias != null &&
-                    this.Alias.SequenceEqual(input.Alias)
-                ) && base.Equals(input) && 
-                (
-                    this.Required == input.Required ||
-                    (this.Required != null &&
-                    this.Required.Equals(input.Required))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Alias, input.Alias)
+                ) && 
+                    Extension.Equals(this.Required, input.Required) && 
+                    Extension.Equals(this.Spec, input.Spec) && 
                 (
                     this.Extensions == input.Extensions ||
-                    this.Extensions != null &&
-                    input.Extensions != null &&
-                    this.Extensions.SequenceEqual(input.Extensions)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Extensions, input.Extensions)
+                ) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -262,7 +247,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DAGFileInput$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

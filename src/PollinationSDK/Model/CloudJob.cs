@@ -48,10 +48,11 @@ namespace PollinationSDK
         /// <param name="owner">owner.</param>
         /// <param name="recipe">The recipe used to generate this .</param>
         /// <param name="status">The status of the job.</param>
+        /// <param name="resourcesDuration">CPU and Memory usage aggregated for all runs in this job.</param>
         public CloudJob
         (
            string id, Job spec, // Required parameters
-           AccountPublic author= default, AccountPublic owner= default, RecipeInterface recipe= default, JobStatus status= default // Optional parameters
+           AccountPublic author= default, AccountPublic owner= default, RecipeInterface recipe= default, JobStatus status= default, ResourcesDuration resourcesDuration= default // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "id" is required (not null)
@@ -62,6 +63,7 @@ namespace PollinationSDK
             this.Owner = owner;
             this.Recipe = recipe;
             this.Status = status;
+            this.ResourcesDuration = resourcesDuration;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "CloudJob";
@@ -71,45 +73,51 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "CloudJob";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "CloudJob";
 
         /// <summary>
         /// The unique ID for this run
         /// </summary>
         /// <value>The unique ID for this run</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// The job specification
         /// </summary>
         /// <value>The job specification</value>
-        [DataMember(Name = "spec", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "spec", IsRequired = true)]
         public Job Spec { get; set; } 
         /// <summary>
         /// author
         /// </summary>
         /// <value>author</value>
-        [DataMember(Name = "author", EmitDefaultValue = false)]
+        [DataMember(Name = "author")]
         public AccountPublic Author { get; set; } 
         /// <summary>
         /// owner
         /// </summary>
         /// <value>owner</value>
-        [DataMember(Name = "owner", EmitDefaultValue = false)]
+        [DataMember(Name = "owner")]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// The recipe used to generate this 
         /// </summary>
         /// <value>The recipe used to generate this </value>
-        [DataMember(Name = "recipe", EmitDefaultValue = false)]
+        [DataMember(Name = "recipe")]
         public RecipeInterface Recipe { get; set; } 
         /// <summary>
         /// The status of the job
         /// </summary>
         /// <value>The status of the job</value>
-        [DataMember(Name = "status", EmitDefaultValue = false)]
+        [DataMember(Name = "status")]
         public JobStatus Status { get; set; } 
+        /// <summary>
+        /// CPU and Memory usage aggregated for all runs in this job
+        /// </summary>
+        /// <value>CPU and Memory usage aggregated for all runs in this job</value>
+        [DataMember(Name = "resources_duration")]
+        public ResourcesDuration ResourcesDuration { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -131,13 +139,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("CloudJob:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Spec: ").Append(Spec).Append("\n");
-            sb.Append("  Author: ").Append(Author).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Recipe: ").Append(Recipe).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Spec: ").Append(this.Spec).Append("\n");
+            sb.Append("  Author: ").Append(this.Author).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Recipe: ").Append(this.Recipe).Append("\n");
+            sb.Append("  Status: ").Append(this.Status).Append("\n");
+            sb.Append("  ResourcesDuration: ").Append(this.ResourcesDuration).Append("\n");
             return sb.ToString();
         }
   
@@ -201,36 +210,14 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Author == input.Author ||
-                    (this.Author != null &&
-                    this.Author.Equals(input.Author))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Recipe == input.Recipe ||
-                    (this.Recipe != null &&
-                    this.Recipe.Equals(input.Recipe))
-                ) && base.Equals(input) && 
-                (
-                    this.Status == input.Status ||
-                    (this.Status != null &&
-                    this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Spec, input.Spec) && 
+                    Extension.Equals(this.Author, input.Author) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Recipe, input.Recipe) && 
+                    Extension.Equals(this.Status, input.Status) && 
+                    Extension.Equals(this.ResourcesDuration, input.ResourcesDuration) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -254,6 +241,8 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.Recipe.GetHashCode();
                 if (this.Status != null)
                     hashCode = hashCode * 59 + this.Status.GetHashCode();
+                if (this.ResourcesDuration != null)
+                    hashCode = hashCode * 59 + this.ResourcesDuration.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -272,7 +261,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^CloudJob$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

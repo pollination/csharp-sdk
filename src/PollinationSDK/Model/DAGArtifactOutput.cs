@@ -52,7 +52,7 @@ namespace PollinationSDK
         (
             string name, object from, // Required parameters
             Dictionary<string, string> annotations= default, string description= default, List<AnyOf<DAGGenericOutputAlias,DAGStringOutputAlias,DAGIntegerOutputAlias,DAGNumberOutputAlias,DAGBooleanOutputAlias,DAGFolderOutputAlias,DAGFileOutputAlias,DAGPathOutputAlias,DAGArrayOutputAlias,DAGJSONObjectOutputAlias,DAGLinkedOutputAlias>> alias= default, bool required = true // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, from: from, alias: alias)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description, from: from, alias: alias )// BaseClass
         {
             this.Required = required;
 
@@ -64,14 +64,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DAGGenericOutput";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DAGGenericOutput";
 
         /// <summary>
         /// A boolean to indicate if an artifact output is required. A False value makes the artifact optional.
         /// </summary>
         /// <value>A boolean to indicate if an artifact output is required. A False value makes the artifact optional.</value>
-        [DataMember(Name = "required", EmitDefaultValue = true)]
+        [DataMember(Name = "required")]
         public bool Required { get; set; }  = true;
 
         /// <summary>
@@ -94,13 +94,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGArtifactOutput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  From: ").Append(From).Append("\n");
-            sb.Append("  Alias: ").Append(Alias).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  From: ").Append(this.From).Append("\n");
+            sb.Append("  Alias: ").Append(this.Alias).Append("\n");
+            sb.Append("  Required: ").Append(this.Required).Append("\n");
             return sb.ToString();
         }
   
@@ -164,16 +164,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Required == input.Required ||
-                    (this.Required != null &&
-                    this.Required.Equals(input.Required))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Required, input.Required) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -205,7 +197,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DAGGenericOutput$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

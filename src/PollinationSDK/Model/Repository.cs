@@ -56,7 +56,7 @@ namespace PollinationSDK
         (
             string name, string id, string latestTag, AccountPublic owner, // Required parameters
             bool _public= default, List<string> keywords= default, string description= default, string icon= default, RepositoryUserPermissions permissions= default, string slug= default // Optional parameters
-        ) : base(_public: _public, keywords: keywords, description: description, icon: icon, name: name)// BaseClass
+        ) : base(_public: _public, keywords: keywords, description: description, icon: icon, name: name )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Repository and cannot be null");
@@ -75,38 +75,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Repository";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Repository";
 
         /// <summary>
         /// The recipe unique ID
         /// </summary>
         /// <value>The recipe unique ID</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// The latest package version to be indexed
         /// </summary>
         /// <value>The latest package version to be indexed</value>
-        [DataMember(Name = "latest_tag", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "latest_tag", IsRequired = true)]
         public string LatestTag { get; set; } 
         /// <summary>
         /// The owner of the repository
         /// </summary>
         /// <value>The owner of the repository</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "owner", IsRequired = true)]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// The permissions the user making the API call has on the resource
         /// </summary>
         /// <value>The permissions the user making the API call has on the resource</value>
-        [DataMember(Name = "permissions", EmitDefaultValue = false)]
+        [DataMember(Name = "permissions")]
         public RepositoryUserPermissions Permissions { get; set; } 
         /// <summary>
         /// The repository slug
         /// </summary>
         /// <value>The repository slug</value>
-        [DataMember(Name = "slug", EmitDefaultValue = false)]
+        [DataMember(Name = "slug")]
         public string Slug { get; set; } 
 
         /// <summary>
@@ -129,17 +129,17 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Repository:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Icon: ").Append(Icon).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  LatestTag: ").Append(LatestTag).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Permissions: ").Append(Permissions).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Public: ").Append(this.Public).Append("\n");
+            sb.Append("  Keywords: ").Append(this.Keywords).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Icon: ").Append(this.Icon).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  LatestTag: ").Append(this.LatestTag).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Permissions: ").Append(this.Permissions).Append("\n");
+            sb.Append("  Slug: ").Append(this.Slug).Append("\n");
             return sb.ToString();
         }
   
@@ -203,36 +203,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.LatestTag == input.LatestTag ||
-                    (this.LatestTag != null &&
-                    this.LatestTag.Equals(input.LatestTag))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Permissions == input.Permissions ||
-                    (this.Permissions != null &&
-                    this.Permissions.Equals(input.Permissions))
-                ) && base.Equals(input) && 
-                (
-                    this.Slug == input.Slug ||
-                    (this.Slug != null &&
-                    this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.LatestTag, input.LatestTag) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Permissions, input.Permissions) && 
+                    Extension.Equals(this.Slug, input.Slug) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -272,7 +248,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Repository$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

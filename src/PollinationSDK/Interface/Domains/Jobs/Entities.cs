@@ -9,5 +9,8 @@ namespace PollinationSDK.Interface.Domains.Jobs
 namespace PollinationSDK
 {
 	public partial class DailyUsage: PollinationSDK.Interface.Domains.Jobs.IEntities {}
+	public partial class ResourcesDuration: PollinationSDK.Interface.Domains.Jobs.IEntities {}
+	public partial class RunMeta: PollinationSDK.Interface.Domains.Jobs.IEntities {}
+	public partial class RunProgress: PollinationSDK.Interface.Domains.Jobs.IEntities {}
 	public partial class Usage: PollinationSDK.Interface.Domains.Jobs.IEntities {}
 }

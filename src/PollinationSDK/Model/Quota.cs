@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// The type of resource
         /// </summary>
         /// <value>The type of resource</value>
-        [DataMember(Name="type", EmitDefaultValue=false)]
+        [DataMember(Name= "quota_type")]
         public QuotaType QuotaType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="Quota" /> class.
@@ -85,67 +85,67 @@ namespace PollinationSDK
         /// The quota owner
         /// </summary>
         /// <value>The quota owner</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "owner", IsRequired = true)]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// The unique ID for this Quota
         /// </summary>
         /// <value>The unique ID for this Quota</value>
-        [DataMember(Name = "id", EmitDefaultValue = false)]
+        [DataMember(Name = "id")]
         public Guid Id { get; set; } 
         /// <summary>
         /// The start of the quota usage tracking period
         /// </summary>
         /// <value>The start of the quota usage tracking period</value>
-        [DataMember(Name = "period_start", EmitDefaultValue = false)]
+        [DataMember(Name = "period_start")]
         public DateTime PeriodStart { get; set; } 
         /// <summary>
         /// The maximum amount of a resource the account can consume
         /// </summary>
         /// <value>The maximum amount of a resource the account can consume</value>
-        [DataMember(Name = "limit", EmitDefaultValue = false)]
+        [DataMember(Name = "limit")]
         public double Limit { get; set; } 
         /// <summary>
         /// The current amount of a resource allocated to the account linked to the subscription
         /// </summary>
         /// <value>The current amount of a resource allocated to the account linked to the subscription</value>
-        [DataMember(Name = "usage", EmitDefaultValue = false)]
+        [DataMember(Name = "usage")]
         public double Usage { get; set; } 
         /// <summary>
         /// Whether consumption is reset to 0 every billing period
         /// </summary>
         /// <value>Whether consumption is reset to 0 every billing period</value>
-        [DataMember(Name = "resets", EmitDefaultValue = true)]
+        [DataMember(Name = "resets")]
         public bool Resets { get; set; }  = false;
         /// <summary>
         /// Whether the limit triggers a blocking response from the server
         /// </summary>
         /// <value>Whether the limit triggers a blocking response from the server</value>
-        [DataMember(Name = "enforced", EmitDefaultValue = true)]
+        [DataMember(Name = "enforced")]
         public bool Enforced { get; set; }  = false;
         /// <summary>
         /// Whether the resource usage is greater than or equal to the limit
         /// </summary>
         /// <value>Whether the resource usage is greater than or equal to the limit</value>
-        [DataMember(Name = "exceeded", EmitDefaultValue = true)]
+        [DataMember(Name = "exceeded")]
         public bool Exceeded { get; set; }  = false;
         /// <summary>
         /// The human-readable name
         /// </summary>
         /// <value>The human-readable name</value>
-        [DataMember(Name = "display_name", EmitDefaultValue = false)]
+        [DataMember(Name = "display_name")]
         public string DisplayName { get; set; } 
         /// <summary>
         /// The description
         /// </summary>
         /// <value>The description</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
         /// <summary>
         /// The unit in which the usage and limit are measured
         /// </summary>
         /// <value>The unit in which the usage and limit are measured</value>
-        [DataMember(Name = "unit", EmitDefaultValue = false)]
+        [DataMember(Name = "unit")]
         public string Unit { get; set; } 
 
         /// <summary>
@@ -168,18 +168,18 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Quota:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  PeriodStart: ").Append(PeriodStart).Append("\n");
-            sb.Append("  Limit: ").Append(Limit).Append("\n");
-            sb.Append("  Usage: ").Append(Usage).Append("\n");
-            sb.Append("  Resets: ").Append(Resets).Append("\n");
-            sb.Append("  Enforced: ").Append(Enforced).Append("\n");
-            sb.Append("  Exceeded: ").Append(Exceeded).Append("\n");
-            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Unit: ").Append(Unit).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  PeriodStart: ").Append(this.PeriodStart).Append("\n");
+            sb.Append("  Limit: ").Append(this.Limit).Append("\n");
+            sb.Append("  Usage: ").Append(this.Usage).Append("\n");
+            sb.Append("  Resets: ").Append(this.Resets).Append("\n");
+            sb.Append("  Enforced: ").Append(this.Enforced).Append("\n");
+            sb.Append("  Exceeded: ").Append(this.Exceeded).Append("\n");
+            sb.Append("  DisplayName: ").Append(this.DisplayName).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Unit: ").Append(this.Unit).Append("\n");
             return sb.ToString();
         }
   
@@ -243,66 +243,18 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.PeriodStart == input.PeriodStart ||
-                    (this.PeriodStart != null &&
-                    this.PeriodStart.Equals(input.PeriodStart))
-                ) && base.Equals(input) && 
-                (
-                    this.Limit == input.Limit ||
-                    (this.Limit != null &&
-                    this.Limit.Equals(input.Limit))
-                ) && base.Equals(input) && 
-                (
-                    this.Usage == input.Usage ||
-                    (this.Usage != null &&
-                    this.Usage.Equals(input.Usage))
-                ) && base.Equals(input) && 
-                (
-                    this.Resets == input.Resets ||
-                    (this.Resets != null &&
-                    this.Resets.Equals(input.Resets))
-                ) && base.Equals(input) && 
-                (
-                    this.Enforced == input.Enforced ||
-                    (this.Enforced != null &&
-                    this.Enforced.Equals(input.Enforced))
-                ) && base.Equals(input) && 
-                (
-                    this.Exceeded == input.Exceeded ||
-                    (this.Exceeded != null &&
-                    this.Exceeded.Equals(input.Exceeded))
-                ) && base.Equals(input) && 
-                (
-                    this.DisplayName == input.DisplayName ||
-                    (this.DisplayName != null &&
-                    this.DisplayName.Equals(input.DisplayName))
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Unit == input.Unit ||
-                    (this.Unit != null &&
-                    this.Unit.Equals(input.Unit))
-                );
+                    Extension.Equals(this.Type, input.Type) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.PeriodStart, input.PeriodStart) && 
+                    Extension.Equals(this.Limit, input.Limit) && 
+                    Extension.Equals(this.Usage, input.Usage) && 
+                    Extension.Equals(this.Resets, input.Resets) && 
+                    Extension.Equals(this.Enforced, input.Enforced) && 
+                    Extension.Equals(this.Exceeded, input.Exceeded) && 
+                    Extension.Equals(this.DisplayName, input.DisplayName) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Unit, input.Unit);
         }
 
         /// <summary>

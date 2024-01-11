@@ -67,32 +67,32 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DockerConfig";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DockerConfig";
 
         /// <summary>
         /// Docker image name. Must include tag.
         /// </summary>
         /// <value>Docker image name. Must include tag.</value>
-        [DataMember(Name = "image", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "image", IsRequired = true)]
         public string Image { get; set; } 
         /// <summary>
         /// The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container.
         /// </summary>
         /// <value>The working directory the entrypoint command of the container runsin. This is used to determine where to load artifacts when running in the container.</value>
-        [DataMember(Name = "workdir", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "workdir", IsRequired = true)]
         public string Workdir { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The container registry URLs that this container should be pulled from. Will default to Dockerhub if none is specified.
         /// </summary>
         /// <value>The container registry URLs that this container should be pulled from. Will default to Dockerhub if none is specified.</value>
-        [DataMember(Name = "registry", EmitDefaultValue = false)]
+        [DataMember(Name = "registry")]
         public string Registry { get; set; } 
 
         /// <summary>
@@ -115,11 +115,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DockerConfig:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Image: ").Append(Image).Append("\n");
-            sb.Append("  Workdir: ").Append(Workdir).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Registry: ").Append(Registry).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Image: ").Append(this.Image).Append("\n");
+            sb.Append("  Workdir: ").Append(this.Workdir).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Registry: ").Append(this.Registry).Append("\n");
             return sb.ToString();
         }
   
@@ -183,32 +183,14 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Image == input.Image ||
-                    (this.Image != null &&
-                    this.Image.Equals(input.Image))
-                ) && base.Equals(input) && 
-                (
-                    this.Workdir == input.Workdir ||
-                    (this.Workdir != null &&
-                    this.Workdir.Equals(input.Workdir))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Image, input.Image) && 
+                    Extension.Equals(this.Workdir, input.Workdir) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Registry == input.Registry ||
-                    (this.Registry != null &&
-                    this.Registry.Equals(input.Registry))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Registry, input.Registry);
         }
 
         /// <summary>
@@ -246,7 +228,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DockerConfig", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

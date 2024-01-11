@@ -51,7 +51,7 @@ namespace PollinationSDK
         (
            string name, // Required parameters
             bool _public= default, List<string> keywords= default, string description= default, string icon= default // Optional parameters
-        ) : base(_public: _public, keywords: keywords, description: description, icon: icon)// BaseClass
+        ) : base(_public: _public, keywords: keywords, description: description, icon: icon )// BaseClass
         {
             // to ensure "name" is required (not null)
             this.Name = name ?? throw new ArgumentNullException("name is a required property for RepositoryCreate and cannot be null");
@@ -64,14 +64,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RepositoryCreate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RepositoryCreate";
 
         /// <summary>
         /// The name of the repository
         /// </summary>
         /// <value>The name of the repository</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
 
         /// <summary>
@@ -94,12 +94,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Icon: ").Append(Icon).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Public: ").Append(this.Public).Append("\n");
+            sb.Append("  Keywords: ").Append(this.Keywords).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Icon: ").Append(this.Icon).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
             return sb.ToString();
         }
   
@@ -163,16 +163,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -214,7 +206,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RepositoryCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

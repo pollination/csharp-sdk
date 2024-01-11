@@ -10,6 +10,7 @@ namespace PollinationSDK
 {
 	public partial class CloudJob: PollinationSDK.Interface.Server.Rest.Jobs.IDto {}
 	public partial class CloudJobList: PollinationSDK.Interface.Server.Rest.Jobs.IDto {}
+	public partial class RetryConfig: PollinationSDK.Interface.Server.Rest.Jobs.IDto {}
 	public partial class Run: PollinationSDK.Interface.Server.Rest.Jobs.IDto {}
 	public partial class RunList: PollinationSDK.Interface.Server.Rest.Jobs.IDto {}
 	public partial class RunResultList: PollinationSDK.Interface.Server.Rest.Jobs.IDto {}

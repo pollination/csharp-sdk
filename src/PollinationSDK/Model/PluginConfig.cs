@@ -64,26 +64,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "PluginConfig";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "PluginConfig";
 
         /// <summary>
         /// The configuration to use this plugin in a docker container
         /// </summary>
         /// <value>The configuration to use this plugin in a docker container</value>
-        [DataMember(Name = "docker", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "docker", IsRequired = true)]
         public DockerConfig Docker { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The configuration to use this plugin locally
         /// </summary>
         /// <value>The configuration to use this plugin locally</value>
-        [DataMember(Name = "local", EmitDefaultValue = false)]
+        [DataMember(Name = "local")]
         public LocalConfig Local { get; set; } 
 
         /// <summary>
@@ -106,10 +106,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("PluginConfig:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Docker: ").Append(Docker).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Local: ").Append(Local).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Docker: ").Append(this.Docker).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Local: ").Append(this.Local).Append("\n");
             return sb.ToString();
         }
   
@@ -173,27 +173,13 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Docker == input.Docker ||
-                    (this.Docker != null &&
-                    this.Docker.Equals(input.Docker))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Docker, input.Docker) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Local == input.Local ||
-                    (this.Local != null &&
-                    this.Local.Equals(input.Local))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Local, input.Local);
         }
 
         /// <summary>
@@ -229,7 +215,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^PluginConfig", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

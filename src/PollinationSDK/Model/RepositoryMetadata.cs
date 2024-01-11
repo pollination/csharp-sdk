@@ -40,7 +40,7 @@ namespace PollinationSDK
         /// <param name="recipeCount">The number of recipes hosted by the repository (default to 0).</param>
         public RepositoryMetadata
         (
-           // Required parameters
+            // Required parameters
            Dictionary<string, string> annotations= default, string name= default, string description = "A Queenbee package repository", string source= default, int pluginCount = 0, int recipeCount = 0// Optional parameters
         ) : base()// BaseClass
         {
@@ -60,44 +60,44 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RepositoryMetadata";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RepositoryMetadata";
 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The name of the repository
         /// </summary>
         /// <value>The name of the repository</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name")]
         public string Name { get; set; } 
         /// <summary>
         /// A short description of the repository
         /// </summary>
         /// <value>A short description of the repository</value>
-        [DataMember(Name = "description", EmitDefaultValue = true)]
+        [DataMember(Name = "description")]
         public string Description { get; set; }  = "A Queenbee package repository";
         /// <summary>
         /// The source path (url or local) to the repository
         /// </summary>
         /// <value>The source path (url or local) to the repository</value>
-        [DataMember(Name = "source", EmitDefaultValue = false)]
+        [DataMember(Name = "source")]
         public string Source { get; set; } 
         /// <summary>
         /// The number of plugins hosted by the repository
         /// </summary>
         /// <value>The number of plugins hosted by the repository</value>
-        [DataMember(Name = "plugin_count", EmitDefaultValue = true)]
+        [DataMember(Name = "plugin_count")]
         public int PluginCount { get; set; }  = 0;
         /// <summary>
         /// The number of recipes hosted by the repository
         /// </summary>
         /// <value>The number of recipes hosted by the repository</value>
-        [DataMember(Name = "recipe_count", EmitDefaultValue = true)]
+        [DataMember(Name = "recipe_count")]
         public int RecipeCount { get; set; }  = 0;
 
         /// <summary>
@@ -120,13 +120,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryMetadata:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  PluginCount: ").Append(PluginCount).Append("\n");
-            sb.Append("  RecipeCount: ").Append(RecipeCount).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Source: ").Append(this.Source).Append("\n");
+            sb.Append("  PluginCount: ").Append(this.PluginCount).Append("\n");
+            sb.Append("  RecipeCount: ").Append(this.RecipeCount).Append("\n");
             return sb.ToString();
         }
   
@@ -190,42 +190,16 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.PluginCount == input.PluginCount ||
-                    (this.PluginCount != null &&
-                    this.PluginCount.Equals(input.PluginCount))
-                ) && base.Equals(input) && 
-                (
-                    this.RecipeCount == input.RecipeCount ||
-                    (this.RecipeCount != null &&
-                    this.RecipeCount.Equals(input.RecipeCount))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Source, input.Source) && 
+                    Extension.Equals(this.PluginCount, input.PluginCount) && 
+                    Extension.Equals(this.RecipeCount, input.RecipeCount);
         }
 
         /// <summary>
@@ -267,7 +241,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RepositoryMetadata$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

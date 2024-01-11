@@ -61,20 +61,20 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "CreatedContent";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "CreatedContent";
 
         /// <summary>
         /// Id for the newly created resource.
         /// </summary>
         /// <value>Id for the newly created resource.</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public Guid Id { get; set; } 
         /// <summary>
         ///  A human readable message
         /// </summary>
         /// <value> A human readable message</value>
-        [DataMember(Name = "message", EmitDefaultValue = false)]
+        [DataMember(Name = "message")]
         public string Message { get; set; } 
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("CreatedContent:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Message: ").Append(this.Message).Append("\n");
             return sb.ToString();
         }
   
@@ -163,21 +163,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Message == input.Message ||
-                    (this.Message != null &&
-                    this.Message.Equals(input.Message))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Message, input.Message) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -211,7 +199,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^CreatedContent$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

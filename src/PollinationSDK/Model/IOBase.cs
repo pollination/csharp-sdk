@@ -37,7 +37,7 @@ namespace PollinationSDK
         /// <param name="outputs">Place-holder. Overwrite this!.</param>
         public IOBase
         (
-           // Required parameters
+            // Required parameters
            Dictionary<string, string> annotations= default, List<object> inputs= default, List<object> outputs= default// Optional parameters
         ) : base()// BaseClass
         {
@@ -53,26 +53,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "IOBase";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "IOBase";
 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Place-holder. Overwrite this!
         /// </summary>
         /// <value>Place-holder. Overwrite this!</value>
-        [DataMember(Name = "inputs", EmitDefaultValue = false)]
+        [DataMember(Name = "inputs")]
         public List<object> Inputs { get; set; } 
         /// <summary>
         /// Place-holder. Overwrite this!
         /// </summary>
         /// <value>Place-holder. Overwrite this!</value>
-        [DataMember(Name = "outputs", EmitDefaultValue = false)]
+        [DataMember(Name = "outputs")]
         public List<object> Outputs { get; set; } 
 
         /// <summary>
@@ -95,10 +95,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("IOBase:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Inputs: ").Append(this.Inputs).Append("\n");
+            sb.Append("  Outputs: ").Append(this.Outputs).Append("\n");
             return sb.ToString();
         }
   
@@ -162,28 +162,18 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
                 (
                     this.Inputs == input.Inputs ||
-                    this.Inputs != null &&
-                    input.Inputs != null &&
-                    this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Inputs, input.Inputs)
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
-                    this.Outputs != null &&
-                    input.Outputs != null &&
-                    this.Outputs.SequenceEqual(input.Outputs)
+                    Extension.AllEquals(this.Outputs, input.Outputs)
                 );
         }
 
@@ -230,7 +220,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^IOBase$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

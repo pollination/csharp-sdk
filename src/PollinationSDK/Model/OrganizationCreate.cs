@@ -39,9 +39,9 @@ namespace PollinationSDK
         /// <param name="description">A description of the org.</param>
         public OrganizationCreate
         (
-           // Required parameters
+            // Required parameters
             string accountName= default, string name= default, string pictureUrl= default, string contactEmail= default, string description= default // Optional parameters
-        ) : base(accountName: accountName, name: name, pictureUrl: pictureUrl, contactEmail: contactEmail, description: description)// BaseClass
+        ) : base(accountName: accountName, name: name, pictureUrl: pictureUrl, contactEmail: contactEmail, description: description )// BaseClass
         {
 
             // Set non-required readonly properties with defaultValue
@@ -52,8 +52,8 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "OrganizationCreate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "OrganizationCreate";
 
 
         /// <summary>
@@ -76,12 +76,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("OrganizationCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  AccountName: ").Append(AccountName).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
-            sb.Append("  ContactEmail: ").Append(ContactEmail).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  AccountName: ").Append(this.AccountName).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  PictureUrl: ").Append(this.PictureUrl).Append("\n");
+            sb.Append("  ContactEmail: ").Append(this.ContactEmail).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
             return sb.ToString();
         }
   
@@ -145,11 +145,7 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -179,7 +175,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^OrganizationCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

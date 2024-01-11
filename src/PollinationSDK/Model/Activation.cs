@@ -55,10 +55,11 @@ namespace PollinationSDK
         /// <param name="leaseExpiresAt">leaseExpiresAt.</param>
         /// <param name="metadata">metadata.</param>
         /// <param name="licenseId">licenseId.</param>
+        /// <param name="user">The user associated with the activation.</param>
         public Activation
         (
            string id, DateTime createdAt, DateTime updatedAt, bool offline, DateTime lastSyncedAt, Location location, // Required parameters
-           string os= default, string osVersion= default, string hostname= default, string appVersion= default, DateTime leaseExpiresAt= default, List<LicenseMetadata> metadata= default, string licenseId= default // Optional parameters
+           string os= default, string osVersion= default, string hostname= default, string appVersion= default, DateTime leaseExpiresAt= default, List<Metadata> metadata= default, string licenseId= default, AccountPublic user= default // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "id" is required (not null)
@@ -76,6 +77,7 @@ namespace PollinationSDK
             this.LeaseExpiresAt = leaseExpiresAt;
             this.Metadata = metadata;
             this.LicenseId = licenseId;
+            this.User = user;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "Activation";
@@ -85,74 +87,80 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Activation";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Activation";
 
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// Gets or Sets CreatedAt
         /// </summary>
-        [DataMember(Name = "created_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "created_at", IsRequired = true)]
         public DateTime CreatedAt { get; set; } 
         /// <summary>
         /// Gets or Sets UpdatedAt
         /// </summary>
-        [DataMember(Name = "updated_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "updated_at", IsRequired = true)]
         public DateTime UpdatedAt { get; set; } 
         /// <summary>
         /// Gets or Sets Offline
         /// </summary>
-        [DataMember(Name = "offline", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "offline", IsRequired = true)]
         public bool Offline { get; set; } 
         /// <summary>
         /// Gets or Sets LastSyncedAt
         /// </summary>
-        [DataMember(Name = "last_synced_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "last_synced_at", IsRequired = true)]
         public DateTime LastSyncedAt { get; set; } 
         /// <summary>
         /// Gets or Sets Location
         /// </summary>
-        [DataMember(Name = "location", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "location", IsRequired = true)]
         public Location Location { get; set; } 
         /// <summary>
         /// Gets or Sets Os
         /// </summary>
-        [DataMember(Name = "os", EmitDefaultValue = false)]
+        [DataMember(Name = "os")]
         public string Os { get; set; } 
         /// <summary>
         /// Gets or Sets OsVersion
         /// </summary>
-        [DataMember(Name = "os_version", EmitDefaultValue = false)]
+        [DataMember(Name = "os_version")]
         public string OsVersion { get; set; } 
         /// <summary>
         /// Gets or Sets Hostname
         /// </summary>
-        [DataMember(Name = "hostname", EmitDefaultValue = false)]
+        [DataMember(Name = "hostname")]
         public string Hostname { get; set; } 
         /// <summary>
         /// Gets or Sets AppVersion
         /// </summary>
-        [DataMember(Name = "app_version", EmitDefaultValue = false)]
+        [DataMember(Name = "app_version")]
         public string AppVersion { get; set; } 
         /// <summary>
         /// Gets or Sets LeaseExpiresAt
         /// </summary>
-        [DataMember(Name = "lease_expires_at", EmitDefaultValue = false)]
+        [DataMember(Name = "lease_expires_at")]
         public DateTime LeaseExpiresAt { get; set; } 
         /// <summary>
         /// Gets or Sets Metadata
         /// </summary>
-        [DataMember(Name = "metadata", EmitDefaultValue = false)]
-        public List<LicenseMetadata> Metadata { get; set; } 
+        [DataMember(Name = "metadata")]
+        public List<Metadata> Metadata { get; set; } 
         /// <summary>
         /// Gets or Sets LicenseId
         /// </summary>
-        [DataMember(Name = "license_id", EmitDefaultValue = false)]
+        [DataMember(Name = "license_id")]
         public string LicenseId { get; set; } 
+        /// <summary>
+        /// The user associated with the activation
+        /// </summary>
+        /// <value>The user associated with the activation</value>
+        [DataMember(Name = "user")]
+        public AccountPublic User { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -174,20 +182,21 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Activation:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
-            sb.Append("  UpdatedAt: ").Append(UpdatedAt).Append("\n");
-            sb.Append("  Offline: ").Append(Offline).Append("\n");
-            sb.Append("  LastSyncedAt: ").Append(LastSyncedAt).Append("\n");
-            sb.Append("  Location: ").Append(Location).Append("\n");
-            sb.Append("  Os: ").Append(Os).Append("\n");
-            sb.Append("  OsVersion: ").Append(OsVersion).Append("\n");
-            sb.Append("  Hostname: ").Append(Hostname).Append("\n");
-            sb.Append("  AppVersion: ").Append(AppVersion).Append("\n");
-            sb.Append("  LeaseExpiresAt: ").Append(LeaseExpiresAt).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  LicenseId: ").Append(LicenseId).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  CreatedAt: ").Append(this.CreatedAt).Append("\n");
+            sb.Append("  UpdatedAt: ").Append(this.UpdatedAt).Append("\n");
+            sb.Append("  Offline: ").Append(this.Offline).Append("\n");
+            sb.Append("  LastSyncedAt: ").Append(this.LastSyncedAt).Append("\n");
+            sb.Append("  Location: ").Append(this.Location).Append("\n");
+            sb.Append("  Os: ").Append(this.Os).Append("\n");
+            sb.Append("  OsVersion: ").Append(this.OsVersion).Append("\n");
+            sb.Append("  Hostname: ").Append(this.Hostname).Append("\n");
+            sb.Append("  AppVersion: ").Append(this.AppVersion).Append("\n");
+            sb.Append("  LeaseExpiresAt: ").Append(this.LeaseExpiresAt).Append("\n");
+            sb.Append("  Metadata: ").Append(this.Metadata).Append("\n");
+            sb.Append("  LicenseId: ").Append(this.LicenseId).Append("\n");
+            sb.Append("  User: ").Append(this.User).Append("\n");
             return sb.ToString();
         }
   
@@ -251,77 +260,24 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.CreatedAt == input.CreatedAt ||
-                    (this.CreatedAt != null &&
-                    this.CreatedAt.Equals(input.CreatedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.UpdatedAt == input.UpdatedAt ||
-                    (this.UpdatedAt != null &&
-                    this.UpdatedAt.Equals(input.UpdatedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Offline == input.Offline ||
-                    (this.Offline != null &&
-                    this.Offline.Equals(input.Offline))
-                ) && base.Equals(input) && 
-                (
-                    this.LastSyncedAt == input.LastSyncedAt ||
-                    (this.LastSyncedAt != null &&
-                    this.LastSyncedAt.Equals(input.LastSyncedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Location == input.Location ||
-                    (this.Location != null &&
-                    this.Location.Equals(input.Location))
-                ) && base.Equals(input) && 
-                (
-                    this.Os == input.Os ||
-                    (this.Os != null &&
-                    this.Os.Equals(input.Os))
-                ) && base.Equals(input) && 
-                (
-                    this.OsVersion == input.OsVersion ||
-                    (this.OsVersion != null &&
-                    this.OsVersion.Equals(input.OsVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.Hostname == input.Hostname ||
-                    (this.Hostname != null &&
-                    this.Hostname.Equals(input.Hostname))
-                ) && base.Equals(input) && 
-                (
-                    this.AppVersion == input.AppVersion ||
-                    (this.AppVersion != null &&
-                    this.AppVersion.Equals(input.AppVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.LeaseExpiresAt == input.LeaseExpiresAt ||
-                    (this.LeaseExpiresAt != null &&
-                    this.LeaseExpiresAt.Equals(input.LeaseExpiresAt))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.CreatedAt, input.CreatedAt) && 
+                    Extension.Equals(this.UpdatedAt, input.UpdatedAt) && 
+                    Extension.Equals(this.Offline, input.Offline) && 
+                    Extension.Equals(this.LastSyncedAt, input.LastSyncedAt) && 
+                    Extension.Equals(this.Location, input.Location) && 
+                    Extension.Equals(this.Os, input.Os) && 
+                    Extension.Equals(this.OsVersion, input.OsVersion) && 
+                    Extension.Equals(this.Hostname, input.Hostname) && 
+                    Extension.Equals(this.AppVersion, input.AppVersion) && 
+                    Extension.Equals(this.LeaseExpiresAt, input.LeaseExpiresAt) && 
                 (
                     this.Metadata == input.Metadata ||
-                    this.Metadata != null &&
-                    input.Metadata != null &&
-                    this.Metadata.SequenceEqual(input.Metadata)
-                ) && base.Equals(input) && 
-                (
-                    this.LicenseId == input.LicenseId ||
-                    (this.LicenseId != null &&
-                    this.LicenseId.Equals(input.LicenseId))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Metadata, input.Metadata)
+                ) && 
+                    Extension.Equals(this.LicenseId, input.LicenseId) && 
+                    Extension.Equals(this.User, input.User) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -359,6 +315,8 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.Metadata.GetHashCode();
                 if (this.LicenseId != null)
                     hashCode = hashCode * 59 + this.LicenseId.GetHashCode();
+                if (this.User != null)
+                    hashCode = hashCode * 59 + this.User.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -377,7 +335,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Activation$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

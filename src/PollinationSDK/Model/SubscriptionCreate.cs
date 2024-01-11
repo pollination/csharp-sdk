@@ -32,14 +32,29 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="SubscriptionCreate" /> class.
         /// </summary>
-        /// <param name="items">The list of recurring price items and the quantity of each to attach to the new subscription.</param>
+        [JsonConstructorAttribute]
+        protected SubscriptionCreate() 
+        { 
+            // Set non-required readonly properties with defaultValue
+            this.Type = "SubscriptionCreate";
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SubscriptionCreate" /> class.
+        /// </summary>
+        /// <param name="account">The name of the account to create subscription for (required).</param>
+        /// <param name="planId">The ID of the plan to subscribe to (required).</param>
+        /// <param name="quantity">The number of subscriptions to create (default to 1).</param>
         public SubscriptionCreate
         (
-           // Required parameters
-           List<NewSubscriptionItem> items= default // Optional parameters
+           string account, int planId, // Required parameters
+           int quantity = 1 // Optional parameters
         ) : base()// BaseClass
         {
-            this.Items = items;
+            // to ensure "account" is required (not null)
+            this.Account = account ?? throw new ArgumentNullException("account is a required property for SubscriptionCreate and cannot be null");
+            this.PlanId = planId;
+            this.Quantity = quantity;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "SubscriptionCreate";
@@ -49,15 +64,27 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "SubscriptionCreate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "SubscriptionCreate";
 
         /// <summary>
-        /// The list of recurring price items and the quantity of each to attach to the new subscription
+        /// The name of the account to create subscription for
         /// </summary>
-        /// <value>The list of recurring price items and the quantity of each to attach to the new subscription</value>
-        [DataMember(Name = "items", EmitDefaultValue = false)]
-        public List<NewSubscriptionItem> Items { get; set; } 
+        /// <value>The name of the account to create subscription for</value>
+        [DataMember(Name = "account", IsRequired = true)]
+        public string Account { get; set; } 
+        /// <summary>
+        /// The ID of the plan to subscribe to
+        /// </summary>
+        /// <value>The ID of the plan to subscribe to</value>
+        [DataMember(Name = "plan_id", IsRequired = true)]
+        public int PlanId { get; set; } 
+        /// <summary>
+        /// The number of subscriptions to create
+        /// </summary>
+        /// <value>The number of subscriptions to create</value>
+        [DataMember(Name = "quantity")]
+        public int Quantity { get; set; }  = 1;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -79,8 +106,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("SubscriptionCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Items: ").Append(Items).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Account: ").Append(this.Account).Append("\n");
+            sb.Append("  PlanId: ").Append(this.PlanId).Append("\n");
+            sb.Append("  Quantity: ").Append(this.Quantity).Append("\n");
             return sb.ToString();
         }
   
@@ -144,17 +173,10 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Items == input.Items ||
-                    this.Items != null &&
-                    input.Items != null &&
-                    this.Items.SequenceEqual(input.Items)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Account, input.Account) && 
+                    Extension.Equals(this.PlanId, input.PlanId) && 
+                    Extension.Equals(this.Quantity, input.Quantity) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -166,8 +188,12 @@ namespace PollinationSDK
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = base.GetHashCode();
-                if (this.Items != null)
-                    hashCode = hashCode * 59 + this.Items.GetHashCode();
+                if (this.Account != null)
+                    hashCode = hashCode * 59 + this.Account.GetHashCode();
+                if (this.PlanId != null)
+                    hashCode = hashCode * 59 + this.PlanId.GetHashCode();
+                if (this.Quantity != null)
+                    hashCode = hashCode * 59 + this.Quantity.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -186,7 +212,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^SubscriptionCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

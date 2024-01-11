@@ -72,39 +72,39 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "AccountPublic";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "AccountPublic";
 
         /// <summary>
         /// Gets or Sets Id
         /// </summary>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// Gets or Sets AccountType
         /// </summary>
-        [DataMember(Name = "account_type", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "account_type", IsRequired = true)]
         public string AccountType { get; set; } 
         /// <summary>
         /// Gets or Sets Name
         /// </summary>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// Gets or Sets DisplayName
         /// </summary>
-        [DataMember(Name = "display_name", EmitDefaultValue = false)]
+        [DataMember(Name = "display_name")]
         public string DisplayName { get; set; } 
         /// <summary>
         /// Gets or Sets Description
         /// </summary>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
         /// <summary>
         /// https://robohash.org/ladybugbot
         /// </summary>
         /// <value>https://robohash.org/ladybugbot</value>
-        [DataMember(Name = "picture_url", EmitDefaultValue = false)]
+        [DataMember(Name = "picture_url")]
         public string PictureUrl { get; set; } 
 
         /// <summary>
@@ -127,13 +127,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("AccountPublic:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  AccountType: ").Append(AccountType).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  DisplayName: ").Append(DisplayName).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  AccountType: ").Append(this.AccountType).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  DisplayName: ").Append(this.DisplayName).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  PictureUrl: ").Append(this.PictureUrl).Append("\n");
             return sb.ToString();
         }
   
@@ -197,41 +197,13 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.AccountType == input.AccountType ||
-                    (this.AccountType != null &&
-                    this.AccountType.Equals(input.AccountType))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.DisplayName == input.DisplayName ||
-                    (this.DisplayName != null &&
-                    this.DisplayName.Equals(input.DisplayName))
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.PictureUrl == input.PictureUrl ||
-                    (this.PictureUrl != null &&
-                    this.PictureUrl.Equals(input.PictureUrl))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.AccountType, input.AccountType) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.DisplayName, input.DisplayName) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.PictureUrl, input.PictureUrl) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -273,7 +245,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^AccountPublic$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

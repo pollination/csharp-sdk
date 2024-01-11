@@ -37,9 +37,9 @@ namespace PollinationSDK
         /// <param name="read">The user has read permission on this resource (default to false).</param>
         public RepositoryUserPermissions
         (
-           // Required parameters
+            // Required parameters
             bool admin = false, bool write = false, bool read = false // Optional parameters
-        ) : base(admin: admin, write: write, read: read)// BaseClass
+        ) : base(admin: admin, write: write, read: read )// BaseClass
         {
 
             // Set non-required readonly properties with defaultValue
@@ -50,8 +50,8 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RepositoryUserPermissions";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RepositoryUserPermissions";
 
 
         /// <summary>
@@ -74,10 +74,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryUserPermissions:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Admin: ").Append(Admin).Append("\n");
-            sb.Append("  Write: ").Append(Write).Append("\n");
-            sb.Append("  Read: ").Append(Read).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Admin: ").Append(this.Admin).Append("\n");
+            sb.Append("  Write: ").Append(this.Write).Append("\n");
+            sb.Append("  Read: ").Append(this.Read).Append("\n");
             return sb.ToString();
         }
   
@@ -141,11 +141,7 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -175,7 +171,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RepositoryUserPermissions$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

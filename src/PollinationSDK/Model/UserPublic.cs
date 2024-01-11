@@ -66,32 +66,32 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "UserPublic";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "UserPublic";
 
         /// <summary>
         /// The lowercase account name for this user
         /// </summary>
         /// <value>The lowercase account name for this user</value>
-        [DataMember(Name = "username", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "username", IsRequired = true)]
         public string Username { get; set; } 
         /// <summary>
         /// The display name for this user
         /// </summary>
         /// <value>The display name for this user</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name")]
         public string Name { get; set; } 
         /// <summary>
         /// A short description of the user
         /// </summary>
         /// <value>A short description of the user</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
         /// <summary>
         /// URL to the picture associated with this user
         /// </summary>
         /// <value>URL to the picture associated with this user</value>
-        [DataMember(Name = "picture", EmitDefaultValue = false)]
+        [DataMember(Name = "picture")]
         public string Picture { get; set; } 
 
         /// <summary>
@@ -114,11 +114,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("UserPublic:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Username: ").Append(Username).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Picture: ").Append(Picture).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Username: ").Append(this.Username).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Picture: ").Append(this.Picture).Append("\n");
             return sb.ToString();
         }
   
@@ -182,31 +182,11 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Username == input.Username ||
-                    (this.Username != null &&
-                    this.Username.Equals(input.Username))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Picture == input.Picture ||
-                    (this.Picture != null &&
-                    this.Picture.Equals(input.Picture))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Username, input.Username) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Picture, input.Picture) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -244,7 +224,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^UserPublic$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

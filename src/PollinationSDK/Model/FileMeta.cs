@@ -70,33 +70,33 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "FileMeta";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "FileMeta";
 
         /// <summary>
         /// Gets or Sets Key
         /// </summary>
-        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "key", IsRequired = true)]
         public string Key { get; set; } 
         /// <summary>
         /// Gets or Sets FileType
         /// </summary>
-        [DataMember(Name = "file_type", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "file_type", IsRequired = true)]
         public string FileType { get; set; } 
         /// <summary>
         /// Gets or Sets FileName
         /// </summary>
-        [DataMember(Name = "file_name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "file_name", IsRequired = true)]
         public string FileName { get; set; } 
         /// <summary>
         /// Gets or Sets LastModified
         /// </summary>
-        [DataMember(Name = "last_modified", EmitDefaultValue = false)]
+        [DataMember(Name = "last_modified")]
         public DateTime LastModified { get; set; } 
         /// <summary>
         /// Gets or Sets Size
         /// </summary>
-        [DataMember(Name = "size", EmitDefaultValue = false)]
+        [DataMember(Name = "size")]
         public int Size { get; set; } 
 
         /// <summary>
@@ -119,12 +119,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("FileMeta:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  FileType: ").Append(FileType).Append("\n");
-            sb.Append("  FileName: ").Append(FileName).Append("\n");
-            sb.Append("  LastModified: ").Append(LastModified).Append("\n");
-            sb.Append("  Size: ").Append(Size).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Key: ").Append(this.Key).Append("\n");
+            sb.Append("  FileType: ").Append(this.FileType).Append("\n");
+            sb.Append("  FileName: ").Append(this.FileName).Append("\n");
+            sb.Append("  LastModified: ").Append(this.LastModified).Append("\n");
+            sb.Append("  Size: ").Append(this.Size).Append("\n");
             return sb.ToString();
         }
   
@@ -188,36 +188,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
-                ) && base.Equals(input) && 
-                (
-                    this.FileType == input.FileType ||
-                    (this.FileType != null &&
-                    this.FileType.Equals(input.FileType))
-                ) && base.Equals(input) && 
-                (
-                    this.FileName == input.FileName ||
-                    (this.FileName != null &&
-                    this.FileName.Equals(input.FileName))
-                ) && base.Equals(input) && 
-                (
-                    this.LastModified == input.LastModified ||
-                    (this.LastModified != null &&
-                    this.LastModified.Equals(input.LastModified))
-                ) && base.Equals(input) && 
-                (
-                    this.Size == input.Size ||
-                    (this.Size != null &&
-                    this.Size.Equals(input.Size))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Key, input.Key) && 
+                    Extension.Equals(this.FileType, input.FileType) && 
+                    Extension.Equals(this.FileName, input.FileName) && 
+                    Extension.Equals(this.LastModified, input.LastModified) && 
+                    Extension.Equals(this.Size, input.Size) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -257,7 +233,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^FileMeta$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

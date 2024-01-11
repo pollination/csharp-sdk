@@ -47,12 +47,12 @@ namespace PollinationSDK
         /// <param name="url">A URL to the license used for the package..</param>
         public License
         (
-           //string name, // Required parameters
+           string name, // Required parameters
            Dictionary<string, string> annotations= default, string url= default// Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "name" is required (not null)
-            //this.Name = name ?? throw new ArgumentNullException("name is a required property for License and cannot be null");
+            this.Name = name ?? throw new ArgumentNullException("name is a required property for License and cannot be null");
             this.Annotations = annotations;
             this.Url = url;
 
@@ -64,26 +64,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "License";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "License";
 
         /// <summary>
         /// The license name used for the package.
         /// </summary>
         /// <value>The license name used for the package.</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// A URL to the license used for the package.
         /// </summary>
         /// <value>A URL to the license used for the package.</value>
-        [DataMember(Name = "url", EmitDefaultValue = false)]
+        [DataMember(Name = "url")]
         public string Url { get; set; } 
 
         /// <summary>
@@ -106,10 +106,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("License:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Url: ").Append(Url).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Url: ").Append(this.Url).Append("\n");
             return sb.ToString();
         }
   
@@ -173,27 +173,13 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Url == input.Url ||
-                    (this.Url != null &&
-                    this.Url.Equals(input.Url))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Url, input.Url);
         }
 
         /// <summary>
@@ -239,7 +225,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^License$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
