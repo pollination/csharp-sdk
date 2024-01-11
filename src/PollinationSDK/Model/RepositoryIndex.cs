@@ -39,7 +39,7 @@ namespace PollinationSDK
         /// <param name="recipe">A dict of recipes accessible by name. Each name key points to a list of recipesversions.</param>
         public RepositoryIndex
         (
-           // Required parameters
+            // Required parameters
            Dictionary<string, string> annotations= default, DateTime generated= default, RepositoryMetadata metadata= default, Dictionary<string, List<PackageVersion>> plugin= default, Dictionary<string, List<PackageVersion>> recipe= default// Optional parameters
         ) : base()// BaseClass
         {
@@ -58,44 +58,44 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RepositoryIndex";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RepositoryIndex";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
-        [DataMember(Name = "api_version", EmitDefaultValue = true)]
-        public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        [DataMember(Name = "api_version")]
+        public string ApiVersion { get; protected set; }  = "v1beta1";
 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The timestamp at which the index was generated
         /// </summary>
         /// <value>The timestamp at which the index was generated</value>
-        [DataMember(Name = "generated", EmitDefaultValue = false)]
+        [DataMember(Name = "generated")]
         public DateTime Generated { get; set; } 
         /// <summary>
         /// Extra information about the repository
         /// </summary>
         /// <value>Extra information about the repository</value>
-        [DataMember(Name = "metadata", EmitDefaultValue = false)]
+        [DataMember(Name = "metadata")]
         public RepositoryMetadata Metadata { get; set; } 
         /// <summary>
         /// A dict of plugins accessible by name. Each name key points to a list of plugin versions
         /// </summary>
         /// <value>A dict of plugins accessible by name. Each name key points to a list of plugin versions</value>
-        [DataMember(Name = "plugin", EmitDefaultValue = false)]
+        [DataMember(Name = "plugin")]
         public Dictionary<string, List<PackageVersion>> Plugin { get; set; } 
         /// <summary>
         /// A dict of recipes accessible by name. Each name key points to a list of recipesversions
         /// </summary>
         /// <value>A dict of recipes accessible by name. Each name key points to a list of recipesversions</value>
-        [DataMember(Name = "recipe", EmitDefaultValue = false)]
+        [DataMember(Name = "recipe")]
         public Dictionary<string, List<PackageVersion>> Recipe { get; set; } 
 
         /// <summary>
@@ -118,13 +118,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryIndex:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
-            sb.Append("  Generated: ").Append(Generated).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  Plugin: ").Append(Plugin).Append("\n");
-            sb.Append("  Recipe: ").Append(Recipe).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  ApiVersion: ").Append(this.ApiVersion).Append("\n");
+            sb.Append("  Generated: ").Append(this.Generated).Append("\n");
+            sb.Append("  Metadata: ").Append(this.Metadata).Append("\n");
+            sb.Append("  Plugin: ").Append(this.Plugin).Append("\n");
+            sb.Append("  Recipe: ").Append(this.Recipe).Append("\n");
             return sb.ToString();
         }
   
@@ -188,43 +188,21 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.ApiVersion == input.ApiVersion ||
-                    (this.ApiVersion != null &&
-                    this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.Generated == input.Generated ||
-                    (this.Generated != null &&
-                    this.Generated.Equals(input.Generated))
-                ) && base.Equals(input) && 
-                (
-                    this.Metadata == input.Metadata ||
-                    (this.Metadata != null &&
-                    this.Metadata.Equals(input.Metadata))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.ApiVersion, input.ApiVersion) && 
+                    Extension.Equals(this.Generated, input.Generated) && 
+                    Extension.Equals(this.Metadata, input.Metadata) && 
                 (
                     this.Plugin == input.Plugin ||
-                    this.Plugin != null &&
-                    input.Plugin != null &&
-                    this.Plugin.SequenceEqual(input.Plugin)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Plugin, input.Plugin)
+                ) && 
                 (
                     this.Recipe == input.Recipe ||
-                    this.Recipe != null &&
-                    input.Recipe != null &&
-                    this.Recipe.SequenceEqual(input.Recipe)
+                    Extension.AllEquals(this.Recipe, input.Recipe)
                 );
         }
 
@@ -267,7 +245,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RepositoryIndex$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
@@ -276,7 +254,7 @@ namespace PollinationSDK
             
             // ApiVersion (string) pattern
             Regex regexApiVersion = new Regex(@"^v1beta1$", RegexOptions.CultureInvariant);
-            if (false == regexApiVersion.Match(this.ApiVersion).Success)
+            if (this.ApiVersion != null && false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
             }

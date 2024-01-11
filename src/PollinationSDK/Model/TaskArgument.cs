@@ -65,26 +65,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "TaskArgument";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "TaskArgument";
 
         /// <summary>
         /// Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.
         /// </summary>
         /// <value>Argument name. The name must match one of the input names from Task&#39;s template which can be a function or DAG.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// A reference to a DAG input, a DAG output or another task output. You can also use the ValueReference type to hard-code an input value.
         /// </summary>
         /// <value>A reference to a DAG input, a DAG output or another task output. You can also use the ValueReference type to hard-code an input value.</value>
-        [DataMember(Name = "from", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "from", IsRequired = true)]
         public AnyOf<InputReference,TaskReference,ItemReference,ValueReference> From { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
 
         /// <summary>
@@ -107,10 +107,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("TaskArgument:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  From: ").Append(From).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  From: ").Append(this.From).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
             return sb.ToString();
         }
   
@@ -174,26 +174,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.From == input.From ||
-                    (this.From != null &&
-                    this.From.Equals(input.From))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.From, input.From) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
+                    Extension.AllEquals(this.Annotations, input.Annotations)
                 );
         }
 
@@ -230,7 +216,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^TaskArgument$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

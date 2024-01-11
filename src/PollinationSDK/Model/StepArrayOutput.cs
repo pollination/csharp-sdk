@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// Type of items in this array. All the items in an array must be from the same type.
         /// </summary>
         /// <value>Type of items in this array. All the items in an array must be from the same type.</value>
-        [DataMember(Name="items_type", EmitDefaultValue=false)]
+        [DataMember(Name="items_type")]
         public ItemType ItemsType { get; set; } = ItemType.String;
         /// <summary>
         /// Initializes a new instance of the <see cref="StepArrayOutput" /> class.
@@ -59,7 +59,7 @@ namespace PollinationSDK
         (
             string name, string path, List<object> value, // Required parameters
             Dictionary<string, string> annotations= default, string description= default, bool required = true, ItemType itemsType= ItemType.String // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, path: path, required: required)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description, path: path, required: required )// BaseClass
         {
             // to ensure "value" is required (not null)
             this.Value = value ?? throw new ArgumentNullException("value is a required property for StepArrayOutput and cannot be null");
@@ -73,13 +73,13 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "StepArrayOutput";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "StepArrayOutput";
 
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
-        [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "value", IsRequired = true)]
         public List<object> Value { get; set; } 
 
         /// <summary>
@@ -102,14 +102,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("StepArrayOutput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Path: ").Append(Path).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
-            sb.Append("  ItemsType: ").Append(ItemsType).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Path: ").Append(this.Path).Append("\n");
+            sb.Append("  Required: ").Append(this.Required).Append("\n");
+            sb.Append("  Value: ").Append(this.Value).Append("\n");
+            sb.Append("  ItemsType: ").Append(this.ItemsType).Append("\n");
             return sb.ToString();
         }
   
@@ -175,20 +175,10 @@ namespace PollinationSDK
             return base.Equals(input) && 
                 (
                     this.Value == input.Value ||
-                    this.Value != null &&
-                    input.Value != null &&
-                    this.Value.SequenceEqual(input.Value)
-                ) && base.Equals(input) && 
-                (
-                    this.ItemsType == input.ItemsType ||
-                    (this.ItemsType != null &&
-                    this.ItemsType.Equals(input.ItemsType))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Value, input.Value)
+                ) && 
+                    Extension.Equals(this.ItemsType, input.ItemsType) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -222,7 +212,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^StepArrayOutput$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

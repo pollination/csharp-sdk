@@ -47,7 +47,7 @@ namespace PollinationSDK
         public S3UploadRequest
         (
            string url, Dictionary<string, string> fields// Required parameters
-           // Optional parameters
+            // Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "url" is required (not null)
@@ -63,18 +63,18 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "S3UploadRequest";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "S3UploadRequest";
 
         /// <summary>
         /// Gets or Sets Url
         /// </summary>
-        [DataMember(Name = "url", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "url", IsRequired = true)]
         public string Url { get; set; } 
         /// <summary>
         /// Gets or Sets Fields
         /// </summary>
-        [DataMember(Name = "fields", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "fields", IsRequired = true)]
         public Dictionary<string, string> Fields { get; set; } 
 
         /// <summary>
@@ -97,9 +97,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("S3UploadRequest:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Url: ").Append(Url).Append("\n");
-            sb.Append("  Fields: ").Append(Fields).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Url: ").Append(this.Url).Append("\n");
+            sb.Append("  Fields: ").Append(this.Fields).Append("\n");
             return sb.ToString();
         }
   
@@ -163,22 +163,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Url == input.Url ||
-                    (this.Url != null &&
-                    this.Url.Equals(input.Url))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Url, input.Url) && 
                 (
                     this.Fields == input.Fields ||
-                    this.Fields != null &&
-                    input.Fields != null &&
-                    this.Fields.SequenceEqual(input.Fields)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Fields, input.Fields)
+                ) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -212,7 +202,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^S3UploadRequest$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -51,7 +51,7 @@ namespace PollinationSDK
         (
             string name, List<string> platform, List<IOAliasHandler> handler, // Required parameters
             Dictionary<string, string> annotations= default, string description= default // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, platform: platform, handler: handler)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description, platform: platform, handler: handler )// BaseClass
         {
 
             // Set non-required readonly properties with defaultValue
@@ -62,8 +62,8 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DAGLinkedOutputAlias";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DAGLinkedOutputAlias";
 
 
         /// <summary>
@@ -86,12 +86,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGLinkedOutputAlias:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Platform: ").Append(Platform).Append("\n");
-            sb.Append("  Handler: ").Append(Handler).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Platform: ").Append(this.Platform).Append("\n");
+            sb.Append("  Handler: ").Append(this.Handler).Append("\n");
             return sb.ToString();
         }
   
@@ -155,11 +155,7 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -189,7 +185,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DAGLinkedOutputAlias$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

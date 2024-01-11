@@ -71,44 +71,44 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DAG";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DAG";
 
         /// <summary>
         /// A unique name for this dag.
         /// </summary>
         /// <value>A unique name for this dag.</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// Tasks are a list of DAG steps
         /// </summary>
         /// <value>Tasks are a list of DAG steps</value>
-        [DataMember(Name = "tasks", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "tasks", IsRequired = true)]
         public List<DAGTask> Tasks { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Inputs for the DAG.
         /// </summary>
         /// <value>Inputs for the DAG.</value>
-        [DataMember(Name = "inputs", EmitDefaultValue = false)]
+        [DataMember(Name = "inputs")]
         public List<AnyOf<DAGGenericInput,DAGStringInput,DAGIntegerInput,DAGNumberInput,DAGBooleanInput,DAGFolderInput,DAGFileInput,DAGPathInput,DAGArrayInput,DAGJSONObjectInput>> Inputs { get; set; } 
         /// <summary>
         /// Outputs of the DAG that can be used by other DAGs.
         /// </summary>
         /// <value>Outputs of the DAG that can be used by other DAGs.</value>
-        [DataMember(Name = "outputs", EmitDefaultValue = false)]
+        [DataMember(Name = "outputs")]
         public List<AnyOf<DAGGenericOutput,DAGStringOutput,DAGIntegerOutput,DAGNumberOutput,DAGBooleanOutput,DAGFolderOutput,DAGFileOutput,DAGPathOutput,DAGArrayOutput,DAGJSONObjectOutput>> Outputs { get; set; } 
         /// <summary>
         /// Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True.
         /// </summary>
         /// <value>Stop scheduling new steps, as soon as it detects that one of the DAG nodes is failed. Default is True.</value>
-        [DataMember(Name = "fail_fast", EmitDefaultValue = true)]
+        [DataMember(Name = "fail_fast")]
         public bool FailFast { get; set; }  = true;
 
         /// <summary>
@@ -131,13 +131,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAG:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Tasks: ").Append(Tasks).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
-            sb.Append("  FailFast: ").Append(FailFast).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Tasks: ").Append(this.Tasks).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Inputs: ").Append(this.Inputs).Append("\n");
+            sb.Append("  Outputs: ").Append(this.Outputs).Append("\n");
+            sb.Append("  FailFast: ").Append(this.FailFast).Append("\n");
             return sb.ToString();
         }
   
@@ -201,45 +201,25 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Name, input.Name) && 
                 (
                     this.Tasks == input.Tasks ||
-                    this.Tasks != null &&
-                    input.Tasks != null &&
-                    this.Tasks.SequenceEqual(input.Tasks)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Tasks, input.Tasks)
+                ) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
                 (
                     this.Inputs == input.Inputs ||
-                    this.Inputs != null &&
-                    input.Inputs != null &&
-                    this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Inputs, input.Inputs)
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
-                    this.Outputs != null &&
-                    input.Outputs != null &&
-                    this.Outputs.SequenceEqual(input.Outputs)
-                ) && base.Equals(input) && 
-                (
-                    this.FailFast == input.FailFast ||
-                    (this.FailFast != null &&
-                    this.FailFast.Equals(input.FailFast))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Outputs, input.Outputs)
+                ) && 
+                    Extension.Equals(this.FailFast, input.FailFast) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -281,7 +261,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DAG$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

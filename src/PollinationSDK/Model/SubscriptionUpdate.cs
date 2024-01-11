@@ -32,22 +32,16 @@ namespace PollinationSDK
         /// <summary>
         /// Initializes a new instance of the <see cref="SubscriptionUpdate" /> class.
         /// </summary>
-        /// <param name="toSubscribe">The Pollination plan to subscribe to.</param>
-        /// <param name="toAdd">The items to add.</param>
-        /// <param name="toUpdate">The items to update.</param>
-        /// <param name="toDelete">The items to delete.</param>
-        /// <param name="promotionCode">A promotion code to apply a discount to the subscription.</param>
+        /// <param name="planId">The Paddle Plan ID to change the subscription to..</param>
+        /// <param name="quantity">The number of times this subscription is purchased (default to 1).</param>
         public SubscriptionUpdate
         (
-           // Required parameters
-           Price toSubscribe= default, List<NewSubscriptionItem> toAdd= default, List<SubscriptionItem> toUpdate= default, List<SubscriptionItem> toDelete= default, string promotionCode= default // Optional parameters
+            // Required parameters
+           int planId= default, int quantity = 1 // Optional parameters
         ) : base()// BaseClass
         {
-            this.ToSubscribe = toSubscribe;
-            this.ToAdd = toAdd;
-            this.ToUpdate = toUpdate;
-            this.ToDelete = toDelete;
-            this.PromotionCode = promotionCode;
+            this.PlanId = planId;
+            this.Quantity = quantity;
 
             // Set non-required readonly properties with defaultValue
             this.Type = "SubscriptionUpdate";
@@ -57,39 +51,21 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "SubscriptionUpdate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "SubscriptionUpdate";
 
         /// <summary>
-        /// The Pollination plan to subscribe to
+        /// The Paddle Plan ID to change the subscription to.
         /// </summary>
-        /// <value>The Pollination plan to subscribe to</value>
-        [DataMember(Name = "to_subscribe", EmitDefaultValue = false)]
-        public Price ToSubscribe { get; set; } 
+        /// <value>The Paddle Plan ID to change the subscription to.</value>
+        [DataMember(Name = "plan_id")]
+        public int PlanId { get; set; } 
         /// <summary>
-        /// The items to add
+        /// The number of times this subscription is purchased
         /// </summary>
-        /// <value>The items to add</value>
-        [DataMember(Name = "to_add", EmitDefaultValue = false)]
-        public List<NewSubscriptionItem> ToAdd { get; set; } 
-        /// <summary>
-        /// The items to update
-        /// </summary>
-        /// <value>The items to update</value>
-        [DataMember(Name = "to_update", EmitDefaultValue = false)]
-        public List<SubscriptionItem> ToUpdate { get; set; } 
-        /// <summary>
-        /// The items to delete
-        /// </summary>
-        /// <value>The items to delete</value>
-        [DataMember(Name = "to_delete", EmitDefaultValue = false)]
-        public List<SubscriptionItem> ToDelete { get; set; } 
-        /// <summary>
-        /// A promotion code to apply a discount to the subscription
-        /// </summary>
-        /// <value>A promotion code to apply a discount to the subscription</value>
-        [DataMember(Name = "promotion_code", EmitDefaultValue = false)]
-        public string PromotionCode { get; set; } 
+        /// <value>The number of times this subscription is purchased</value>
+        [DataMember(Name = "quantity")]
+        public int Quantity { get; set; }  = 1;
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -111,12 +87,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("SubscriptionUpdate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  ToSubscribe: ").Append(ToSubscribe).Append("\n");
-            sb.Append("  ToAdd: ").Append(ToAdd).Append("\n");
-            sb.Append("  ToUpdate: ").Append(ToUpdate).Append("\n");
-            sb.Append("  ToDelete: ").Append(ToDelete).Append("\n");
-            sb.Append("  PromotionCode: ").Append(PromotionCode).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  PlanId: ").Append(this.PlanId).Append("\n");
+            sb.Append("  Quantity: ").Append(this.Quantity).Append("\n");
             return sb.ToString();
         }
   
@@ -180,39 +153,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.ToSubscribe == input.ToSubscribe ||
-                    (this.ToSubscribe != null &&
-                    this.ToSubscribe.Equals(input.ToSubscribe))
-                ) && base.Equals(input) && 
-                (
-                    this.ToAdd == input.ToAdd ||
-                    this.ToAdd != null &&
-                    input.ToAdd != null &&
-                    this.ToAdd.SequenceEqual(input.ToAdd)
-                ) && base.Equals(input) && 
-                (
-                    this.ToUpdate == input.ToUpdate ||
-                    this.ToUpdate != null &&
-                    input.ToUpdate != null &&
-                    this.ToUpdate.SequenceEqual(input.ToUpdate)
-                ) && base.Equals(input) && 
-                (
-                    this.ToDelete == input.ToDelete ||
-                    this.ToDelete != null &&
-                    input.ToDelete != null &&
-                    this.ToDelete.SequenceEqual(input.ToDelete)
-                ) && base.Equals(input) && 
-                (
-                    this.PromotionCode == input.PromotionCode ||
-                    (this.PromotionCode != null &&
-                    this.PromotionCode.Equals(input.PromotionCode))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.PlanId, input.PlanId) && 
+                    Extension.Equals(this.Quantity, input.Quantity) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -224,16 +167,10 @@ namespace PollinationSDK
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = base.GetHashCode();
-                if (this.ToSubscribe != null)
-                    hashCode = hashCode * 59 + this.ToSubscribe.GetHashCode();
-                if (this.ToAdd != null)
-                    hashCode = hashCode * 59 + this.ToAdd.GetHashCode();
-                if (this.ToUpdate != null)
-                    hashCode = hashCode * 59 + this.ToUpdate.GetHashCode();
-                if (this.ToDelete != null)
-                    hashCode = hashCode * 59 + this.ToDelete.GetHashCode();
-                if (this.PromotionCode != null)
-                    hashCode = hashCode * 59 + this.PromotionCode.GetHashCode();
+                if (this.PlanId != null)
+                    hashCode = hashCode * 59 + this.PlanId.GetHashCode();
+                if (this.Quantity != null)
+                    hashCode = hashCode * 59 + this.Quantity.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
                 return hashCode;
@@ -252,7 +189,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^SubscriptionUpdate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

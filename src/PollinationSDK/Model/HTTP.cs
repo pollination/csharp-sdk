@@ -48,7 +48,7 @@ namespace PollinationSDK
         (
            string url, // Required parameters
             Dictionary<string, string> annotations= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+        ) : base(annotations: annotations )// BaseClass
         {
             // to ensure "url" is required (not null)
             this.Url = url ?? throw new ArgumentNullException("url is a required property for HTTP and cannot be null");
@@ -61,14 +61,14 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "HTTP";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "HTTP";
 
         /// <summary>
         /// For a HTTP endpoint this can be http://climate.onebuilding.org.
         /// </summary>
         /// <value>For a HTTP endpoint this can be http://climate.onebuilding.org.</value>
-        [DataMember(Name = "url", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "url", IsRequired = true)]
         public string Url { get; set; } 
 
         /// <summary>
@@ -91,9 +91,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("HTTP:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Url: ").Append(Url).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Url: ").Append(this.Url).Append("\n");
             return sb.ToString();
         }
   
@@ -157,16 +157,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Url == input.Url ||
-                    (this.Url != null &&
-                    this.Url.Equals(input.Url))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Url, input.Url) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -198,7 +190,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^HTTP$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -63,20 +63,20 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "NewPluginPackage";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "NewPluginPackage";
 
         /// <summary>
         /// The Plugin manifest to be created
         /// </summary>
         /// <value>The Plugin manifest to be created</value>
-        [DataMember(Name = "manifest", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "manifest", IsRequired = true)]
         public Plugin Manifest { get; set; } 
         /// <summary>
         /// The README file to attach to this package
         /// </summary>
         /// <value>The README file to attach to this package</value>
-        [DataMember(Name = "readme", EmitDefaultValue = true)]
+        [DataMember(Name = "readme")]
         public string Readme { get; set; }  = "";
 
         /// <summary>
@@ -99,9 +99,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("NewPluginPackage:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Manifest: ").Append(Manifest).Append("\n");
-            sb.Append("  Readme: ").Append(Readme).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Manifest: ").Append(this.Manifest).Append("\n");
+            sb.Append("  Readme: ").Append(this.Readme).Append("\n");
             return sb.ToString();
         }
   
@@ -165,21 +165,9 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Manifest == input.Manifest ||
-                    (this.Manifest != null &&
-                    this.Manifest.Equals(input.Manifest))
-                ) && base.Equals(input) && 
-                (
-                    this.Readme == input.Readme ||
-                    (this.Readme != null &&
-                    this.Readme.Equals(input.Readme))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Manifest, input.Manifest) && 
+                    Extension.Equals(this.Readme, input.Readme) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -213,7 +201,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^NewPluginPackage$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

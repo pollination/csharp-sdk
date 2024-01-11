@@ -36,7 +36,7 @@ namespace PollinationSDK
         /// <param name="from">The task or DAG parameter to loop over (must be iterable)..</param>
         public DAGTaskLoop
         (
-           // Required parameters
+            // Required parameters
            Dictionary<string, string> annotations= default, AnyOf<InputReference,TaskReference,ValueListReference> from= default// Optional parameters
         ) : base()// BaseClass
         {
@@ -51,20 +51,20 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DAGTaskLoop";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DAGTaskLoop";
 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// The task or DAG parameter to loop over (must be iterable).
         /// </summary>
         /// <value>The task or DAG parameter to loop over (must be iterable).</value>
-        [DataMember(Name = "from", EmitDefaultValue = false)]
+        [DataMember(Name = "from")]
         public AnyOf<InputReference,TaskReference,ValueListReference> From { get; set; } 
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DAGTaskLoop:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  From: ").Append(From).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  From: ").Append(this.From).Append("\n");
             return sb.ToString();
         }
   
@@ -153,22 +153,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.From == input.From ||
-                    (this.From != null &&
-                    this.From.Equals(input.From))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.From, input.From);
         }
 
         /// <summary>
@@ -202,7 +192,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DAGTaskLoop$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

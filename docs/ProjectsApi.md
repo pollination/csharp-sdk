@@ -12,7 +12,8 @@ Method | HTTP request | Description
 [**GetProject**](ProjectsApi.md#getproject) | **GET** /projects/{owner}/{name} | Get a project
 [**GetProjectAccessPermissions**](ProjectsApi.md#getprojectaccesspermissions) | **GET** /projects/{owner}/{name}/permissions | Get project access permissions
 [**GetProjectRecipeFilters**](ProjectsApi.md#getprojectrecipefilters) | **GET** /projects/{owner}/{name}/recipes/filters | Get project recipe filters
-[**GetProjectRecipes**](ProjectsApi.md#getprojectrecipes) | **GET** /projects/{owner}/{name}/recipes | Get project recipes
+[**GetProjectRecipeRepositories**](ProjectsApi.md#getprojectreciperepositories) | **GET** /projects/{owner}/{name}/recipes/repositories | Get project recipe repositories
+[**GetProjectRecipes**](ProjectsApi.md#getprojectrecipes) | **GET** /projects/{owner}/{name}/recipes | Get project recipe versions
 [**ListProjects**](ProjectsApi.md#listprojects) | **GET** /projects | List Projects
 [**Update**](ProjectsApi.md#update) | **PUT** /projects/{owner}/{name} | Update a Project
 [**UpsertProjectPermission**](ProjectsApi.md#upsertprojectpermission) | **PATCH** /projects/{owner}/{name}/permissions | Upsert a new permission to a project
@@ -725,11 +726,100 @@ Name | Type | Description  | Notes
 [[Back to README]](../README.md)
 
 
+## GetProjectRecipeRepositories
+
+> RepositoryList GetProjectRecipeRepositories (string owner, string name, string search = null, int? page = null, int? perPage = null)
+
+Get project recipe repositories
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using PollinationSDK.Api;
+using PollinationSDK.Client;
+using PollinationSDK.Model;
+
+namespace Example
+{
+    public class GetProjectRecipeRepositoriesExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost";
+            // Configure API key authorization: APIKeyAuth
+            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
+            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
+            // Configure HTTP bearer authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+
+            var apiInstance = new ProjectsApi(Configuration.Default);
+            var owner = owner_example;  // string | 
+            var name = name_example;  // string | 
+            var search = search_example;  // string | Search string to find recipes (optional) 
+            var page = 56;  // int? | Page number starting from 1 (optional)  (default to 1)
+            var perPage = 56;  // int? | Number of items per page (optional)  (default to 25)
+
+            try
+            {
+                // Get project recipe repositories
+                RepositoryList result = apiInstance.GetProjectRecipeRepositories(owner, name, search, page, perPage);
+                Debug.WriteLine(result);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling ProjectsApi.GetProjectRecipeRepositories: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **owner** | **string**|  | 
+ **name** | **string**|  | 
+ **search** | **string**| Search string to find recipes | [optional] 
+ **page** | **int?**| Page number starting from 1 | [optional] [default to 1]
+ **perPage** | **int?**| Number of items per page | [optional] [default to 25]
+
+### Return type
+
+[**RepositoryList**](RepositoryList.md)
+
+### Authorization
+
+[APIKeyAuth](../README.md#APIKeyAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **200** | Retrieved |  -  |
+| **422** | Validation Error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
 ## GetProjectRecipes
 
 > RecipeInterfaceList GetProjectRecipes (string owner, string name, string search = null, int? page = null, int? perPage = null)
 
-Get project recipes
+Get project recipe versions
 
 ### Example
 
@@ -763,7 +853,7 @@ namespace Example
 
             try
             {
-                // Get project recipes
+                // Get project recipe versions
                 RecipeInterfaceList result = apiInstance.GetProjectRecipes(owner, name, search, page, perPage);
                 Debug.WriteLine(result);
             }

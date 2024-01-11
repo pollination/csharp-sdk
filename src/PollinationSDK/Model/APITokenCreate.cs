@@ -49,7 +49,7 @@ namespace PollinationSDK
         (
             string tokenId, string name, // Required parameters
             Dictionary<string, string> claims= default // Optional parameters
-        ) : base(tokenId: tokenId, name: name, claims: claims)// BaseClass
+        ) : base(tokenId: tokenId, name: name, claims: claims )// BaseClass
         {
 
             // Set non-required readonly properties with defaultValue
@@ -60,8 +60,8 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "APITokenCreate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "APITokenCreate";
 
 
         /// <summary>
@@ -84,10 +84,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("APITokenCreate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  TokenId: ").Append(TokenId).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Claims: ").Append(Claims).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  TokenId: ").Append(this.TokenId).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Claims: ").Append(this.Claims).Append("\n");
             return sb.ToString();
         }
   
@@ -151,11 +151,7 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -195,7 +191,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^APITokenCreate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

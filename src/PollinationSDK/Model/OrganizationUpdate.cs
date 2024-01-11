@@ -39,7 +39,7 @@ namespace PollinationSDK
         /// <param name="description">A description of the org.</param>
         public OrganizationUpdate
         (
-           // Required parameters
+            // Required parameters
            string accountName= default, string name= default, string pictureUrl= default, string contactEmail= default, string description= default // Optional parameters
         ) : base()// BaseClass
         {
@@ -57,38 +57,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "OrganizationUpdate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "OrganizationUpdate";
 
         /// <summary>
         /// The unique name of the org in small case without spaces
         /// </summary>
         /// <value>The unique name of the org in small case without spaces</value>
-        [DataMember(Name = "account_name", EmitDefaultValue = false)]
+        [DataMember(Name = "account_name")]
         public string AccountName { get; set; } 
         /// <summary>
         /// The display name for this org
         /// </summary>
         /// <value>The display name for this org</value>
-        [DataMember(Name = "name", EmitDefaultValue = false)]
+        [DataMember(Name = "name")]
         public string Name { get; set; } 
         /// <summary>
         /// URL to the picture associated with this org
         /// </summary>
         /// <value>URL to the picture associated with this org</value>
-        [DataMember(Name = "picture_url", EmitDefaultValue = false)]
+        [DataMember(Name = "picture_url")]
         public string PictureUrl { get; set; } 
         /// <summary>
         /// The contact email for the Organization
         /// </summary>
         /// <value>The contact email for the Organization</value>
-        [DataMember(Name = "contact_email", EmitDefaultValue = false)]
+        [DataMember(Name = "contact_email")]
         public string ContactEmail { get; set; } 
         /// <summary>
         /// A description of the org
         /// </summary>
         /// <value>A description of the org</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
 
         /// <summary>
@@ -111,12 +111,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("OrganizationUpdate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  AccountName: ").Append(AccountName).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
-            sb.Append("  ContactEmail: ").Append(ContactEmail).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  AccountName: ").Append(this.AccountName).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  PictureUrl: ").Append(this.PictureUrl).Append("\n");
+            sb.Append("  ContactEmail: ").Append(this.ContactEmail).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
             return sb.ToString();
         }
   
@@ -180,36 +180,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.AccountName == input.AccountName ||
-                    (this.AccountName != null &&
-                    this.AccountName.Equals(input.AccountName))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
-                (
-                    this.PictureUrl == input.PictureUrl ||
-                    (this.PictureUrl != null &&
-                    this.PictureUrl.Equals(input.PictureUrl))
-                ) && base.Equals(input) && 
-                (
-                    this.ContactEmail == input.ContactEmail ||
-                    (this.ContactEmail != null &&
-                    this.ContactEmail.Equals(input.ContactEmail))
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.AccountName, input.AccountName) && 
+                    Extension.Equals(this.Name, input.Name) && 
+                    Extension.Equals(this.PictureUrl, input.PictureUrl) && 
+                    Extension.Equals(this.ContactEmail, input.ContactEmail) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -259,7 +235,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^OrganizationUpdate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

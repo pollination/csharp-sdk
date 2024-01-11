@@ -70,38 +70,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Plugin";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Plugin";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
-        [DataMember(Name = "api_version", EmitDefaultValue = true)]
-        public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        [DataMember(Name = "api_version")]
+        public string ApiVersion { get; protected set; }  = "v1beta1";
 
         /// <summary>
         /// The Plugin metadata information
         /// </summary>
         /// <value>The Plugin metadata information</value>
-        [DataMember(Name = "metadata", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "metadata", IsRequired = true)]
         public MetaData Metadata { get; set; } 
         /// <summary>
         /// The configuration information to run this plugin
         /// </summary>
         /// <value>The configuration information to run this plugin</value>
-        [DataMember(Name = "config", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "config", IsRequired = true)]
         public PluginConfig Config { get; set; } 
         /// <summary>
         /// List of Plugin functions
         /// </summary>
         /// <value>List of Plugin functions</value>
-        [DataMember(Name = "functions", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "functions", IsRequired = true)]
         public List<Function> Functions { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
 
         /// <summary>
@@ -124,12 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Plugin:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  Config: ").Append(Config).Append("\n");
-            sb.Append("  Functions: ").Append(Functions).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Metadata: ").Append(this.Metadata).Append("\n");
+            sb.Append("  Config: ").Append(this.Config).Append("\n");
+            sb.Append("  Functions: ").Append(this.Functions).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  ApiVersion: ").Append(this.ApiVersion).Append("\n");
             return sb.ToString();
         }
   
@@ -193,38 +193,18 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Metadata == input.Metadata ||
-                    (this.Metadata != null &&
-                    this.Metadata.Equals(input.Metadata))
-                ) && base.Equals(input) && 
-                (
-                    this.Config == input.Config ||
-                    (this.Config != null &&
-                    this.Config.Equals(input.Config))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Metadata, input.Metadata) && 
+                    Extension.Equals(this.Config, input.Config) && 
                 (
                     this.Functions == input.Functions ||
-                    this.Functions != null &&
-                    input.Functions != null &&
-                    this.Functions.SequenceEqual(input.Functions)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Functions, input.Functions)
+                ) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.ApiVersion == input.ApiVersion ||
-                    (this.ApiVersion != null &&
-                    this.ApiVersion.Equals(input.ApiVersion))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.ApiVersion, input.ApiVersion);
         }
 
         /// <summary>
@@ -264,7 +244,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Plugin", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }
@@ -273,7 +253,7 @@ namespace PollinationSDK
             
             // ApiVersion (string) pattern
             Regex regexApiVersion = new Regex(@"^v1beta1$", RegexOptions.CultureInvariant);
-            if (false == regexApiVersion.Match(this.ApiVersion).Success)
+            if (this.ApiVersion != null && false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
             }

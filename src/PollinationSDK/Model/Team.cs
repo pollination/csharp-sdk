@@ -51,7 +51,7 @@ namespace PollinationSDK
         (
             string name, string id, string slug, // Required parameters
             string description= default, int memberCount = 0 // Optional parameters
-        ) : base(name: name, description: description)// BaseClass
+        ) : base(name: name, description: description )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Team and cannot be null");
@@ -67,26 +67,26 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Team";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Team";
 
         /// <summary>
         /// The team ID
         /// </summary>
         /// <value>The team ID</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// The public slug of the team
         /// </summary>
         /// <value>The public slug of the team</value>
-        [DataMember(Name = "slug", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "slug", IsRequired = true)]
         public string Slug { get; set; } 
         /// <summary>
         /// The number of members that are part of this team
         /// </summary>
         /// <value>The number of members that are part of this team</value>
-        [DataMember(Name = "member_count", EmitDefaultValue = true)]
+        [DataMember(Name = "member_count")]
         public int MemberCount { get; set; }  = 0;
 
         /// <summary>
@@ -109,12 +109,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Team:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
-            sb.Append("  MemberCount: ").Append(MemberCount).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Slug: ").Append(this.Slug).Append("\n");
+            sb.Append("  MemberCount: ").Append(this.MemberCount).Append("\n");
             return sb.ToString();
         }
   
@@ -178,26 +178,10 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Slug == input.Slug ||
-                    (this.Slug != null &&
-                    this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
-                (
-                    this.MemberCount == input.MemberCount ||
-                    (this.MemberCount != null &&
-                    this.MemberCount.Equals(input.MemberCount))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Slug, input.Slug) && 
+                    Extension.Equals(this.MemberCount, input.MemberCount) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -233,7 +217,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Team$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -49,8 +49,6 @@ namespace PollinationSDK.Wrapper
             this.IsCloudJob = !job.IsLocalJob;
             this.JobID = job.JobID;
 
-        
-     
             this.Recipe = $"{job.Recipe.Metadata.Name}:{job.Recipe.Metadata.Tag}";
             this.SavedLocalPath = job.SavedLocalPath;
 

@@ -35,11 +35,12 @@ namespace PollinationSDK
         /// <param name="detail">detail.</param>
         public HTTPValidationError
         (
-           // Required parameters
+            // Required parameters
            List<ValidationError> detail= default// Optional parameters
         )// BaseClass
         {
             this.Detail = detail;
+
             // Set non-required readonly properties with defaultValue
         }
 
@@ -47,7 +48,7 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Detail
         /// </summary>
-        [DataMember(Name = "detail", EmitDefaultValue = false)]
+        [DataMember(Name = "detail")]
         public List<ValidationError> Detail { get; set; } 
 
         /// <summary>
@@ -70,7 +71,7 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("HTTPValidationError:\n");
-            sb.Append("  Detail: ").Append(Detail).Append("\n");
+            sb.Append("  Detail: ").Append(this.Detail).Append("\n");
             return sb.ToString();
         }
   
@@ -125,12 +126,10 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return 
+            return base.Equals(input) && 
                 (
                     this.Detail == input.Detail ||
-                    this.Detail != null &&
-                    input.Detail != null &&
-                    this.Detail.SequenceEqual(input.Detail)
+                    Extension.AllEquals(this.Detail, input.Detail)
                 );
         }
 

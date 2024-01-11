@@ -52,7 +52,7 @@ namespace PollinationSDK
         (
             string name, string path, bool value, // Required parameters
             Dictionary<string, string> annotations= default, string description= default, bool required = true // Optional parameters
-        ) : base(name: name, annotations: annotations, description: description, path: path, required: required)// BaseClass
+        ) : base(name: name, annotations: annotations, description: description, path: path, required: required )// BaseClass
         {
             this.Value = value;
 
@@ -64,13 +64,13 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "StepBooleanOutput";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "StepBooleanOutput";
 
         /// <summary>
         /// Gets or Sets Value
         /// </summary>
-        [DataMember(Name = "value", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "value", IsRequired = true)]
         public bool Value { get; set; } 
 
         /// <summary>
@@ -93,13 +93,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("StepBooleanOutput:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Path: ").Append(Path).Append("\n");
-            sb.Append("  Required: ").Append(Required).Append("\n");
-            sb.Append("  Value: ").Append(Value).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Path: ").Append(this.Path).Append("\n");
+            sb.Append("  Required: ").Append(this.Required).Append("\n");
+            sb.Append("  Value: ").Append(this.Value).Append("\n");
             return sb.ToString();
         }
   
@@ -163,16 +163,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Value == input.Value ||
-                    (this.Value != null &&
-                    this.Value.Equals(input.Value))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Value, input.Value) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -204,7 +196,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^StepBooleanOutput$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

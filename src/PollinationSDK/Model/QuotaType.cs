@@ -96,7 +96,19 @@ namespace PollinationSDK
         /// Enum Revitpluginlicense for value: revit_plugin_license
         /// </summary>
         [EnumMember(Value = "revit_plugin_license")]
-        Revitpluginlicense = 11
+        Revitpluginlicense = 11,
+
+        /// <summary>
+        /// Enum Applicationcpu for value: application_cpu
+        /// </summary>
+        [EnumMember(Value = "application_cpu")]
+        Applicationcpu = 12,
+
+        /// <summary>
+        /// Enum Applicationmemory for value: application_memory
+        /// </summary>
+        [EnumMember(Value = "application_memory")]
+        Applicationmemory = 13
 
     }
 

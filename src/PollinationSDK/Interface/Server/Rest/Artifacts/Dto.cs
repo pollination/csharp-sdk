@@ -9,6 +9,7 @@ namespace PollinationSDK.Interface.Server.Rest.Artifacts
 namespace PollinationSDK
 {
 	public partial class FileMeta: PollinationSDK.Interface.Server.Rest.Artifacts.IDto {}
+	public partial class FileMetaList: PollinationSDK.Interface.Server.Rest.Artifacts.IDto {}
 	public partial class KeyRequest: PollinationSDK.Interface.Server.Rest.Artifacts.IDto {}
 	public partial class S3UploadRequest: PollinationSDK.Interface.Server.Rest.Artifacts.IDto {}
 }

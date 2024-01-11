@@ -51,7 +51,7 @@ namespace PollinationSDK
         (
            string key, string endpoint, string bucket, // Required parameters
             Dictionary<string, string> annotations= default, string credentialsPath= default // Optional parameters
-        ) : base(annotations: annotations)// BaseClass
+        ) : base(annotations: annotations )// BaseClass
         {
             // to ensure "key" is required (not null)
             this.Key = key ?? throw new ArgumentNullException("key is a required property for S3 and cannot be null");
@@ -69,32 +69,32 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "S3";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "S3";
 
         /// <summary>
         /// The path inside the bucket to source artifacts from.
         /// </summary>
         /// <value>The path inside the bucket to source artifacts from.</value>
-        [DataMember(Name = "key", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "key", IsRequired = true)]
         public string Key { get; set; } 
         /// <summary>
         /// The HTTP endpoint to reach the S3 bucket.
         /// </summary>
         /// <value>The HTTP endpoint to reach the S3 bucket.</value>
-        [DataMember(Name = "endpoint", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "endpoint", IsRequired = true)]
         public string Endpoint { get; set; } 
         /// <summary>
         /// The name of the S3 bucket on the host server.
         /// </summary>
         /// <value>The name of the S3 bucket on the host server.</value>
-        [DataMember(Name = "bucket", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "bucket", IsRequired = true)]
         public string Bucket { get; set; } 
         /// <summary>
         /// Path to the file holding the AccessKey and SecretAccessKey to authenticate to the bucket. Assumes public bucket access if none are specified.
         /// </summary>
         /// <value>Path to the file holding the AccessKey and SecretAccessKey to authenticate to the bucket. Assumes public bucket access if none are specified.</value>
-        [DataMember(Name = "credentials_path", EmitDefaultValue = false)]
+        [DataMember(Name = "credentials_path")]
         public string CredentialsPath { get; set; } 
 
         /// <summary>
@@ -117,12 +117,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("S3:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Key: ").Append(Key).Append("\n");
-            sb.Append("  Endpoint: ").Append(Endpoint).Append("\n");
-            sb.Append("  Bucket: ").Append(Bucket).Append("\n");
-            sb.Append("  CredentialsPath: ").Append(CredentialsPath).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Key: ").Append(this.Key).Append("\n");
+            sb.Append("  Endpoint: ").Append(this.Endpoint).Append("\n");
+            sb.Append("  Bucket: ").Append(this.Bucket).Append("\n");
+            sb.Append("  CredentialsPath: ").Append(this.CredentialsPath).Append("\n");
             return sb.ToString();
         }
   
@@ -186,31 +186,11 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Key == input.Key ||
-                    (this.Key != null &&
-                    this.Key.Equals(input.Key))
-                ) && base.Equals(input) && 
-                (
-                    this.Endpoint == input.Endpoint ||
-                    (this.Endpoint != null &&
-                    this.Endpoint.Equals(input.Endpoint))
-                ) && base.Equals(input) && 
-                (
-                    this.Bucket == input.Bucket ||
-                    (this.Bucket != null &&
-                    this.Bucket.Equals(input.Bucket))
-                ) && base.Equals(input) && 
-                (
-                    this.CredentialsPath == input.CredentialsPath ||
-                    (this.CredentialsPath != null &&
-                    this.CredentialsPath.Equals(input.CredentialsPath))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Key, input.Key) && 
+                    Extension.Equals(this.Endpoint, input.Endpoint) && 
+                    Extension.Equals(this.Bucket, input.Bucket) && 
+                    Extension.Equals(this.CredentialsPath, input.CredentialsPath) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -248,7 +228,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^S3$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

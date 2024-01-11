@@ -18,6 +18,7 @@ Name | Type | Description | Notes
 **LeaseExpiresAt** | **DateTime** |  | [optional] 
 **Metadata** | [**List&lt;Metadata&gt;**](Metadata.md) |  | [optional] 
 **LicenseId** | **string** |  | [optional] 
+**User** | [**AccountPublic**](AccountPublic.md) | The user associated with the activation | [optional] 
 **Type** | **string** |  | [optional] [readonly] [default to "Activation"]
 
 [[Back to Model list]](../README.md#documentation-for-models)

@@ -53,7 +53,7 @@ namespace PollinationSDK
         (
            DateTime startedAt, // Required parameters
             Dictionary<string, string> annotations= default, List<object> inputs= default, List<object> outputs= default, string message= default, DateTime finishedAt= default, string source= default // Optional parameters
-        ) : base(annotations: annotations, inputs: inputs, outputs: outputs)// BaseClass
+        ) : base(annotations: annotations, inputs: inputs, outputs: outputs )// BaseClass
         {
             this.StartedAt = startedAt;
             this.Message = message;
@@ -68,32 +68,32 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "BaseStatus";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "BaseStatus";
 
         /// <summary>
         /// The time at which the task was started
         /// </summary>
         /// <value>The time at which the task was started</value>
-        [DataMember(Name = "started_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "started_at", IsRequired = true)]
         public DateTime StartedAt { get; set; } 
         /// <summary>
         /// Any message produced by the task. Usually error/debugging hints.
         /// </summary>
         /// <value>Any message produced by the task. Usually error/debugging hints.</value>
-        [DataMember(Name = "message", EmitDefaultValue = false)]
+        [DataMember(Name = "message")]
         public string Message { get; set; } 
         /// <summary>
         /// The time at which the task was completed
         /// </summary>
         /// <value>The time at which the task was completed</value>
-        [DataMember(Name = "finished_at", EmitDefaultValue = false)]
+        [DataMember(Name = "finished_at")]
         public DateTime FinishedAt { get; set; } 
         /// <summary>
         /// Source url for the status object. It can be a recipe or a function.
         /// </summary>
         /// <value>Source url for the status object. It can be a recipe or a function.</value>
-        [DataMember(Name = "source", EmitDefaultValue = false)]
+        [DataMember(Name = "source")]
         public string Source { get; set; } 
 
         /// <summary>
@@ -116,14 +116,14 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("BaseStatus:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
-            sb.Append("  StartedAt: ").Append(StartedAt).Append("\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
-            sb.Append("  FinishedAt: ").Append(FinishedAt).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Inputs: ").Append(this.Inputs).Append("\n");
+            sb.Append("  Outputs: ").Append(this.Outputs).Append("\n");
+            sb.Append("  StartedAt: ").Append(this.StartedAt).Append("\n");
+            sb.Append("  Message: ").Append(this.Message).Append("\n");
+            sb.Append("  FinishedAt: ").Append(this.FinishedAt).Append("\n");
+            sb.Append("  Source: ").Append(this.Source).Append("\n");
             return sb.ToString();
         }
   
@@ -187,31 +187,11 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.StartedAt == input.StartedAt ||
-                    (this.StartedAt != null &&
-                    this.StartedAt.Equals(input.StartedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Message == input.Message ||
-                    (this.Message != null &&
-                    this.Message.Equals(input.Message))
-                ) && base.Equals(input) && 
-                (
-                    this.FinishedAt == input.FinishedAt ||
-                    (this.FinishedAt != null &&
-                    this.FinishedAt.Equals(input.FinishedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.StartedAt, input.StartedAt) && 
+                    Extension.Equals(this.Message, input.Message) && 
+                    Extension.Equals(this.FinishedAt, input.FinishedAt) && 
+                    Extension.Equals(this.Source, input.Source) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -249,7 +229,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^BaseStatus$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

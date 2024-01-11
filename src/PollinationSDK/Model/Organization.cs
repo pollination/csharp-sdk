@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// The role the user has within the organization
         /// </summary>
         /// <value>The role the user has within the organization</value>
-        [DataMember(Name="role", EmitDefaultValue=false)]
+        [DataMember(Name="role")]
         public OrganizationRoleEnum Role { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="Organization" /> class.
@@ -62,7 +62,7 @@ namespace PollinationSDK
         (
            string id, AccountPublic owner, // Required parameters
             string accountName= default, string name= default, string pictureUrl= default, string contactEmail= default, string description= default, OrganizationRoleEnum role= default, int memberCount = 0, int teamCount = 0 // Optional parameters
-        ) : base(accountName: accountName, name: name, pictureUrl: pictureUrl, contactEmail: contactEmail, description: description)// BaseClass
+        ) : base(accountName: accountName, name: name, pictureUrl: pictureUrl, contactEmail: contactEmail, description: description )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for Organization and cannot be null");
@@ -80,32 +80,32 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Organization";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Organization";
 
         /// <summary>
         /// The org ID
         /// </summary>
         /// <value>The org ID</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// The account the organization represents
         /// </summary>
         /// <value>The account the organization represents</value>
-        [DataMember(Name = "owner", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "owner", IsRequired = true)]
         public AccountPublic Owner { get; set; } 
         /// <summary>
         /// The number of members that are part of this org
         /// </summary>
         /// <value>The number of members that are part of this org</value>
-        [DataMember(Name = "member_count", EmitDefaultValue = true)]
+        [DataMember(Name = "member_count")]
         public int MemberCount { get; set; }  = 0;
         /// <summary>
         /// The number of teams that are part of this org
         /// </summary>
         /// <value>The number of teams that are part of this org</value>
-        [DataMember(Name = "team_count", EmitDefaultValue = true)]
+        [DataMember(Name = "team_count")]
         public int TeamCount { get; set; }  = 0;
 
         /// <summary>
@@ -128,17 +128,17 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Organization:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  AccountName: ").Append(AccountName).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  PictureUrl: ").Append(PictureUrl).Append("\n");
-            sb.Append("  ContactEmail: ").Append(ContactEmail).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Owner: ").Append(Owner).Append("\n");
-            sb.Append("  Role: ").Append(Role).Append("\n");
-            sb.Append("  MemberCount: ").Append(MemberCount).Append("\n");
-            sb.Append("  TeamCount: ").Append(TeamCount).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  AccountName: ").Append(this.AccountName).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  PictureUrl: ").Append(this.PictureUrl).Append("\n");
+            sb.Append("  ContactEmail: ").Append(this.ContactEmail).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  Role: ").Append(this.Role).Append("\n");
+            sb.Append("  MemberCount: ").Append(this.MemberCount).Append("\n");
+            sb.Append("  TeamCount: ").Append(this.TeamCount).Append("\n");
             return sb.ToString();
         }
   
@@ -202,36 +202,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.Owner == input.Owner ||
-                    (this.Owner != null &&
-                    this.Owner.Equals(input.Owner))
-                ) && base.Equals(input) && 
-                (
-                    this.Role == input.Role ||
-                    (this.Role != null &&
-                    this.Role.Equals(input.Role))
-                ) && base.Equals(input) && 
-                (
-                    this.MemberCount == input.MemberCount ||
-                    (this.MemberCount != null &&
-                    this.MemberCount.Equals(input.MemberCount))
-                ) && base.Equals(input) && 
-                (
-                    this.TeamCount == input.TeamCount ||
-                    (this.TeamCount != null &&
-                    this.TeamCount.Equals(input.TeamCount))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Role, input.Role) && 
+                    Extension.Equals(this.MemberCount, input.MemberCount) && 
+                    Extension.Equals(this.TeamCount, input.TeamCount) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -271,7 +247,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Organization$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

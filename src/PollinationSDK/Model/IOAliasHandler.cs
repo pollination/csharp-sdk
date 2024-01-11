@@ -70,38 +70,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "IOAliasHandler";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "IOAliasHandler";
 
         /// <summary>
         /// Declare the language (e.g. python, csharp, etc.). This option allows the recipe to be flexible on handling different programming languages.
         /// </summary>
         /// <value>Declare the language (e.g. python, csharp, etc.). This option allows the recipe to be flexible on handling different programming languages.</value>
-        [DataMember(Name = "language", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "language", IsRequired = true)]
         public string Language { get; set; } 
         /// <summary>
         /// Target module or namespace to load the alias function.
         /// </summary>
         /// <value>Target module or namespace to load the alias function.</value>
-        [DataMember(Name = "module", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "module", IsRequired = true)]
         public string Module { get; set; } 
         /// <summary>
         /// Name of the function. The input value will be passed to this function as the first argument.
         /// </summary>
         /// <value>Name of the function. The input value will be passed to this function as the first argument.</value>
-        [DataMember(Name = "function", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "function", IsRequired = true)]
         public string Function { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained.
         /// </summary>
         /// <value>An integer to set the index for the order of execution. This input is only useful when there are more than one handler for the same platform and the output of one handler should be passed to another handler. This is also called chained handlers. By default all the handlers are indexed as 0 assuming they are not chained.</value>
-        [DataMember(Name = "index", EmitDefaultValue = true)]
+        [DataMember(Name = "index")]
         public int Index { get; set; }  = 0;
 
         /// <summary>
@@ -124,12 +124,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("IOAliasHandler:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Language: ").Append(Language).Append("\n");
-            sb.Append("  Module: ").Append(Module).Append("\n");
-            sb.Append("  Function: ").Append(Function).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Index: ").Append(Index).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Language: ").Append(this.Language).Append("\n");
+            sb.Append("  Module: ").Append(this.Module).Append("\n");
+            sb.Append("  Function: ").Append(this.Function).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Index: ").Append(this.Index).Append("\n");
             return sb.ToString();
         }
   
@@ -193,37 +193,15 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Language == input.Language ||
-                    (this.Language != null &&
-                    this.Language.Equals(input.Language))
-                ) && base.Equals(input) && 
-                (
-                    this.Module == input.Module ||
-                    (this.Module != null &&
-                    this.Module.Equals(input.Module))
-                ) && base.Equals(input) && 
-                (
-                    this.Function == input.Function ||
-                    (this.Function != null &&
-                    this.Function.Equals(input.Function))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Language, input.Language) && 
+                    Extension.Equals(this.Module, input.Module) && 
+                    Extension.Equals(this.Function, input.Function) && 
+                    Extension.Equals(this.Type, input.Type) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Index == input.Index ||
-                    (this.Index != null &&
-                    this.Index.Equals(input.Index))
-                );
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Index, input.Index);
         }
 
         /// <summary>
@@ -263,7 +241,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^IOAliasHandler$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -40,7 +40,7 @@ namespace PollinationSDK
         /// <param name="longitude">longitude.</param>
         public Location
         (
-           // Required parameters
+            // Required parameters
            string ipAddress= default, string countryCode= default, string countryName= default, string city= default, double latitude= default, double longitude= default // Optional parameters
         ) : base()// BaseClass
         {
@@ -59,38 +59,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Location";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "Location";
 
         /// <summary>
         /// Gets or Sets IpAddress
         /// </summary>
-        [DataMember(Name = "ip_address", EmitDefaultValue = false)]
+        [DataMember(Name = "ip_address")]
         public string IpAddress { get; set; } 
         /// <summary>
         /// Gets or Sets CountryCode
         /// </summary>
-        [DataMember(Name = "country_code", EmitDefaultValue = false)]
+        [DataMember(Name = "country_code")]
         public string CountryCode { get; set; } 
         /// <summary>
         /// Gets or Sets CountryName
         /// </summary>
-        [DataMember(Name = "country_name", EmitDefaultValue = false)]
+        [DataMember(Name = "country_name")]
         public string CountryName { get; set; } 
         /// <summary>
         /// Gets or Sets City
         /// </summary>
-        [DataMember(Name = "city", EmitDefaultValue = false)]
+        [DataMember(Name = "city")]
         public string City { get; set; } 
         /// <summary>
         /// Gets or Sets Latitude
         /// </summary>
-        [DataMember(Name = "latitude", EmitDefaultValue = false)]
+        [DataMember(Name = "latitude")]
         public double Latitude { get; set; } 
         /// <summary>
         /// Gets or Sets Longitude
         /// </summary>
-        [DataMember(Name = "longitude", EmitDefaultValue = false)]
+        [DataMember(Name = "longitude")]
         public double Longitude { get; set; } 
 
         /// <summary>
@@ -113,13 +113,13 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Location:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  IpAddress: ").Append(IpAddress).Append("\n");
-            sb.Append("  CountryCode: ").Append(CountryCode).Append("\n");
-            sb.Append("  CountryName: ").Append(CountryName).Append("\n");
-            sb.Append("  City: ").Append(City).Append("\n");
-            sb.Append("  Latitude: ").Append(Latitude).Append("\n");
-            sb.Append("  Longitude: ").Append(Longitude).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  IpAddress: ").Append(this.IpAddress).Append("\n");
+            sb.Append("  CountryCode: ").Append(this.CountryCode).Append("\n");
+            sb.Append("  CountryName: ").Append(this.CountryName).Append("\n");
+            sb.Append("  City: ").Append(this.City).Append("\n");
+            sb.Append("  Latitude: ").Append(this.Latitude).Append("\n");
+            sb.Append("  Longitude: ").Append(this.Longitude).Append("\n");
             return sb.ToString();
         }
   
@@ -183,41 +183,13 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.IpAddress == input.IpAddress ||
-                    (this.IpAddress != null &&
-                    this.IpAddress.Equals(input.IpAddress))
-                ) && base.Equals(input) && 
-                (
-                    this.CountryCode == input.CountryCode ||
-                    (this.CountryCode != null &&
-                    this.CountryCode.Equals(input.CountryCode))
-                ) && base.Equals(input) && 
-                (
-                    this.CountryName == input.CountryName ||
-                    (this.CountryName != null &&
-                    this.CountryName.Equals(input.CountryName))
-                ) && base.Equals(input) && 
-                (
-                    this.City == input.City ||
-                    (this.City != null &&
-                    this.City.Equals(input.City))
-                ) && base.Equals(input) && 
-                (
-                    this.Latitude == input.Latitude ||
-                    (this.Latitude != null &&
-                    this.Latitude.Equals(input.Latitude))
-                ) && base.Equals(input) && 
-                (
-                    this.Longitude == input.Longitude ||
-                    (this.Longitude != null &&
-                    this.Longitude.Equals(input.Longitude))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.IpAddress, input.IpAddress) && 
+                    Extension.Equals(this.CountryCode, input.CountryCode) && 
+                    Extension.Equals(this.CountryName, input.CountryName) && 
+                    Extension.Equals(this.City, input.City) && 
+                    Extension.Equals(this.Latitude, input.Latitude) && 
+                    Extension.Equals(this.Longitude, input.Longitude) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -259,7 +231,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^Location$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

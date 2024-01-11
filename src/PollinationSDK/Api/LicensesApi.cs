@@ -25,10 +25,10 @@ namespace PollinationSDK.Api
     {
         #region Synchronous Operations
         /// <summary>
-        /// Delete Activation
+        /// Delete the activation
         /// </summary>
         /// <remarks>
-        /// Delete the activation
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -37,10 +37,10 @@ namespace PollinationSDK.Api
         void DeleteActivation (string poolId, string activationId);
 
         /// <summary>
-        /// Delete Activation
+        /// Delete the activation
         /// </summary>
         /// <remarks>
-        /// Delete the activation
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -48,10 +48,10 @@ namespace PollinationSDK.Api
         /// <returns>ApiResponse of Object(void)</returns>
         ApiResponse<Object> DeleteActivationWithHttpInfo (string poolId, string activationId);
         /// <summary>
-        /// Get Available Pools
+        /// Get license pools available to authenticated user
         /// </summary>
         /// <remarks>
-        /// Get license pools available to authenticated user
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -59,20 +59,20 @@ namespace PollinationSDK.Api
         LicensePoolList GetAvailablePools (List<string> owner = default);
 
         /// <summary>
-        /// Get Available Pools
+        /// Get license pools available to authenticated user
         /// </summary>
         /// <remarks>
-        /// Get license pools available to authenticated user
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
         /// <returns>ApiResponse of LicensePoolList</returns>
         ApiResponse<LicensePoolList> GetAvailablePoolsWithHttpInfo (List<string> owner = default);
         /// <summary>
-        /// Get Activations
+        /// Get the activations for the license
         /// </summary>
         /// <remarks>
-        /// Get the activations for the license
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -80,20 +80,20 @@ namespace PollinationSDK.Api
         ActivationList GetLicenseActivations (string poolId);
 
         /// <summary>
-        /// Get Activations
+        /// Get the activations for the license
         /// </summary>
         /// <remarks>
-        /// Get the activations for the license
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of ActivationList</returns>
         ApiResponse<ActivationList> GetLicenseActivationsWithHttpInfo (string poolId);
         /// <summary>
-        /// Get Pool License
+        /// Get the license associated with a pool
         /// </summary>
         /// <remarks>
-        /// Get the license associated with a pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -101,20 +101,20 @@ namespace PollinationSDK.Api
         LicensePublic GetPoolLicense (Guid poolId);
 
         /// <summary>
-        /// Get Pool License
+        /// Get the license associated with a pool
         /// </summary>
         /// <remarks>
-        /// Get the license associated with a pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of LicensePublic</returns>
         ApiResponse<LicensePublic> GetPoolLicenseWithHttpInfo (Guid poolId);
         /// <summary>
-        /// Grant Pool Access
+        /// Grant access to the license pool
         /// </summary>
         /// <remarks>
-        /// Grant access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -123,10 +123,10 @@ namespace PollinationSDK.Api
         LicensePoolPublic GrantAccessToPool (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList);
 
         /// <summary>
-        /// Grant Pool Access
+        /// Grant access to the license pool
         /// </summary>
         /// <remarks>
-        /// Grant access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -134,10 +134,10 @@ namespace PollinationSDK.Api
         /// <returns>ApiResponse of LicensePoolPublic</returns>
         ApiResponse<LicensePoolPublic> GrantAccessToPoolWithHttpInfo (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList);
         /// <summary>
-        /// Regenerate
+        /// Regenerate the license associated with the pool
         /// </summary>
         /// <remarks>
-        /// Regenerate the license associated with the pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -145,20 +145,20 @@ namespace PollinationSDK.Api
         object RegenerateLicensePool (Guid poolId);
 
         /// <summary>
-        /// Regenerate
+        /// Regenerate the license associated with the pool
         /// </summary>
         /// <remarks>
-        /// Regenerate the license associated with the pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of object</returns>
         ApiResponse<object> RegenerateLicensePoolWithHttpInfo (Guid poolId);
         /// <summary>
-        /// Delete Pool Access
+        /// Revoke access to the license pool
         /// </summary>
         /// <remarks>
-        /// Revoke access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -167,10 +167,10 @@ namespace PollinationSDK.Api
         LicensePoolPublic RevokeAccessToPool (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList);
 
         /// <summary>
-        /// Delete Pool Access
+        /// Revoke access to the license pool
         /// </summary>
         /// <remarks>
-        /// Revoke access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -178,10 +178,10 @@ namespace PollinationSDK.Api
         /// <returns>ApiResponse of LicensePoolPublic</returns>
         ApiResponse<LicensePoolPublic> RevokeAccessToPoolWithHttpInfo (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList);
         /// <summary>
-        /// Update Pool
+        /// Update the license pool
         /// </summary>
         /// <remarks>
-        /// Update the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -190,10 +190,10 @@ namespace PollinationSDK.Api
         object UpdateLicensePool (Guid poolId, LicensePoolUpdate licensePoolUpdate);
 
         /// <summary>
-        /// Update Pool
+        /// Update the license pool
         /// </summary>
         /// <remarks>
-        /// Update the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -203,10 +203,10 @@ namespace PollinationSDK.Api
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
-        /// Delete Activation
+        /// Delete the activation
         /// </summary>
         /// <remarks>
-        /// Delete the activation
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -216,10 +216,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task DeleteActivationAsync (string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Delete Activation
+        /// Delete the activation
         /// </summary>
         /// <remarks>
-        /// Delete the activation
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -228,10 +228,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse</returns>
         System.Threading.Tasks.Task<ApiResponse<Object>> DeleteActivationWithHttpInfoAsync (string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get Available Pools
+        /// Get license pools available to authenticated user
         /// </summary>
         /// <remarks>
-        /// Get license pools available to authenticated user
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -240,10 +240,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<LicensePoolList> GetAvailablePoolsAsync (List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Get Available Pools
+        /// Get license pools available to authenticated user
         /// </summary>
         /// <remarks>
-        /// Get license pools available to authenticated user
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -251,10 +251,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse (LicensePoolList)</returns>
         System.Threading.Tasks.Task<ApiResponse<LicensePoolList>> GetAvailablePoolsWithHttpInfoAsync (List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get Activations
+        /// Get the activations for the license
         /// </summary>
         /// <remarks>
-        /// Get the activations for the license
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -263,10 +263,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<ActivationList> GetLicenseActivationsAsync (string poolId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Get Activations
+        /// Get the activations for the license
         /// </summary>
         /// <remarks>
-        /// Get the activations for the license
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -274,10 +274,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse (ActivationList)</returns>
         System.Threading.Tasks.Task<ApiResponse<ActivationList>> GetLicenseActivationsWithHttpInfoAsync (string poolId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Get Pool License
+        /// Get the license associated with a pool
         /// </summary>
         /// <remarks>
-        /// Get the license associated with a pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -286,10 +286,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<LicensePublic> GetPoolLicenseAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Get Pool License
+        /// Get the license associated with a pool
         /// </summary>
         /// <remarks>
-        /// Get the license associated with a pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -297,10 +297,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse (LicensePublic)</returns>
         System.Threading.Tasks.Task<ApiResponse<LicensePublic>> GetPoolLicenseWithHttpInfoAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Grant Pool Access
+        /// Grant access to the license pool
         /// </summary>
         /// <remarks>
-        /// Grant access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -310,10 +310,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<LicensePoolPublic> GrantAccessToPoolAsync (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Grant Pool Access
+        /// Grant access to the license pool
         /// </summary>
         /// <remarks>
-        /// Grant access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -322,10 +322,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse (LicensePoolPublic)</returns>
         System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> GrantAccessToPoolWithHttpInfoAsync (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Regenerate
+        /// Regenerate the license associated with the pool
         /// </summary>
         /// <remarks>
-        /// Regenerate the license associated with the pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -334,10 +334,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<object> RegenerateLicensePoolAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Regenerate
+        /// Regenerate the license associated with the pool
         /// </summary>
         /// <remarks>
-        /// Regenerate the license associated with the pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -345,10 +345,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse (object)</returns>
         System.Threading.Tasks.Task<ApiResponse<object>> RegenerateLicensePoolWithHttpInfoAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Delete Pool Access
+        /// Revoke access to the license pool
         /// </summary>
         /// <remarks>
-        /// Revoke access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -358,10 +358,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<LicensePoolPublic> RevokeAccessToPoolAsync (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Delete Pool Access
+        /// Revoke access to the license pool
         /// </summary>
         /// <remarks>
-        /// Revoke access to the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -370,10 +370,10 @@ namespace PollinationSDK.Api
         /// <returns>Task of ApiResponse (LicensePoolPublic)</returns>
         System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> RevokeAccessToPoolWithHttpInfoAsync (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
-        /// Update Pool
+        /// Update the license pool
         /// </summary>
         /// <remarks>
-        /// Update the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -383,10 +383,10 @@ namespace PollinationSDK.Api
         System.Threading.Tasks.Task<object> UpdateLicensePoolAsync (Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
-        /// Update Pool
+        /// Update the license pool
         /// </summary>
         /// <remarks>
-        /// Update the license pool
+        /// 
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -474,7 +474,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Activation Delete the activation
+        /// Delete the activation 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -486,7 +486,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Activation Delete the activation
+        /// Delete the activation 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -556,7 +556,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Activation Delete the activation
+        /// Delete the activation 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -570,7 +570,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Activation Delete the activation
+        /// Delete the activation 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -641,7 +641,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Available Pools Get license pools available to authenticated user
+        /// Get license pools available to authenticated user 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -653,7 +653,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Available Pools Get license pools available to authenticated user
+        /// Get license pools available to authenticated user 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -715,7 +715,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Available Pools Get license pools available to authenticated user
+        /// Get license pools available to authenticated user 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -729,7 +729,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Available Pools Get license pools available to authenticated user
+        /// Get license pools available to authenticated user 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
@@ -792,7 +792,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Activations Get the activations for the license
+        /// Get the activations for the license 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -804,7 +804,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Activations Get the activations for the license
+        /// Get the activations for the license 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -869,7 +869,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Activations Get the activations for the license
+        /// Get the activations for the license 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -883,7 +883,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Activations Get the activations for the license
+        /// Get the activations for the license 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -949,7 +949,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Pool License Get the license associated with a pool
+        /// Get the license associated with a pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -961,7 +961,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Pool License Get the license associated with a pool
+        /// Get the license associated with a pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1026,7 +1026,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Pool License Get the license associated with a pool
+        /// Get the license associated with a pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1040,7 +1040,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Get Pool License Get the license associated with a pool
+        /// Get the license associated with a pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1106,7 +1106,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Grant Pool Access Grant access to the license pool
+        /// Grant access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1119,7 +1119,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Grant Pool Access Grant access to the license pool
+        /// Grant access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1197,7 +1197,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Grant Pool Access Grant access to the license pool
+        /// Grant access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1212,7 +1212,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Grant Pool Access Grant access to the license pool
+        /// Grant access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1291,7 +1291,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Regenerate Regenerate the license associated with the pool
+        /// Regenerate the license associated with the pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1303,7 +1303,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Regenerate Regenerate the license associated with the pool
+        /// Regenerate the license associated with the pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1368,7 +1368,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Regenerate Regenerate the license associated with the pool
+        /// Regenerate the license associated with the pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1382,7 +1382,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Regenerate Regenerate the license associated with the pool
+        /// Regenerate the license associated with the pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1448,7 +1448,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Pool Access Revoke access to the license pool
+        /// Revoke access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1461,7 +1461,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Pool Access Revoke access to the license pool
+        /// Revoke access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1539,7 +1539,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Pool Access Revoke access to the license pool
+        /// Revoke access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1554,7 +1554,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Delete Pool Access Revoke access to the license pool
+        /// Revoke access to the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1633,7 +1633,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Update Pool Update the license pool
+        /// Update the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1646,7 +1646,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Update Pool Update the license pool
+        /// Update the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1724,7 +1724,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Update Pool Update the license pool
+        /// Update the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
@@ -1739,7 +1739,7 @@ namespace PollinationSDK.Api
         }
 
         /// <summary>
-        /// Update Pool Update the license pool
+        /// Update the license pool 
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>

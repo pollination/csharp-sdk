@@ -109,7 +109,7 @@ namespace PollinationSDK.Api
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <returns>object</returns>
         object PostPlugin (string owner, string type = default, System.IO.Stream package = default);
@@ -122,7 +122,7 @@ namespace PollinationSDK.Api
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <returns>ApiResponse of object</returns>
         ApiResponse<object> PostPluginWithHttpInfo (string owner, string type = default, System.IO.Stream package = default);
@@ -244,7 +244,7 @@ namespace PollinationSDK.Api
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of object</returns>
@@ -258,7 +258,7 @@ namespace PollinationSDK.Api
         /// </remarks>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (object)</returns>
@@ -925,7 +925,7 @@ namespace PollinationSDK.Api
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <returns>object</returns>
         public object PostPlugin (string owner, string type = default, System.IO.Stream package = default)
@@ -939,7 +939,7 @@ namespace PollinationSDK.Api
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <returns>ApiResponse of object</returns>
         public ApiResponse<object> PostPluginWithHttpInfo (string owner, string type = default, System.IO.Stream package = default)
@@ -1009,7 +1009,7 @@ namespace PollinationSDK.Api
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of object</returns>
@@ -1025,7 +1025,7 @@ namespace PollinationSDK.Api
         /// </summary>
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner"></param>
-        /// <param name="type"> (optional, default to &quot;Body_post_plugin__owner__plugins_post&quot;)</param>
+        /// <param name="type"> (optional, default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;)</param>
         /// <param name="package"> (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (object)</returns>

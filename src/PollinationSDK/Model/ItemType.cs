@@ -24,9 +24,9 @@ using System.ComponentModel.DataAnnotations;
 namespace PollinationSDK
 {
     /// <summary>
-    /// Type enum for items in a list.  Items can not be files or folder. For a list of files you should copy them to a folder and use FolderInput input instead of using ArrayInput.
+    /// Type enum for items in a list.      Items can not be files or folder. For a list of files you should copy them to a     folder and use FolderInput input instead of using ArrayInput.     
     /// </summary>
-    /// <value>Type enum for items in a list.  Items can not be files or folder. For a list of files you should copy them to a folder and use FolderInput input instead of using ArrayInput.</value>
+    /// <value>Type enum for items in a list.      Items can not be files or folder. For a list of files you should copy them to a     folder and use FolderInput input instead of using ArrayInput.     </value>
     
     [JsonConverter(typeof(StringEnumConverter))]
     

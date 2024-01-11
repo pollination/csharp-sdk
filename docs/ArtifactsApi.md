@@ -275,7 +275,7 @@ Name | Type | Description  | Notes
 
 ## ListArtifacts
 
-> List&lt;FileMeta&gt; ListArtifacts (string owner, string name, List<string> path = null, int? page = null, int? perPage = null)
+> FileMetaList ListArtifacts (string owner, string name, List<string> path = null, int? page = null, int? perPage = null)
 
 List artifacts in a project folder
 
@@ -312,7 +312,7 @@ namespace Example
             try
             {
                 // List artifacts in a project folder
-                List<FileMeta> result = apiInstance.ListArtifacts(owner, name, path, page, perPage);
+                FileMetaList result = apiInstance.ListArtifacts(owner, name, path, page, perPage);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -339,7 +339,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**List&lt;FileMeta&gt;**](FileMeta.md)
+[**FileMetaList**](FileMetaList.md)
 
 ### Authorization
 

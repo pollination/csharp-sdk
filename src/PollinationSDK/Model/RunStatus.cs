@@ -33,7 +33,7 @@ namespace PollinationSDK
         /// The status of this run.
         /// </summary>
         /// <value>The status of this run.</value>
-        [DataMember(Name="status", EmitDefaultValue=false)]
+        [DataMember(Name="status")]
         public RunStatusEnum Status { get; set; } = RunStatusEnum.Unknown;
         /// <summary>
         /// Initializes a new instance of the <see cref="RunStatus" /> class.
@@ -93,79 +93,79 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets ApiVersion
         /// </summary>
-        [DataMember(Name = "api_version", EmitDefaultValue = true)]
-        public string ApiVersion { get; protected internal set; }  = "v1beta1";
+        [DataMember(Name = "api_version")]
+        public string ApiVersion { get; protected set; }  = "v1beta1";
         //============================================== is ReadOnly 
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RunStatus";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RunStatus";
 
         /// <summary>
         /// The inputs used for this run.
         /// </summary>
         /// <value>The inputs used for this run.</value>
-        [DataMember(Name = "inputs", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "inputs", IsRequired = true)]
         public List<AnyOf<StepStringInput,StepIntegerInput,StepNumberInput,StepBooleanInput,StepFolderInput,StepFileInput,StepPathInput,StepArrayInput,StepJSONObjectInput>> Inputs { get; set; } 
         /// <summary>
         /// The outputs produced by this run.
         /// </summary>
         /// <value>The outputs produced by this run.</value>
-        [DataMember(Name = "outputs", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "outputs", IsRequired = true)]
         public List<AnyOf<StepStringOutput,StepIntegerOutput,StepNumberOutput,StepBooleanOutput,StepFolderOutput,StepFileOutput,StepPathOutput,StepArrayOutput,StepJSONObjectOutput>> Outputs { get; set; } 
         /// <summary>
         /// The time at which the task was started
         /// </summary>
         /// <value>The time at which the task was started</value>
-        [DataMember(Name = "started_at", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "started_at", IsRequired = true)]
         public DateTime StartedAt { get; set; } 
         /// <summary>
         /// The ID of the individual run.
         /// </summary>
         /// <value>The ID of the individual run.</value>
-        [DataMember(Name = "id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "id", IsRequired = true)]
         public string Id { get; set; } 
         /// <summary>
         /// The ID of the job that generated this run.
         /// </summary>
         /// <value>The ID of the job that generated this run.</value>
-        [DataMember(Name = "job_id", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "job_id", IsRequired = true)]
         public string JobId { get; set; } 
         /// <summary>
         /// An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.
         /// </summary>
         /// <value>An optional dictionary to add annotations to inputs. These annotations will be used by the client side libraries.</value>
-        [DataMember(Name = "annotations", EmitDefaultValue = false)]
+        [DataMember(Name = "annotations")]
         public Dictionary<string, string> Annotations { get; set; } 
         /// <summary>
         /// Any message produced by the task. Usually error/debugging hints.
         /// </summary>
         /// <value>Any message produced by the task. Usually error/debugging hints.</value>
-        [DataMember(Name = "message", EmitDefaultValue = false)]
+        [DataMember(Name = "message")]
         public string Message { get; set; } 
         /// <summary>
         /// The time at which the task was completed
         /// </summary>
         /// <value>The time at which the task was completed</value>
-        [DataMember(Name = "finished_at", EmitDefaultValue = false)]
+        [DataMember(Name = "finished_at")]
         public DateTime FinishedAt { get; set; } 
         /// <summary>
         /// Source url for the status object. It can be a recipe or a function.
         /// </summary>
         /// <value>Source url for the status object. It can be a recipe or a function.</value>
-        [DataMember(Name = "source", EmitDefaultValue = false)]
+        [DataMember(Name = "source")]
         public string Source { get; set; } 
         /// <summary>
         /// The ID of the first step in the run.
         /// </summary>
         /// <value>The ID of the first step in the run.</value>
-        [DataMember(Name = "entrypoint", EmitDefaultValue = false)]
+        [DataMember(Name = "entrypoint")]
         public string Entrypoint { get; set; } 
         /// <summary>
         /// Gets or Sets Steps
         /// </summary>
-        [DataMember(Name = "steps", EmitDefaultValue = false)]
+        [DataMember(Name = "steps")]
         public Dictionary<string, StepStatus> Steps { get; set; } 
 
         /// <summary>
@@ -188,20 +188,20 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RunStatus:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Inputs: ").Append(Inputs).Append("\n");
-            sb.Append("  Outputs: ").Append(Outputs).Append("\n");
-            sb.Append("  StartedAt: ").Append(StartedAt).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  JobId: ").Append(JobId).Append("\n");
-            sb.Append("  Annotations: ").Append(Annotations).Append("\n");
-            sb.Append("  Message: ").Append(Message).Append("\n");
-            sb.Append("  FinishedAt: ").Append(FinishedAt).Append("\n");
-            sb.Append("  Source: ").Append(Source).Append("\n");
-            sb.Append("  ApiVersion: ").Append(ApiVersion).Append("\n");
-            sb.Append("  Entrypoint: ").Append(Entrypoint).Append("\n");
-            sb.Append("  Status: ").Append(Status).Append("\n");
-            sb.Append("  Steps: ").Append(Steps).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Inputs: ").Append(this.Inputs).Append("\n");
+            sb.Append("  Outputs: ").Append(this.Outputs).Append("\n");
+            sb.Append("  StartedAt: ").Append(this.StartedAt).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  JobId: ").Append(this.JobId).Append("\n");
+            sb.Append("  Annotations: ").Append(this.Annotations).Append("\n");
+            sb.Append("  Message: ").Append(this.Message).Append("\n");
+            sb.Append("  FinishedAt: ").Append(this.FinishedAt).Append("\n");
+            sb.Append("  Source: ").Append(this.Source).Append("\n");
+            sb.Append("  ApiVersion: ").Append(this.ApiVersion).Append("\n");
+            sb.Append("  Entrypoint: ").Append(this.Entrypoint).Append("\n");
+            sb.Append("  Status: ").Append(this.Status).Append("\n");
+            sb.Append("  Steps: ").Append(this.Steps).Append("\n");
             return sb.ToString();
         }
   
@@ -267,78 +267,30 @@ namespace PollinationSDK
             return base.Equals(input) && 
                 (
                     this.Inputs == input.Inputs ||
-                    this.Inputs != null &&
-                    input.Inputs != null &&
-                    this.Inputs.SequenceEqual(input.Inputs)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Inputs, input.Inputs)
+                ) && 
                 (
                     this.Outputs == input.Outputs ||
-                    this.Outputs != null &&
-                    input.Outputs != null &&
-                    this.Outputs.SequenceEqual(input.Outputs)
-                ) && base.Equals(input) && 
-                (
-                    this.StartedAt == input.StartedAt ||
-                    (this.StartedAt != null &&
-                    this.StartedAt.Equals(input.StartedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Id == input.Id ||
-                    (this.Id != null &&
-                    this.Id.Equals(input.Id))
-                ) && base.Equals(input) && 
-                (
-                    this.JobId == input.JobId ||
-                    (this.JobId != null &&
-                    this.JobId.Equals(input.JobId))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Outputs, input.Outputs)
+                ) && 
+                    Extension.Equals(this.StartedAt, input.StartedAt) && 
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.JobId, input.JobId) && 
                 (
                     this.Annotations == input.Annotations ||
-                    this.Annotations != null &&
-                    input.Annotations != null &&
-                    this.Annotations.SequenceEqual(input.Annotations)
-                ) && base.Equals(input) && 
-                (
-                    this.Message == input.Message ||
-                    (this.Message != null &&
-                    this.Message.Equals(input.Message))
-                ) && base.Equals(input) && 
-                (
-                    this.FinishedAt == input.FinishedAt ||
-                    (this.FinishedAt != null &&
-                    this.FinishedAt.Equals(input.FinishedAt))
-                ) && base.Equals(input) && 
-                (
-                    this.Source == input.Source ||
-                    (this.Source != null &&
-                    this.Source.Equals(input.Source))
-                ) && base.Equals(input) && 
-                (
-                    this.ApiVersion == input.ApiVersion ||
-                    (this.ApiVersion != null &&
-                    this.ApiVersion.Equals(input.ApiVersion))
-                ) && base.Equals(input) && 
-                (
-                    this.Entrypoint == input.Entrypoint ||
-                    (this.Entrypoint != null &&
-                    this.Entrypoint.Equals(input.Entrypoint))
-                ) && base.Equals(input) && 
-                (
-                    this.Status == input.Status ||
-                    (this.Status != null &&
-                    this.Status.Equals(input.Status))
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Annotations, input.Annotations)
+                ) && 
+                    Extension.Equals(this.Message, input.Message) && 
+                    Extension.Equals(this.FinishedAt, input.FinishedAt) && 
+                    Extension.Equals(this.Source, input.Source) && 
+                    Extension.Equals(this.ApiVersion, input.ApiVersion) && 
+                    Extension.Equals(this.Entrypoint, input.Entrypoint) && 
+                    Extension.Equals(this.Status, input.Status) && 
                 (
                     this.Steps == input.Steps ||
-                    this.Steps != null &&
-                    input.Steps != null &&
-                    this.Steps.SequenceEqual(input.Steps)
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Steps, input.Steps)
+                ) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -394,7 +346,7 @@ namespace PollinationSDK
             
             // ApiVersion (string) pattern
             Regex regexApiVersion = new Regex(@"^v1beta1$", RegexOptions.CultureInvariant);
-            if (false == regexApiVersion.Match(this.ApiVersion).Success)
+            if (this.ApiVersion != null && false == regexApiVersion.Match(this.ApiVersion).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for ApiVersion, must match a pattern of " + regexApiVersion, new [] { "ApiVersion" });
             }
@@ -403,7 +355,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RunStatus$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

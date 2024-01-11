@@ -38,7 +38,7 @@ namespace PollinationSDK
         /// <param name="icon">An icon to represent this repository.</param>
         public RepositoryUpdate
         (
-           // Required parameters
+            // Required parameters
            bool _public= default, List<string> keywords= default, string description= default, string icon= default // Optional parameters
         ) : base()// BaseClass
         {
@@ -55,32 +55,32 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RepositoryUpdate";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RepositoryUpdate";
 
         /// <summary>
         /// Whether or not a repository is publicly viewable
         /// </summary>
         /// <value>Whether or not a repository is publicly viewable</value>
-        [DataMember(Name = "public", EmitDefaultValue = false)]
+        [DataMember(Name = "public")]
         public bool Public { get; set; } 
         /// <summary>
         /// A list of keywords to index the repository by
         /// </summary>
         /// <value>A list of keywords to index the repository by</value>
-        [DataMember(Name = "keywords", EmitDefaultValue = false)]
+        [DataMember(Name = "keywords")]
         public List<string> Keywords { get; set; } 
         /// <summary>
         /// A description of the repository
         /// </summary>
         /// <value>A description of the repository</value>
-        [DataMember(Name = "description", EmitDefaultValue = false)]
+        [DataMember(Name = "description")]
         public string Description { get; set; } 
         /// <summary>
         /// An icon to represent this repository
         /// </summary>
         /// <value>An icon to represent this repository</value>
-        [DataMember(Name = "icon", EmitDefaultValue = false)]
+        [DataMember(Name = "icon")]
         public string Icon { get; set; } 
 
         /// <summary>
@@ -103,11 +103,11 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RepositoryUpdate:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Public: ").Append(Public).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Icon: ").Append(Icon).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Public: ").Append(this.Public).Append("\n");
+            sb.Append("  Keywords: ").Append(this.Keywords).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Icon: ").Append(this.Icon).Append("\n");
             return sb.ToString();
         }
   
@@ -171,32 +171,14 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Public == input.Public ||
-                    (this.Public != null &&
-                    this.Public.Equals(input.Public))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Public, input.Public) && 
                 (
                     this.Keywords == input.Keywords ||
-                    this.Keywords != null &&
-                    input.Keywords != null &&
-                    this.Keywords.SequenceEqual(input.Keywords)
-                ) && base.Equals(input) && 
-                (
-                    this.Description == input.Description ||
-                    (this.Description != null &&
-                    this.Description.Equals(input.Description))
-                ) && base.Equals(input) && 
-                (
-                    this.Icon == input.Icon ||
-                    (this.Icon != null &&
-                    this.Icon.Equals(input.Icon))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.AllEquals(this.Keywords, input.Keywords)
+                ) && 
+                    Extension.Equals(this.Description, input.Description) && 
+                    Extension.Equals(this.Icon, input.Icon) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -244,7 +226,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RepositoryUpdate$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

@@ -35,8 +35,8 @@ namespace PollinationSDK
         [JsonConstructorAttribute]
         public OpenAPIGenBaseModel
         (
-           // Required parameters
-           // Optional parameters
+            // Required parameters
+            // Optional parameters
         )// BaseClass
         {
 
@@ -49,8 +49,8 @@ namespace PollinationSDK
         /// A base class to use when there is no baseclass available to fall on.
         /// </summary>
         /// <value>A base class to use when there is no baseclass available to fall on.</value>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "InvalidType";
+        [DataMember(Name = "type")]
+        public virtual string Type { get; protected set; }  = "InvalidType";
 
 
         /// <summary>
@@ -73,7 +73,7 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("OpenAPIGenBaseModel:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
             return sb.ToString();
         }
   
@@ -128,12 +128,8 @@ namespace PollinationSDK
         {
             if (input == null)
                 return false;
-            return 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+            return base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>

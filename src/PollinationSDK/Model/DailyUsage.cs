@@ -67,38 +67,38 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "DailyUsage";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "DailyUsage";
 
         /// <summary>
         /// The day this usage was aggregated for
         /// </summary>
         /// <value>The day this usage was aggregated for</value>
-        [DataMember(Name = "date", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "date", IsRequired = true)]
         public DateTime Date { get; set; } 
         /// <summary>
         /// cpu usage
         /// </summary>
         /// <value>cpu usage</value>
-        [DataMember(Name = "cpu", EmitDefaultValue = true)]
+        [DataMember(Name = "cpu")]
         public double Cpu { get; set; }  = 0D;
         /// <summary>
         /// memory usage
         /// </summary>
         /// <value>memory usage</value>
-        [DataMember(Name = "memory", EmitDefaultValue = true)]
+        [DataMember(Name = "memory")]
         public double Memory { get; set; }  = 0D;
         /// <summary>
         /// succeeded usage
         /// </summary>
         /// <value>succeeded usage</value>
-        [DataMember(Name = "succeeded", EmitDefaultValue = true)]
+        [DataMember(Name = "succeeded")]
         public int Succeeded { get; set; }  = 0;
         /// <summary>
         /// failed usage
         /// </summary>
         /// <value>failed usage</value>
-        [DataMember(Name = "failed", EmitDefaultValue = true)]
+        [DataMember(Name = "failed")]
         public int Failed { get; set; }  = 0;
 
         /// <summary>
@@ -121,12 +121,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("DailyUsage:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Date: ").Append(Date).Append("\n");
-            sb.Append("  Cpu: ").Append(Cpu).Append("\n");
-            sb.Append("  Memory: ").Append(Memory).Append("\n");
-            sb.Append("  Succeeded: ").Append(Succeeded).Append("\n");
-            sb.Append("  Failed: ").Append(Failed).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Date: ").Append(this.Date).Append("\n");
+            sb.Append("  Cpu: ").Append(this.Cpu).Append("\n");
+            sb.Append("  Memory: ").Append(this.Memory).Append("\n");
+            sb.Append("  Succeeded: ").Append(this.Succeeded).Append("\n");
+            sb.Append("  Failed: ").Append(this.Failed).Append("\n");
             return sb.ToString();
         }
   
@@ -190,36 +190,12 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Date == input.Date ||
-                    (this.Date != null &&
-                    this.Date.Equals(input.Date))
-                ) && base.Equals(input) && 
-                (
-                    this.Cpu == input.Cpu ||
-                    (this.Cpu != null &&
-                    this.Cpu.Equals(input.Cpu))
-                ) && base.Equals(input) && 
-                (
-                    this.Memory == input.Memory ||
-                    (this.Memory != null &&
-                    this.Memory.Equals(input.Memory))
-                ) && base.Equals(input) && 
-                (
-                    this.Succeeded == input.Succeeded ||
-                    (this.Succeeded != null &&
-                    this.Succeeded.Equals(input.Succeeded))
-                ) && base.Equals(input) && 
-                (
-                    this.Failed == input.Failed ||
-                    (this.Failed != null &&
-                    this.Failed.Equals(input.Failed))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Date, input.Date) && 
+                    Extension.Equals(this.Cpu, input.Cpu) && 
+                    Extension.Equals(this.Memory, input.Memory) && 
+                    Extension.Equals(this.Succeeded, input.Succeeded) && 
+                    Extension.Equals(this.Failed, input.Failed) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -259,7 +235,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^DailyUsage$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

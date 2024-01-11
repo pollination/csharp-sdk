@@ -54,7 +54,7 @@ namespace PollinationSDK
         (
             string digest, string tag, Plugin manifest, // Required parameters
             List<string> keywords= default, string description= default, string icon= default, DateTime createdAt= default, string readme= default // Optional parameters
-        ) : base(digest: digest, tag: tag, keywords: keywords, description: description, icon: icon, createdAt: createdAt, readme: readme)// BaseClass
+        ) : base(digest: digest, tag: tag, keywords: keywords, description: description, icon: icon, createdAt: createdAt, readme: readme )// BaseClass
         {
             // to ensure "manifest" is required (not null)
             this.Manifest = manifest ?? throw new ArgumentNullException("manifest is a required property for PluginPackage and cannot be null");
@@ -67,13 +67,13 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "PluginPackage";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "PluginPackage";
 
         /// <summary>
         /// Gets or Sets Manifest
         /// </summary>
-        [DataMember(Name = "manifest", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "manifest", IsRequired = true)]
         public Plugin Manifest { get; set; } 
 
         /// <summary>
@@ -96,15 +96,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("PluginPackage:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Digest: ").Append(Digest).Append("\n");
-            sb.Append("  Tag: ").Append(Tag).Append("\n");
-            sb.Append("  Keywords: ").Append(Keywords).Append("\n");
-            sb.Append("  Description: ").Append(Description).Append("\n");
-            sb.Append("  Icon: ").Append(Icon).Append("\n");
-            sb.Append("  CreatedAt: ").Append(CreatedAt).Append("\n");
-            sb.Append("  Readme: ").Append(Readme).Append("\n");
-            sb.Append("  Manifest: ").Append(Manifest).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Digest: ").Append(this.Digest).Append("\n");
+            sb.Append("  Tag: ").Append(this.Tag).Append("\n");
+            sb.Append("  Keywords: ").Append(this.Keywords).Append("\n");
+            sb.Append("  Description: ").Append(this.Description).Append("\n");
+            sb.Append("  Icon: ").Append(this.Icon).Append("\n");
+            sb.Append("  CreatedAt: ").Append(this.CreatedAt).Append("\n");
+            sb.Append("  Readme: ").Append(this.Readme).Append("\n");
+            sb.Append("  Manifest: ").Append(this.Manifest).Append("\n");
             return sb.ToString();
         }
   
@@ -168,16 +168,8 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Manifest == input.Manifest ||
-                    (this.Manifest != null &&
-                    this.Manifest.Equals(input.Manifest))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Manifest, input.Manifest) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -209,7 +201,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^PluginPackage$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

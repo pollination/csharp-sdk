@@ -37,7 +37,7 @@ namespace PollinationSDK
         /// <param name="total">total (default to 0).</param>
         public RunProgress
         (
-           // Required parameters
+            // Required parameters
            int completed = 0, int running = 0, int total = 0 // Optional parameters
         ) : base()// BaseClass
         {
@@ -53,23 +53,23 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "RunProgress";
+        [DataMember(Name = "type")]
+        public override string Type { get; protected set; }  = "RunProgress";
 
         /// <summary>
         /// Gets or Sets Completed
         /// </summary>
-        [DataMember(Name = "completed", EmitDefaultValue = true)]
+        [DataMember(Name = "completed")]
         public int Completed { get; set; }  = 0;
         /// <summary>
         /// Gets or Sets Running
         /// </summary>
-        [DataMember(Name = "running", EmitDefaultValue = true)]
+        [DataMember(Name = "running")]
         public int Running { get; set; }  = 0;
         /// <summary>
         /// Gets or Sets Total
         /// </summary>
-        [DataMember(Name = "total", EmitDefaultValue = true)]
+        [DataMember(Name = "total")]
         public int Total { get; set; }  = 0;
 
         /// <summary>
@@ -92,10 +92,10 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("RunProgress:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Completed: ").Append(Completed).Append("\n");
-            sb.Append("  Running: ").Append(Running).Append("\n");
-            sb.Append("  Total: ").Append(Total).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Completed: ").Append(this.Completed).Append("\n");
+            sb.Append("  Running: ").Append(this.Running).Append("\n");
+            sb.Append("  Total: ").Append(this.Total).Append("\n");
             return sb.ToString();
         }
   
@@ -159,26 +159,10 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Completed == input.Completed ||
-                    (this.Completed != null &&
-                    this.Completed.Equals(input.Completed))
-                ) && base.Equals(input) && 
-                (
-                    this.Running == input.Running ||
-                    (this.Running != null &&
-                    this.Running.Equals(input.Running))
-                ) && base.Equals(input) && 
-                (
-                    this.Total == input.Total ||
-                    (this.Total != null &&
-                    this.Total.Equals(input.Total))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Completed, input.Completed) && 
+                    Extension.Equals(this.Running, input.Running) && 
+                    Extension.Equals(this.Total, input.Total) && 
+                    Extension.Equals(this.Type, input.Type);
         }
 
         /// <summary>
@@ -214,7 +198,7 @@ namespace PollinationSDK
             
             // Type (string) pattern
             Regex regexType = new Regex(@"^RunProgress$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
+            if (this.Type != null && false == regexType.Match(this.Type).Success)
             {
                 yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
             }

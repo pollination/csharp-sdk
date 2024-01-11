@@ -27,8 +27,14 @@ namespace PollinationSDK
     /// Subscription
     /// </summary>
     [DataContract(Name = "Subscription")]
-    public partial class Subscription : ExternalResource, IEquatable<Subscription>, IValidatableObject
+    public partial class Subscription : OpenAPIGenBaseModel, IEquatable<Subscription>, IValidatableObject
     {
+        /// <summary>
+        /// The type of subscription
+        /// </summary>
+        /// <value>The type of subscription</value>
+        [DataMember(Name="plan_type")]
+        public PlanType PlanType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscription" /> class.
         /// </summary>
@@ -36,98 +42,88 @@ namespace PollinationSDK
         protected Subscription() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Subscription";
         }
         
         /// <summary>
         /// Initializes a new instance of the <see cref="Subscription" /> class.
         /// </summary>
-        /// <param name="cancelAtPeriodEnd">cancelAtPeriodEnd (required).</param>
-        /// <param name="currentPeriodStart">currentPeriodStart (required).</param>
-        /// <param name="currentPeriodEnd">currentPeriodEnd (required).</param>
-        /// <param name="customer">customer (required).</param>
-        /// <param name="items">items (required).</param>
-        /// <param name="latestInvoice">latestInvoice (required).</param>
-        /// <param name="defaultPaymentMethod">defaultPaymentMethod.</param>
-        /// <param name="schedule">schedule.</param>
-        /// <param name="discount">discount.</param>
-        /// <param name="id">id (required).</param>
-        /// <param name="metadata">metadata.</param>
+        /// <param name="id">The unique ID of this subscription (required).</param>
+        /// <param name="owner">The owner of the repository (required).</param>
+        /// <param name="periodStart">The start of the current subscription period (required).</param>
+        /// <param name="periodEnd">The end of the current subscription period (required).</param>
+        /// <param name="planSlug">The slug of the plan used to create this subscription (required).</param>
+        /// <param name="externalId">The ID of this subscription.</param>
+        /// <param name="planMultiplier">The number of times to multiply the plan limit by (default to 1).</param>
+        /// <param name="billingInfo">The billing info for the subscription.</param>
         public Subscription
         (
-            string id, bool cancelAtPeriodEnd, DateTime currentPeriodStart, DateTime currentPeriodEnd, string customer, SubscriptionItemList items, string latestInvoice, // Required parameters
-            Object metadata= default, string defaultPaymentMethod= default, string schedule= default, Discount discount= default // Optional parameters
-        ) : base(id: id, metadata: metadata)// BaseClass
+           Guid id, AccountPublic owner, DateTime periodStart, DateTime periodEnd, string planSlug, // Required parameters
+           string externalId= default, int planMultiplier = 1, BillingInfo billingInfo= default// Optional parameters
+        ) : base()// BaseClass
         {
-            this.CancelAtPeriodEnd = cancelAtPeriodEnd;
-            this.CurrentPeriodStart = currentPeriodStart;
-            this.CurrentPeriodEnd = currentPeriodEnd;
-            // to ensure "customer" is required (not null)
-            this.Customer = customer ?? throw new ArgumentNullException("customer is a required property for Subscription and cannot be null");
-            // to ensure "items" is required (not null)
-            this.Items = items ?? throw new ArgumentNullException("items is a required property for Subscription and cannot be null");
-            // to ensure "latestInvoice" is required (not null)
-            this.LatestInvoice = latestInvoice ?? throw new ArgumentNullException("latestInvoice is a required property for Subscription and cannot be null");
-            this.DefaultPaymentMethod = defaultPaymentMethod;
-            this.Schedule = schedule;
-            this.Discount = discount;
+            this.Id = id;
+            // to ensure "owner" is required (not null)
+            this.Owner = owner ?? throw new ArgumentNullException("owner is a required property for Subscription and cannot be null");
+            this.PeriodStart = periodStart;
+            this.PeriodEnd = periodEnd;
+            // to ensure "planSlug" is required (not null)
+            this.PlanSlug = planSlug ?? throw new ArgumentNullException("planSlug is a required property for Subscription and cannot be null");
+            this.ExternalId = externalId;
+            this.PlanMultiplier = planMultiplier;
+            this.BillingInfo = billingInfo;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "Subscription";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "Subscription";
 
         /// <summary>
-        /// Gets or Sets CancelAtPeriodEnd
+        /// The unique ID of this subscription
         /// </summary>
-        [DataMember(Name = "cancel_at_period_end", IsRequired = true, EmitDefaultValue = false)]
-        public bool CancelAtPeriodEnd { get; set; } 
+        /// <value>The unique ID of this subscription</value>
+        [DataMember(Name = "id", IsRequired = true)]
+        public Guid Id { get; set; } 
         /// <summary>
-        /// Gets or Sets CurrentPeriodStart
+        /// The owner of the repository
         /// </summary>
-        [DataMember(Name = "current_period_start", IsRequired = true, EmitDefaultValue = false)]
-        public DateTime CurrentPeriodStart { get; set; } 
+        /// <value>The owner of the repository</value>
+        [DataMember(Name = "owner", IsRequired = true)]
+        public AccountPublic Owner { get; set; } 
         /// <summary>
-        /// Gets or Sets CurrentPeriodEnd
+        /// The start of the current subscription period
         /// </summary>
-        [DataMember(Name = "current_period_end", IsRequired = true, EmitDefaultValue = false)]
-        public DateTime CurrentPeriodEnd { get; set; } 
+        /// <value>The start of the current subscription period</value>
+        [DataMember(Name = "period_start", IsRequired = true)]
+        public DateTime PeriodStart { get; set; } 
         /// <summary>
-        /// Gets or Sets Customer
+        /// The end of the current subscription period
         /// </summary>
-        [DataMember(Name = "customer", IsRequired = true, EmitDefaultValue = false)]
-        public string Customer { get; set; } 
+        /// <value>The end of the current subscription period</value>
+        [DataMember(Name = "period_end", IsRequired = true)]
+        public DateTime PeriodEnd { get; set; } 
         /// <summary>
-        /// Gets or Sets Items
+        /// The slug of the plan used to create this subscription
         /// </summary>
-        [DataMember(Name = "items", IsRequired = true, EmitDefaultValue = false)]
-        public SubscriptionItemList Items { get; set; } 
+        /// <value>The slug of the plan used to create this subscription</value>
+        [DataMember(Name = "plan_slug", IsRequired = true)]
+        public string PlanSlug { get; set; } 
         /// <summary>
-        /// Gets or Sets LatestInvoice
+        /// The ID of this subscription
         /// </summary>
-        [DataMember(Name = "latest_invoice", IsRequired = true, EmitDefaultValue = false)]
-        public string LatestInvoice { get; set; } 
+        /// <value>The ID of this subscription</value>
+        [DataMember(Name = "external_id")]
+        public string ExternalId { get; set; } 
         /// <summary>
-        /// Gets or Sets DefaultPaymentMethod
+        /// The number of times to multiply the plan limit by
         /// </summary>
-        [DataMember(Name = "default_payment_method", EmitDefaultValue = false)]
-        public string DefaultPaymentMethod { get; set; } 
+        /// <value>The number of times to multiply the plan limit by</value>
+        [DataMember(Name = "plan_multiplier")]
+        public int PlanMultiplier { get; set; }  = 1;
         /// <summary>
-        /// Gets or Sets Schedule
+        /// The billing info for the subscription
         /// </summary>
-        [DataMember(Name = "schedule", EmitDefaultValue = false)]
-        public string Schedule { get; set; } 
-        /// <summary>
-        /// Gets or Sets Discount
-        /// </summary>
-        [DataMember(Name = "discount", EmitDefaultValue = false)]
-        public Discount Discount { get; set; } 
+        /// <value>The billing info for the subscription</value>
+        [DataMember(Name = "billing_info")]
+        public BillingInfo BillingInfo { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -149,18 +145,15 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("Subscription:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Id: ").Append(Id).Append("\n");
-            sb.Append("  Metadata: ").Append(Metadata).Append("\n");
-            sb.Append("  CancelAtPeriodEnd: ").Append(CancelAtPeriodEnd).Append("\n");
-            sb.Append("  CurrentPeriodStart: ").Append(CurrentPeriodStart).Append("\n");
-            sb.Append("  CurrentPeriodEnd: ").Append(CurrentPeriodEnd).Append("\n");
-            sb.Append("  Customer: ").Append(Customer).Append("\n");
-            sb.Append("  Items: ").Append(Items).Append("\n");
-            sb.Append("  LatestInvoice: ").Append(LatestInvoice).Append("\n");
-            sb.Append("  DefaultPaymentMethod: ").Append(DefaultPaymentMethod).Append("\n");
-            sb.Append("  Schedule: ").Append(Schedule).Append("\n");
-            sb.Append("  Discount: ").Append(Discount).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Id: ").Append(this.Id).Append("\n");
+            sb.Append("  Owner: ").Append(this.Owner).Append("\n");
+            sb.Append("  PeriodStart: ").Append(this.PeriodStart).Append("\n");
+            sb.Append("  PeriodEnd: ").Append(this.PeriodEnd).Append("\n");
+            sb.Append("  PlanSlug: ").Append(this.PlanSlug).Append("\n");
+            sb.Append("  ExternalId: ").Append(this.ExternalId).Append("\n");
+            sb.Append("  PlanMultiplier: ").Append(this.PlanMultiplier).Append("\n");
+            sb.Append("  BillingInfo: ").Append(this.BillingInfo).Append("\n");
             return sb.ToString();
         }
   
@@ -198,7 +191,7 @@ namespace PollinationSDK
         /// Creates a new instance with the same properties.
         /// </summary>
         /// <returns>OpenAPIGenBaseModel</returns>
-        public override ExternalResource DuplicateExternalResource()
+        public override OpenAPIGenBaseModel DuplicateOpenAPIGenBaseModel()
         {
             return DuplicateSubscription();
         }
@@ -224,56 +217,15 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.CancelAtPeriodEnd == input.CancelAtPeriodEnd ||
-                    (this.CancelAtPeriodEnd != null &&
-                    this.CancelAtPeriodEnd.Equals(input.CancelAtPeriodEnd))
-                ) && base.Equals(input) && 
-                (
-                    this.CurrentPeriodStart == input.CurrentPeriodStart ||
-                    (this.CurrentPeriodStart != null &&
-                    this.CurrentPeriodStart.Equals(input.CurrentPeriodStart))
-                ) && base.Equals(input) && 
-                (
-                    this.CurrentPeriodEnd == input.CurrentPeriodEnd ||
-                    (this.CurrentPeriodEnd != null &&
-                    this.CurrentPeriodEnd.Equals(input.CurrentPeriodEnd))
-                ) && base.Equals(input) && 
-                (
-                    this.Customer == input.Customer ||
-                    (this.Customer != null &&
-                    this.Customer.Equals(input.Customer))
-                ) && base.Equals(input) && 
-                (
-                    this.Items == input.Items ||
-                    (this.Items != null &&
-                    this.Items.Equals(input.Items))
-                ) && base.Equals(input) && 
-                (
-                    this.LatestInvoice == input.LatestInvoice ||
-                    (this.LatestInvoice != null &&
-                    this.LatestInvoice.Equals(input.LatestInvoice))
-                ) && base.Equals(input) && 
-                (
-                    this.DefaultPaymentMethod == input.DefaultPaymentMethod ||
-                    (this.DefaultPaymentMethod != null &&
-                    this.DefaultPaymentMethod.Equals(input.DefaultPaymentMethod))
-                ) && base.Equals(input) && 
-                (
-                    this.Schedule == input.Schedule ||
-                    (this.Schedule != null &&
-                    this.Schedule.Equals(input.Schedule))
-                ) && base.Equals(input) && 
-                (
-                    this.Discount == input.Discount ||
-                    (this.Discount != null &&
-                    this.Discount.Equals(input.Discount))
-                ) && base.Equals(input) && 
-                (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
-                );
+                    Extension.Equals(this.Id, input.Id) && 
+                    Extension.Equals(this.Owner, input.Owner) && 
+                    Extension.Equals(this.Type, input.Type) && 
+                    Extension.Equals(this.PeriodStart, input.PeriodStart) && 
+                    Extension.Equals(this.PeriodEnd, input.PeriodEnd) && 
+                    Extension.Equals(this.PlanSlug, input.PlanSlug) && 
+                    Extension.Equals(this.ExternalId, input.ExternalId) && 
+                    Extension.Equals(this.PlanMultiplier, input.PlanMultiplier) && 
+                    Extension.Equals(this.BillingInfo, input.BillingInfo);
         }
 
         /// <summary>
@@ -285,26 +237,24 @@ namespace PollinationSDK
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = base.GetHashCode();
-                if (this.CancelAtPeriodEnd != null)
-                    hashCode = hashCode * 59 + this.CancelAtPeriodEnd.GetHashCode();
-                if (this.CurrentPeriodStart != null)
-                    hashCode = hashCode * 59 + this.CurrentPeriodStart.GetHashCode();
-                if (this.CurrentPeriodEnd != null)
-                    hashCode = hashCode * 59 + this.CurrentPeriodEnd.GetHashCode();
-                if (this.Customer != null)
-                    hashCode = hashCode * 59 + this.Customer.GetHashCode();
-                if (this.Items != null)
-                    hashCode = hashCode * 59 + this.Items.GetHashCode();
-                if (this.LatestInvoice != null)
-                    hashCode = hashCode * 59 + this.LatestInvoice.GetHashCode();
-                if (this.DefaultPaymentMethod != null)
-                    hashCode = hashCode * 59 + this.DefaultPaymentMethod.GetHashCode();
-                if (this.Schedule != null)
-                    hashCode = hashCode * 59 + this.Schedule.GetHashCode();
-                if (this.Discount != null)
-                    hashCode = hashCode * 59 + this.Discount.GetHashCode();
+                if (this.Id != null)
+                    hashCode = hashCode * 59 + this.Id.GetHashCode();
+                if (this.Owner != null)
+                    hashCode = hashCode * 59 + this.Owner.GetHashCode();
                 if (this.Type != null)
                     hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.PeriodStart != null)
+                    hashCode = hashCode * 59 + this.PeriodStart.GetHashCode();
+                if (this.PeriodEnd != null)
+                    hashCode = hashCode * 59 + this.PeriodEnd.GetHashCode();
+                if (this.PlanSlug != null)
+                    hashCode = hashCode * 59 + this.PlanSlug.GetHashCode();
+                if (this.ExternalId != null)
+                    hashCode = hashCode * 59 + this.ExternalId.GetHashCode();
+                if (this.PlanMultiplier != null)
+                    hashCode = hashCode * 59 + this.PlanMultiplier.GetHashCode();
+                if (this.BillingInfo != null)
+                    hashCode = hashCode * 59 + this.BillingInfo.GetHashCode();
                 return hashCode;
             }
         }
@@ -316,26 +266,7 @@ namespace PollinationSDK
         /// <returns>Validation Result</returns>
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
-            return this.BaseValidate(validationContext);
-        }
-
-        /// <summary>
-        /// To validate all properties of the instance
-        /// </summary>
-        /// <param name="validationContext">Validation context</param>
-        /// <returns>Validation Result</returns>
-        protected IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> BaseValidate(ValidationContext validationContext)
-        {
             foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^Subscription$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }

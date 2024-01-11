@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **Owner** | [**AccountPublic**](AccountPublic.md) | owner | [optional] 
 **Recipe** | [**RecipeInterface**](RecipeInterface.md) | The recipe used to generate this  | [optional] 
 **Status** | [**JobStatus**](JobStatus.md) | The status of the job | [optional] 
+**ResourcesDuration** | [**ResourcesDuration**](ResourcesDuration.md) | CPU and Memory usage aggregated for all runs in this job | [optional] 
 **Type** | **string** |  | [optional] [readonly] [default to "CloudJob"]
 
 [[Back to Model list]](../README.md#documentation-for-models)

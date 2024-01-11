@@ -24,11 +24,17 @@ using System.ComponentModel.DataAnnotations;
 namespace PollinationSDK
 {
     /// <summary>
-    /// A Subscription plan
+    /// SubscriptionPlan
     /// </summary>
     [DataContract(Name = "SubscriptionPlan")]
     public partial class SubscriptionPlan : OpenAPIGenBaseModel, IEquatable<SubscriptionPlan>, IValidatableObject
     {
+        /// <summary>
+        /// The type of plan
+        /// </summary>
+        /// <value>The type of plan</value>
+        [DataMember(Name="plan_type")]
+        public PlanType PlanType { get; set; }   
         /// <summary>
         /// Initializes a new instance of the <see cref="SubscriptionPlan" /> class.
         /// </summary>
@@ -36,7 +42,6 @@ namespace PollinationSDK
         protected SubscriptionPlan() 
         { 
             // Set non-required readonly properties with defaultValue
-            this.Type = "SubscriptionPlan";
         }
         
         /// <summary>
@@ -46,10 +51,11 @@ namespace PollinationSDK
         /// <param name="name">A name of the config plan used to create this subscription (required).</param>
         /// <param name="accountTypes">The types of account to which the plan can be applied (required).</param>
         /// <param name="quotas">A list of quota plans for a given subscription.</param>
+        /// <param name="billingOptions">The billing options for this plan.</param>
         public SubscriptionPlan
         (
            string slug, string name, List<AccountType> accountTypes, // Required parameters
-           List<QuotaPlan> quotas= default // Optional parameters
+           List<QuotaPlan> quotas= default, List<BillingOption> billingOptions= default// Optional parameters
         ) : base()// BaseClass
         {
             // to ensure "slug" is required (not null)
@@ -59,42 +65,42 @@ namespace PollinationSDK
             // to ensure "accountTypes" is required (not null)
             this.AccountTypes = accountTypes ?? throw new ArgumentNullException("accountTypes is a required property for SubscriptionPlan and cannot be null");
             this.Quotas = quotas;
+            this.BillingOptions = billingOptions;
 
             // Set non-required readonly properties with defaultValue
-            this.Type = "SubscriptionPlan";
         }
 
-        //============================================== is ReadOnly 
-        /// <summary>
-        /// Gets or Sets Type
-        /// </summary>
-        [DataMember(Name = "type", EmitDefaultValue = true)]
-        public override string Type { get; protected internal set; }  = "SubscriptionPlan";
 
         /// <summary>
         /// A slug of the config plan used to create this subscription
         /// </summary>
         /// <value>A slug of the config plan used to create this subscription</value>
-        [DataMember(Name = "slug", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "slug", IsRequired = true)]
         public string Slug { get; set; } 
         /// <summary>
         /// A name of the config plan used to create this subscription
         /// </summary>
         /// <value>A name of the config plan used to create this subscription</value>
-        [DataMember(Name = "name", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "name", IsRequired = true)]
         public string Name { get; set; } 
         /// <summary>
         /// The types of account to which the plan can be applied
         /// </summary>
         /// <value>The types of account to which the plan can be applied</value>
-        [DataMember(Name = "account_types", IsRequired = true, EmitDefaultValue = false)]
+        [DataMember(Name = "account_types", IsRequired = true)]
         public List<AccountType> AccountTypes { get; set; } 
         /// <summary>
         /// A list of quota plans for a given subscription
         /// </summary>
         /// <value>A list of quota plans for a given subscription</value>
-        [DataMember(Name = "quotas", EmitDefaultValue = false)]
+        [DataMember(Name = "quotas")]
         public List<QuotaPlan> Quotas { get; set; } 
+        /// <summary>
+        /// The billing options for this plan
+        /// </summary>
+        /// <value>The billing options for this plan</value>
+        [DataMember(Name = "billing_options")]
+        public List<BillingOption> BillingOptions { get; set; } 
 
         /// <summary>
         /// Returns the string presentation of the object
@@ -116,11 +122,12 @@ namespace PollinationSDK
             
             var sb = new StringBuilder();
             sb.Append("SubscriptionPlan:\n");
-            sb.Append("  Type: ").Append(Type).Append("\n");
-            sb.Append("  Slug: ").Append(Slug).Append("\n");
-            sb.Append("  Name: ").Append(Name).Append("\n");
-            sb.Append("  AccountTypes: ").Append(AccountTypes).Append("\n");
-            sb.Append("  Quotas: ").Append(Quotas).Append("\n");
+            sb.Append("  Type: ").Append(this.Type).Append("\n");
+            sb.Append("  Slug: ").Append(this.Slug).Append("\n");
+            sb.Append("  Name: ").Append(this.Name).Append("\n");
+            sb.Append("  AccountTypes: ").Append(this.AccountTypes).Append("\n");
+            sb.Append("  Quotas: ").Append(this.Quotas).Append("\n");
+            sb.Append("  BillingOptions: ").Append(this.BillingOptions).Append("\n");
             return sb.ToString();
         }
   
@@ -184,32 +191,20 @@ namespace PollinationSDK
             if (input == null)
                 return false;
             return base.Equals(input) && 
-                (
-                    this.Slug == input.Slug ||
-                    (this.Slug != null &&
-                    this.Slug.Equals(input.Slug))
-                ) && base.Equals(input) && 
-                (
-                    this.Name == input.Name ||
-                    (this.Name != null &&
-                    this.Name.Equals(input.Name))
-                ) && base.Equals(input) && 
+                    Extension.Equals(this.Type, input.Type) && 
+                    Extension.Equals(this.Slug, input.Slug) && 
+                    Extension.Equals(this.Name, input.Name) && 
                 (
                     this.AccountTypes == input.AccountTypes ||
-                    this.AccountTypes != null &&
-                    input.AccountTypes != null &&
-                    this.AccountTypes.SequenceEqual(input.AccountTypes)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.AccountTypes, input.AccountTypes)
+                ) && 
                 (
                     this.Quotas == input.Quotas ||
-                    this.Quotas != null &&
-                    input.Quotas != null &&
-                    this.Quotas.SequenceEqual(input.Quotas)
-                ) && base.Equals(input) && 
+                    Extension.AllEquals(this.Quotas, input.Quotas)
+                ) && 
                 (
-                    this.Type == input.Type ||
-                    (this.Type != null &&
-                    this.Type.Equals(input.Type))
+                    this.BillingOptions == input.BillingOptions ||
+                    Extension.AllEquals(this.BillingOptions, input.BillingOptions)
                 );
         }
 
@@ -222,6 +217,8 @@ namespace PollinationSDK
             unchecked // Overflow is fine, just wrap
             {
                 int hashCode = base.GetHashCode();
+                if (this.Type != null)
+                    hashCode = hashCode * 59 + this.Type.GetHashCode();
                 if (this.Slug != null)
                     hashCode = hashCode * 59 + this.Slug.GetHashCode();
                 if (this.Name != null)
@@ -230,8 +227,8 @@ namespace PollinationSDK
                     hashCode = hashCode * 59 + this.AccountTypes.GetHashCode();
                 if (this.Quotas != null)
                     hashCode = hashCode * 59 + this.Quotas.GetHashCode();
-                if (this.Type != null)
-                    hashCode = hashCode * 59 + this.Type.GetHashCode();
+                if (this.BillingOptions != null)
+                    hashCode = hashCode * 59 + this.BillingOptions.GetHashCode();
                 return hashCode;
             }
         }
@@ -244,15 +241,6 @@ namespace PollinationSDK
         IEnumerable<System.ComponentModel.DataAnnotations.ValidationResult> IValidatableObject.Validate(ValidationContext validationContext)
         {
             foreach(var x in base.BaseValidate(validationContext)) yield return x;
-
-            
-            // Type (string) pattern
-            Regex regexType = new Regex(@"^SubscriptionPlan$", RegexOptions.CultureInvariant);
-            if (false == regexType.Match(this.Type).Success)
-            {
-                yield return new System.ComponentModel.DataAnnotations.ValidationResult("Invalid value for Type, must match a pattern of " + regexType, new [] { "Type" });
-            }
-
             yield break;
         }
     }
