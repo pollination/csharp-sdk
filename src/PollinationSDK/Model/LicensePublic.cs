@@ -32,8 +32,8 @@ namespace PollinationSDK
         /// <summary>
         /// Gets or Sets Type
         /// </summary>
-        [DataMember(Name="license_type")]
-        public LicenseType LicenseType { get; set; }   
+        [DataMember(Name = "license_type")]
+        public LicenseType LicenseType { get; set; } = LicenseType.HostedFloating;
         /// <summary>
         /// Initializes a new instance of the <see cref="LicensePublic" /> class.
         /// </summary>
@@ -68,9 +68,9 @@ namespace PollinationSDK
         /// <param name="url">A URL to the license used for the package..</param>
         public LicensePublic
         (
-            string name, string id, DateTime createdAt, DateTime updatedAt, string key, bool revoked, bool suspended, int totalActivations, int totalDeactivations, int validity, int allowedActivations, int serverSyncGracePeriod, int serverSyncInterval, int leaseDuration, string productId, List<Metadata> metadata, LicenseType type, // Required parameters
+            string id, DateTime createdAt, DateTime updatedAt, string key, bool revoked, bool suspended, int totalActivations, int totalDeactivations, int validity, int allowedActivations, int serverSyncGracePeriod, int serverSyncInterval, int leaseDuration, string productId, List<LicenseMetadata> metadata, LicenseType type, // Required parameters
             Dictionary<string, string> annotations= default, string url= default, string notes= default// Optional parameters
-        ) : base(name: name, annotations: annotations, url: url )// BaseClass
+        ) : base( annotations: annotations, url: url )// BaseClass
         {
             // to ensure "id" is required (not null)
             this.Id = id ?? throw new ArgumentNullException("id is a required property for LicensePublic and cannot be null");
@@ -173,7 +173,7 @@ namespace PollinationSDK
         /// Gets or Sets Metadata
         /// </summary>
         [DataMember(Name = "metadata", IsRequired = true)]
-        public List<Metadata> Metadata { get; set; } 
+        public List<LicenseMetadata> Metadata { get; set; } 
         /// <summary>
         /// Gets or Sets Notes
         /// </summary>
@@ -232,7 +232,7 @@ namespace PollinationSDK
             var obj = JsonConvert.DeserializeObject<LicensePublic>(json, JsonSetting.AnyOfConvertSetting);
             if (obj == null)
                 return null;
-            return obj.Type.ToLower() == obj.GetType().Name.ToLower() ? obj : null;
+            return obj;
         }
 
         /// <summary>

@@ -1,0 +1,26 @@
+{
+    "id": "7832b8b1-xxxx-xxxx-xxxx-8ee6253b0aab",
+    "created_at": "2023-12-11T00:26:25.877353+00:00",
+    "updated_at": "2023-12-25T03:00:27.492802+00:00",
+    "key": "5A87B3-XXXXXX-XXXXXX-XXXXXX-XXXXXX-666F6E",
+    "revoked": false,
+    "suspended": false,
+    "total_activations": 0,
+    "total_deactivations": 0,
+    "validity": 0,
+    "allowed_activations": 20,
+    "type": "hosted-floating",
+    "server_sync_grace_period": 86400,
+    "server_sync_interval": 3600,
+    "lease_duration": 3630,
+    "product_id": "95e61f3a-xxxx-xxxx-xxxx-5aaa9321ba23",
+    "notes": null,
+    "metadata": [
+        {
+            "id": "f38f378d-xxxx-xxxx-xxxx-5ca758a917e2",
+            "key": "pollination/account-id",
+            "value": "1da45dba-xxxx-xxxx-xxxx-b5df2f28e3bd",
+            "visible": false
+        }
+    ]
+}

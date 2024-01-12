@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System.IO;
 using System.Linq;
 
 namespace PollinationSDK.Test
@@ -25,6 +26,15 @@ namespace PollinationSDK.Test
         {
             var key = Utilities.GetValidLicenseKey("rhino_plugin");
             Assert.IsTrue(!string.IsNullOrEmpty(key));
+        }
+
+        [Test]
+        public void DeserializeLicense()
+        {
+            var f = Path.GetFullPath(@"../../../TestSample/licensePublic.json");
+            var json = System.IO.File.ReadAllText(f);
+            var l = LicensePublic.FromJson(json);
+            Assert.IsNotNull(l);
         }
     }
 
