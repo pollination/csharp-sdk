@@ -35,8 +35,8 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new APITokensApi(Configuration.Default);
             var aPITokenCreate = new APITokenCreate(); // APITokenCreate | 
@@ -114,8 +114,8 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new APITokensApi(Configuration.Default);
             var tokenId = tokenId_example;  // string | 
@@ -193,8 +193,8 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new APITokensApi(Configuration.Default);
             var page = 56;  // int? | Page number starting from 1 (optional)  (default to 1)
@@ -274,8 +274,8 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new APITokensApi(Configuration.Default);
             var tokenId = tokenId_example;  // string | 

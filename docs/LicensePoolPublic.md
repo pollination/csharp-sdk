@@ -5,16 +5,15 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**Accessors** | [**List&lt;Accessor&gt;**](Accessor.md) | The entities that can access the license though the pool | [optional] 
+**AllowedActivations** | **int** | The number of allowable activations for this license | 
+**Description** | **string** | The description of the pool | [optional] 
 **Id** | **Guid** | The ID of the pool | 
 **LicenseId** | **string** | The ID of the license to which the pool provides access | 
 **Owner** | [**AccountPublic**](AccountPublic.md) | The account that owns the license | 
 **Permissions** | [**UserPermission**](UserPermission.md) |  | 
 **Product** | **string** | The pollination product to which this pool provides access | 
 **TotalActivations** | **int** | The number of current activations for this license | 
-**AllowedActivations** | **int** | The number of allowable activations for this license | 
-**Accessors** | [**List&lt;Accessor&gt;**](Accessor.md) | The entities that can access the license though the pool | [optional] 
-**Description** | **string** | The description of the pool | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "LicensePoolPublic"]
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
