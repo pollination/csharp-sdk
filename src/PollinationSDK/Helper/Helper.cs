@@ -294,16 +294,26 @@ namespace PollinationSDK
             var projOwner = proj[0];
             var projName = proj[1];
 
+            // check folder assets
+            var gp = assets.GroupBy(_ => Path.HasExtension(_.RelativePath));
+            var fileAssets = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _)?.ToList() ?? new List<CloudReferenceAsset>();
+            var folderAssets = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _.RelativePath)?.ToList();
+            if (folderAssets != null && folderAssets.Any())
+            {
+                var allFiles = await GetAllFilesAsync(api, projOwner, projName, folderAssets, saveAsDir);
+                var cloudRefs = allFiles.Select(_ => new CloudReferenceAsset(projOwner, projName, _.Key));
+                fileAssets.AddRange(cloudRefs);
+            }
 
             // check if cached
             if (useCached)
             {
-                assets = CheckCached(assets, dir).ToList();
+                fileAssets = CheckCached(fileAssets, dir).ToList();
             }
 
-            var total = assets.Count();
+            var total = fileAssets.Count();
             var completed = 0;
-            foreach (var asset in assets)
+            foreach (var asset in fileAssets)
             {
                 try
                 {
@@ -341,6 +351,32 @@ namespace PollinationSDK
                 }
             }
             return tasks;
+
+        }
+
+        /// <summary>
+        /// List all FileMeta from all sub-folders if exists
+        /// </summary>
+        /// <param name="api"></param>
+        /// <param name="projOwner"></param>
+        /// <param name="projName"></param>
+        /// <param name="relativeFolderPaths"></param>
+        /// <param name="saveAsDir"></param>
+        /// <param name="reportProgressAction"></param>
+        /// <param name="cancelToken"></param>
+        /// <returns></returns>
+        public static async Task<List<FileMeta>> GetAllFilesAsync(ArtifactsApi api, string projOwner, string projName, List<string> relativeFolderPaths, string saveAsDir)
+        {
+            var fs = api.ListArtifacts(projOwner, projName, relativeFolderPaths, null, 500).Resources;
+            var gp = fs.GroupBy(_ => _.FileType == "folder");
+            var files = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _)?.ToList() ?? new List<FileMeta>();
+            var folders = gp.FirstOrDefault(_=>_.Key == true)?.Select(_ => _.Key)?.ToList() ?? new List<string>();
+            if (folders.Any())
+            {
+                var subItems = await GetAllFilesAsync(api, projOwner, projName, folders, saveAsDir);
+                files.AddRange(subItems);
+            }
+            return files;
 
         }
 
