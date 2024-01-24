@@ -32,13 +32,13 @@ namespace PollinationSDK.Test
         public void TestDownloadFolder()
         {
             var api = new ArtifactsApi();
-            // var relativeFolderPath = new List<string> { "testSubDir" };
-            var relativeFolderPath = null;
+            var relativeFolderPath = new List<string> { "testSubDir" };
+            relativeFolderPath = null;
             var projOwner = "ladybug-tools";
             var projName = "demo-project";
 
 
-            var pathes = Helper.DownloadArtifactFolderAsync(api, projOwner, projName, relativeFolderPath, "").GetAwaiter().GetResult();
+            var pathes = Helper.GetAllFilesAsync(api, projOwner, projName, relativeFolderPath, "").GetAwaiter().GetResult();
             Assert.IsTrue(pathes != null);
             Assert.IsTrue(pathes.Count() > 20);
         }
