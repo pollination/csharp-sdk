@@ -5,15 +5,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **int** |  | 
-**SubscriptionId** | **int** |  | 
 **Amount** | **int** |  | 
 **Currency** | **string** |  | 
-**PayoutDate** | **DateTime** |  | 
-**IsPaid** | **bool** |  | 
+**Id** | **int** |  | 
 **IsOneOffCharge** | **bool** |  | 
+**IsPaid** | **bool** |  | 
+**PayoutDate** | **DateTime** |  | 
 **ReceiptUrl** | **string** |  | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "Payment"]
+**SubscriptionId** | **int** |  | 
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

@@ -34,12 +34,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -121,12 +119,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -210,12 +206,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
@@ -271,7 +265,7 @@ Name | Type | Description  | Notes
 
 ## PostPlugin
 
-> AnyType PostPlugin (string owner, string type = null, System.IO.Stream package = null)
+> AnyType PostPlugin (string owner, System.IO.Stream package)
 
 Push a plugin to the registry
 
@@ -291,22 +285,19 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
-            var type = type_example;  // string |  (optional)  (default to "Body_cython_function_or_method__owner__plugins_post")
-            var package = BINARY_DATA_HERE;  // System.IO.Stream |  (optional) 
+            var package = BINARY_DATA_HERE;  // System.IO.Stream | 
 
             try
             {
                 // Push a plugin to the registry
-                AnyType result = apiInstance.PostPlugin(owner, type, package);
+                AnyType result = apiInstance.PostPlugin(owner, package);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -326,8 +317,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **owner** | **string**|  | 
- **type** | **string**|  | [optional] [default to &quot;Body_cython_function_or_method__owner__plugins_post&quot;]
- **package** | **System.IO.Stream**|  | [optional] 
+ **package** | **System.IO.Stream**|  | 
 
 ### Return type
 
@@ -356,7 +346,7 @@ Name | Type | Description  | Notes
 
 ## PostRecipe
 
-> AnyType PostRecipe (string owner, string type = null, System.IO.Stream package = null)
+> AnyType PostRecipe (string owner, System.IO.Stream package)
 
 Push an Recipe to the registry
 
@@ -376,22 +366,19 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new RegistriesApi(Configuration.Default);
             var owner = owner_example;  // string | 
-            var type = type_example;  // string |  (optional)  (default to "Body_post_recipe__owner__recipes_post")
-            var package = BINARY_DATA_HERE;  // System.IO.Stream |  (optional) 
+            var package = BINARY_DATA_HERE;  // System.IO.Stream | 
 
             try
             {
                 // Push an Recipe to the registry
-                AnyType result = apiInstance.PostRecipe(owner, type, package);
+                AnyType result = apiInstance.PostRecipe(owner, package);
                 Debug.WriteLine(result);
             }
             catch (ApiException e)
@@ -411,8 +398,7 @@ namespace Example
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **owner** | **string**|  | 
- **type** | **string**|  | [optional] [default to &quot;Body_post_recipe__owner__recipes_post&quot;]
- **package** | **System.IO.Stream**|  | [optional] 
+ **package** | **System.IO.Stream**|  | 
 
 ### Return type
 
