@@ -7,7 +7,10 @@ namespace PollinationSDK.Wrapper
 {
     public class CloudReferenceAsset : PollinationSDK.Wrapper.AssetBase
     {
+        private static readonly string _cloudReferenceAssetKey = "CloudReferenceAsset";
         public string ProjectSlug { get; set; }
+        public bool IsCloudJobReferenceAsset => !this.RunSource.EndsWith(_cloudReferenceAssetKey);
+        public string JobId => IsCloudJobReferenceAsset ? this.RunSource.Split('/').LastOrDefault() : string.Empty;
 
         [JsonConstructorAttribute]
         public CloudReferenceAsset()
@@ -28,14 +31,28 @@ namespace PollinationSDK.Wrapper
 
             this.Description = $"CLOUD:{ProjectSlug}/{RelativePath}";
 
-
-            this.RunSource = $"CLOUD:{ProjectSlug}/CloudReferenceAsset";
+            this.RunSource = $"CLOUD:{ProjectSlug}/{_cloudReferenceAssetKey}";
         }
 
+        public CloudReferenceAsset(string projOwner, string projName, string jobID, string assetPath)
+        {
+            // get name
+            this.Name = System.IO.Path.GetFileNameWithoutExtension(assetPath);
+
+
+            // check path type
+            this.RelativePath = assetPath;
+            this.ProjectSlug = $"{projOwner}/{projName}";
+
+            this.Description = $"CLOUD:{ProjectSlug}/{jobID}/{RelativePath}";
+
+            this.RunSource = $"CLOUD:{ProjectSlug}/{jobID}";
+        }
 
         public override string ToString()
         {
-            return this.ToJobPathArgument().ToUserFriendlyString(true); 
+            return this.Description;
+            //return this.ToJobPathArgument().ToUserFriendlyString(true);
         }
 
 
