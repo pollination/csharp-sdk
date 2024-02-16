@@ -279,6 +279,17 @@ namespace PollinationSDK
         }
 
 
+        /// <summary>
+        /// Download all cloud reference assets (file or folder) from a project folder
+        /// </summary>
+        /// <param name="projSlug"></param>
+        /// <param name="assets"></param>
+        /// <param name="saveAsDir"></param>
+        /// <param name="reportProgressAction"></param>
+        /// <param name="useCached"></param>
+        /// <param name="cancelToken"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static async Task<List<CloudReferenceAsset>> DownloadAssetsAsync(string projSlug, IEnumerable<CloudReferenceAsset> assets, string saveAsDir, Action<string> reportProgressAction, bool useCached = false, System.Threading.CancellationToken cancelToken = default)
         {
             var tasks = new List<CloudReferenceAsset>();
@@ -354,6 +365,84 @@ namespace PollinationSDK
 
         }
 
+        public static async Task<List<CloudReferenceAsset>> DownloadAssetsAsync(string projSlug, string jobId, IEnumerable<CloudReferenceAsset> assets, string saveAsDir, Action<string> reportProgressAction, bool useCached = false, System.Threading.CancellationToken cancelToken = default)
+        {
+            var tasks = new List<CloudReferenceAsset>();
+            if (assets == null || !assets.Any()) return tasks;
+
+
+            var dir = Path.GetFullPath(Path.Combine(saveAsDir, projSlug));
+            System.IO.Directory.CreateDirectory(dir);
+
+
+            var proj = projSlug.Split('/');
+            var projOwner = proj[0];
+            var projName = proj[1];
+
+            // check folder assets
+            var gp = assets.GroupBy(_ => Path.HasExtension(_.RelativePath));
+            var fileAssets = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _)?.ToList() ?? new List<CloudReferenceAsset>();
+            var folderAssets = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _.RelativePath)?.ToList();
+
+            var api = new PollinationSDK.Api.JobsApi();
+            if (folderAssets != null && folderAssets.Any())
+            {
+                var allFiles = await GetAllFilesAsync(api, projOwner, projName, jobId, folderAssets, saveAsDir);
+                var cloudRefs = allFiles.Select(_ => new CloudReferenceAsset(projOwner, projName, jobId, _.Key));
+                fileAssets.AddRange(cloudRefs);
+            }
+
+            // check if cached
+            if (useCached)
+            {
+                fileAssets = CheckCached(fileAssets, dir).ToList();
+            }
+
+            var total = fileAssets.Count();
+            var completed = 0;
+            foreach (var asset in fileAssets)
+            {
+                try
+                {
+                    if (asset.IsPathAsset() && !asset.IsSaved())
+                    {
+
+                        Action<int> individualProgress = (percent) => {
+                            reportProgressAction?.Invoke($"[{completed}]: {percent}%");
+                        };
+
+                        var savedFolderOrFilePath = await DownloadArtifactAsync(api, projOwner, projName, jobId, asset.RelativePath, dir, individualProgress, cancelToken);
+
+                        // check folder with single file 
+                        savedFolderOrFilePath = CheckPathForDir(savedFolderOrFilePath);
+
+                        // update saved path
+                        var dup = asset.Duplicate() as CloudReferenceAsset;
+                        dup.LocalPath = savedFolderOrFilePath;
+                        tasks.Add(dup);
+                    }
+                    else
+                    {
+                        tasks.Add(asset);
+                    }
+
+                    completed++;
+                }
+                catch (Exception e)
+                {
+                    //canceled by user
+                    if (e is OperationCanceledException)
+                        return null;
+
+                    throw new ArgumentException($"Failed to download asset {asset.Name}.\n -{e.Message}");
+                }
+            }
+            return tasks;
+
+        }
+
+
+
         /// <summary>
         /// List all FileMeta from all sub-folders if exists
         /// </summary>
@@ -380,9 +469,24 @@ namespace PollinationSDK
 
         }
 
+        public static async Task<List<FileMeta>> GetAllFilesAsync(JobsApi api, string projOwner, string projName, string jobId, List<string> relativeFolderPaths, string saveAsDir)
+        {
+            var fs = api.SearchJobFolder(projOwner, projName, jobId, relativeFolderPaths, null, 500).Resources;
+            var gp = fs.GroupBy(_ => _.FileType == "folder");
+            var files = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _)?.ToList() ?? new List<FileMeta>();
+            var folders = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _.Key)?.ToList() ?? new List<string>();
+            if (folders.Any())
+            {
+                var subItems = await GetAllFilesAsync(api, projOwner, projName, jobId, folders, saveAsDir);
+                files.AddRange(subItems);
+            }
+            return files;
+
+        }
+
 
         /// <summary>
-        ///
+        /// Download file artifacts from a project folder
         /// </summary>
         /// <param name="relativePath">"model\grid\room.pts"</param>
         public static async Task<string> DownloadArtifactAsync(ArtifactsApi api, string projOwner, string projName, string relativePath, string saveAsDir, Action<int> reportProgressAction = default, System.Threading.CancellationToken cancelToken = default)
@@ -409,7 +513,31 @@ namespace PollinationSDK
             return path;
         }
 
-        
+        public static async Task<string> DownloadArtifactAsync(JobsApi api, string projOwner, string projName, string jobId, string relativePath, string saveAsDir, Action<int> reportProgressAction = default, System.Threading.CancellationToken cancelToken = default)
+        {
+            var fileRelativePath = relativePath.Replace('\\', '/');
+            if (fileRelativePath.StartsWith("/"))
+                fileRelativePath = fileRelativePath.Substring(1);
+
+            if (!Path.HasExtension(fileRelativePath)) // dir
+            {
+                var msg = $"Cannot download the following folder directly: {fileRelativePath}";
+                throw new ArgumentException(msg);
+            }
+
+            var url = (await api.DownloadJobArtifactAsync(projOwner, projName, jobId, fileRelativePath, cancelToken))?.ToString();
+
+            Helper.Logger.Information($"DownloadJobArtifactAsync: downloading {fileRelativePath} from \n  -{url}\n");
+            // get relative path correct
+            saveAsDir = Path.GetDirectoryName(Path.Combine(saveAsDir, relativePath));
+            saveAsDir = Path.GetFullPath(saveAsDir);
+            var path = await Helper.DownloadUrlAsync(url.ToString(), saveAsDir, reportProgressAction, null, cancelToken);
+
+            Helper.Logger.Information($"DownloadJobArtifactAsync: saved {fileRelativePath} to {path}");
+            return path;
+        }
+
+
         public static async Task<string> DownloadArtifactAsync(Project proj, FileMeta file, string saveAsFolder, Action<int> reportProgressAction = default)
         {
             var api = new ArtifactsApi();
