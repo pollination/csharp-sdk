@@ -287,7 +287,8 @@ namespace PollinationSDK.Wrapper
                 }
 
                 var runInfo = new RunInfo(schJobInfo.CloudProject, firstRun);
-
+                // assign job id to runInfo, so that ListRunAssets could use 
+                runInfo.JobId = schJobInfo.JobID;
                 _runInfoCache.Add(runIndex, runInfo);
                 return runInfo;
             }

@@ -23,6 +23,7 @@ namespace PollinationSDK.Wrapper
         public string ProjectName { get; private set; }
         public string ProjectSlug => $"{ProjectOwner}/{ProjectName}";
         public string RunSlug => $"{ProjectSlug}/{RunID}";
+        public string JobId { get; set; }
         public RecipeInterface Recipe { get; private set; }
 
         //[IgnoreDataMember]
