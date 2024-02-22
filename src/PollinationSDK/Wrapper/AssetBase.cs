@@ -35,6 +35,14 @@ namespace PollinationSDK.Wrapper
         public string RelativePath { get; protected set; }
 
         [JsonProperty]
+        /// <summary>
+        /// folder or file
+        /// </summary>
+        public string PathType { get; protected set; } = "file";
+        public bool IsFolder => this.PathType == "folder";
+        public bool IsFile => this.PathType == "file";
+
+        [JsonProperty]
         public string LocalPath { get; set; }
 
         /// <summary>

@@ -234,7 +234,7 @@ namespace PollinationSDK
         {
             var p = savedFolderOrFilePath;
             // check folder
-            if (!Path.HasExtension(p))
+            if (IsDirectory(p))
             {
                 var tempDir = new DirectoryInfo(p);
                 var subItems = tempDir.GetFileSystemInfos("*", SearchOption.TopDirectoryOnly);
@@ -278,6 +278,13 @@ namespace PollinationSDK
             return true;
         }
 
+        public static bool IsDirectory(string path)
+        {
+            FileAttributes attr = File.GetAttributes(path);
+            var isDir = attr.HasFlag(FileAttributes.Directory);
+            return isDir;
+        }
+
 
         /// <summary>
         /// Download all cloud reference assets (file or folder) from a project folder
@@ -306,13 +313,13 @@ namespace PollinationSDK
             var projName = proj[1];
 
             // check folder assets
-            var gp = assets.GroupBy(_ => Path.HasExtension(_.RelativePath));
-            var fileAssets = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _)?.ToList() ?? new List<CloudReferenceAsset>();
-            var folderAssets = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _.RelativePath)?.ToList();
+            var gp = assets.GroupBy(_ => _.IsFolder);
+            var fileAssets = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _)?.ToList() ?? new List<CloudReferenceAsset>();
+            var folderAssets = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _.RelativePath)?.ToList();
             if (folderAssets != null && folderAssets.Any())
             {
                 var allFiles = await GetAllFilesAsync(api, projOwner, projName, folderAssets, saveAsDir);
-                var cloudRefs = allFiles.Select(_ => new CloudReferenceAsset(projOwner, projName, _.Key));
+                var cloudRefs = allFiles.Select(_ => new CloudReferenceAsset(projOwner, projName, _.Key, _.FileType));
                 fileAssets.AddRange(cloudRefs);
             }
 
@@ -380,15 +387,15 @@ namespace PollinationSDK
             var projName = proj[1];
 
             // check folder assets
-            var gp = assets.GroupBy(_ => Path.HasExtension(_.RelativePath));
-            var fileAssets = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _)?.ToList() ?? new List<CloudReferenceAsset>();
-            var folderAssets = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _.RelativePath)?.ToList();
+            var gp = assets.GroupBy(_ => _.IsFolder);
+            var fileAssets = gp.FirstOrDefault(_ => _.Key == false)?.Select(_ => _)?.ToList() ?? new List<CloudReferenceAsset>();
+            var folderAssets = gp.FirstOrDefault(_ => _.Key == true)?.Select(_ => _.RelativePath)?.ToList();
 
             var api = new PollinationSDK.Api.JobsApi();
             if (folderAssets != null && folderAssets.Any())
             {
                 var allFiles = await GetAllFilesAsync(api, projOwner, projName, jobId, folderAssets, saveAsDir);
-                var cloudRefs = allFiles.Select(_ => new CloudReferenceAsset(projOwner, projName, jobId, _.Key));
+                var cloudRefs = allFiles.Select(_ => new CloudReferenceAsset(projOwner, projName, jobId, _.Key, _.FileType));
                 fileAssets.AddRange(cloudRefs);
             }
 
@@ -495,12 +502,6 @@ namespace PollinationSDK
             if (fileRelativePath.StartsWith("/"))
                 fileRelativePath = fileRelativePath.Substring(1);
 
-            if (!Path.HasExtension(fileRelativePath)) // dir
-            {
-                var msg = $"Cannot download the following folder directly: {fileRelativePath}";
-                throw new ArgumentException(msg);
-            }
-
             var url = (await api.DownloadArtifactAsync(projOwner, projName, fileRelativePath))?.ToString();
 
             Helper.Logger.Information($"DownloadArtifactAsync: downloading {fileRelativePath} from \n  -{url}\n");
@@ -518,12 +519,6 @@ namespace PollinationSDK
             var fileRelativePath = relativePath.Replace('\\', '/');
             if (fileRelativePath.StartsWith("/"))
                 fileRelativePath = fileRelativePath.Substring(1);
-
-            if (!Path.HasExtension(fileRelativePath)) // dir
-            {
-                var msg = $"Cannot download the following folder directly: {fileRelativePath}";
-                throw new ArgumentException(msg);
-            }
 
             var url = (await api.DownloadJobArtifactAsync(projOwner, projName, jobId, fileRelativePath, cancelToken))?.ToString();
 

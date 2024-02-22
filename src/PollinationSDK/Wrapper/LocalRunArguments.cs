@@ -52,7 +52,7 @@ namespace PollinationSDK.Wrapper
                     //copy to folder
                     var tempPath = (p.Source.Obj as PollinationSDK.ProjectFolder).Path;
                     var pathName = string.Empty;
-                    if (System.IO.Path.HasExtension(tempPath)) // file type
+                    if (!Helper.IsDirectory(tempPath)) // file type
                     {
                         if (!File.Exists(tempPath))
                             throw new ArgumentException($"Failed to find path argument {tempPath}");
