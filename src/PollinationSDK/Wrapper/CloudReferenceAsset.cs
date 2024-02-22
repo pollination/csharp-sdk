@@ -19,13 +19,13 @@ namespace PollinationSDK.Wrapper
         }
 
 
-        public CloudReferenceAsset(string projOwner, string projName, string assetPath)
+        public CloudReferenceAsset(string projOwner, string projName, string assetPath, string pathType = "file")
         {
             // get name
             this.Name = System.IO.Path.GetFileNameWithoutExtension(assetPath);
-           
 
             // check path type
+            this.PathType = pathType;
             this.RelativePath = assetPath;
             this.ProjectSlug = $"{projOwner}/{projName}";
 
@@ -34,13 +34,14 @@ namespace PollinationSDK.Wrapper
             this.RunSource = $"CLOUD:{ProjectSlug}/{_cloudReferenceAssetKey}";
         }
 
-        public CloudReferenceAsset(string projOwner, string projName, string jobID, string assetPath)
+        public CloudReferenceAsset(string projOwner, string projName, string jobID, string assetPath, string pathType)
         {
             // get name
             this.Name = System.IO.Path.GetFileNameWithoutExtension(assetPath);
 
 
             // check path type
+            this.PathType = pathType;
             this.RelativePath = assetPath;
             this.ProjectSlug = $"{projOwner}/{projName}";
 

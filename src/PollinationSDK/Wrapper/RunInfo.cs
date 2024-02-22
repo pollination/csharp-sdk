@@ -363,7 +363,7 @@ namespace PollinationSDK.Wrapper
                 }
                 else if (dup is RunOutputAsset output)
                 {
-                    var isFile = Path.HasExtension(output.RelativePath);
+                    var isFile = !Helper.IsDirectory(output.RelativePath);
                     var relativeOutPath = output.RelativePath.Replace("/", @"\");
                     relativeOutPath = relativeOutPath.StartsWith(@"\") ? relativeOutPath : $@"\{relativeOutPath}";
                     if (isFile)
@@ -396,7 +396,7 @@ namespace PollinationSDK.Wrapper
                     Directory.CreateDirectory(newRoot);
 
                     // file type 
-                    if (Path.HasExtension(newPath))
+                    if (!Helper.IsDirectory(newPath))
                     {
                         File.Copy(dup.LocalPath, newPath, true);
                     }
