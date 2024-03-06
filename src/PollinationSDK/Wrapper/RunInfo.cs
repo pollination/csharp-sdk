@@ -363,10 +363,9 @@ namespace PollinationSDK.Wrapper
                 }
                 else if (dup is RunOutputAsset output)
                 {
-                    var isFile = !Helper.IsDirectory(output.RelativePath);
                     var relativeOutPath = output.RelativePath.Replace("/", @"\");
                     relativeOutPath = relativeOutPath.StartsWith(@"\") ? relativeOutPath : $@"\{relativeOutPath}";
-                    if (isFile)
+                    if (output.IsFile)
                     {
                         var file = Directory.GetFiles(root, "*", SearchOption.AllDirectories).OrderBy(_ => _.Length).FirstOrDefault(_ => _.EndsWith(relativeOutPath));
                         dup.LocalPath = file;

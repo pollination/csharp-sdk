@@ -39,6 +39,10 @@ namespace PollinationSDK.Wrapper
             // local source: LOCAL:C\Users\mingo\simulaiton\1D725BD1
             this.RunSource = runSource;
             this.RelativePath = dagOutput.GetOutputPath();
+
+            if (dagOutput.IsPathType()) 
+                this.PathType = dagOutput is DAGFolderOutput ? "folder" : "file";
+
         }
 
         public override object CheckOutputWithHandler(object inputData, HandlerChecker handlerChecker)
