@@ -29,6 +29,9 @@ namespace PollinationSDK.Wrapper
             // cloud source: CLOUD:mingbo/demo/1D725BD1-44E1-4C3C-85D6-4D98F558DE7C
             // local source: LOCAL:C\Users\mingo\simulaiton\1D725BD1
             this.RunSource = runSource;
+
+            if (dagInput.IsPathType())
+                this.PathType = dagInput is StepFolderInput ? "folder" : "file";
         }
 
         public override AssetBase Duplicate()
