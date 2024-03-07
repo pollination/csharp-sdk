@@ -124,6 +124,39 @@ namespace PollinationSDK.Wrapper
             return  this.IsLocalJob ? $"LOCAL:{this.JobSlug}@{this.SavedLocalPath}" : $"CLOUD:{this.JobSlug}";
         }
         
+        public bool IsCloudJobDone(out string completeMessage)
+        {
+            completeMessage = null;
+            if (this.CloudJob == null)
+                return false;
+
+            var status = this.CloudJob.Status?.Status;
+            var done = status == JobStatusEnum.Completed;
+            done |= status == JobStatusEnum.Failed;
+            done |= status == JobStatusEnum.Cancelled;
+
+            if (done)
+                completeMessage = GetCloudJobDoneMessage(this.CloudJob);
+            return done;
+
+        }
+
+        public static string GetCloudJobDoneMessage(CloudJob cloudJob)
+        {
+            if (cloudJob == null)
+                return null;
+
+            var status = cloudJob.Status;
+            var totalTime = status.FinishedAt - status.StartedAt;
+            var finishMessage = status.Status.ToString();
+
+            var total = status?.RunsCompleted + status?.RunsFailed + status?.RunsCancelled;
+
+            finishMessage = $"{finishMessage}: [{GetUserFriendlyTimeCounter(totalTime)}]({total})";
+
+            return finishMessage;
+        }
+
 
         public async Task<string> WatchJobStatusAsync(Action<string> progressAction = default, System.Threading.CancellationToken cancelToken = default)
         {
@@ -177,12 +210,7 @@ namespace PollinationSDK.Wrapper
                 // suspended by user
                 cancelToken.ThrowIfCancellationRequested();
 
-                var totalTime = status.FinishedAt - startTime;
-                var finishMessage = status.Status.ToString();
-
-                //progressAction?.Invoke($"Task: {status.Status}");
-
-                finishMessage = $"{finishMessage}: [{GetUserFriendlyTimeCounter(totalTime)}]";
+                var finishMessage = GetCloudJobDoneMessage(this.CloudJob);
                 progressAction?.Invoke(finishMessage);
                 Helper.Logger.Information($"WatchJobStatusAsync: finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
 
@@ -196,19 +224,21 @@ namespace PollinationSDK.Wrapper
 
            
 
-            string GetUserFriendlyTimeCounter(TimeSpan timeDelta)
-            {
-                string format = @"hh\:mm\:ss";
-                if (timeDelta.Days > 0)
-                    format = @"d\ hh\:mm\:ss";
-                else if (timeDelta.Hours > 0)
-                    format = @"hh\:mm\:ss";
-                else if (timeDelta.Minutes > 0)
-                    format = @"mm\:ss";
-                else
-                    format = @"ss";
-                return timeDelta.ToString(format);
-            }
+           
+        }
+
+        private static string GetUserFriendlyTimeCounter(TimeSpan timeDelta)
+        {
+            string format = @"hh\:mm\:ss";
+            if (timeDelta.Days > 0)
+                format = @"d\ hh\:mm\:ss";
+            else if (timeDelta.Hours > 0)
+                format = @"hh\:mm\:ss";
+            else if (timeDelta.Minutes > 0)
+                format = @"mm\:ss";
+            else
+                format = @"ss";
+            return timeDelta.ToString(format);
         }
 
         public void CancelJob()
