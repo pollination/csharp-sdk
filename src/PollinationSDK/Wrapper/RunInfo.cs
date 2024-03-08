@@ -323,7 +323,7 @@ namespace PollinationSDK.Wrapper
         public List<RunOutputAsset> GetOutputAssets(string platform)
         {
             var sourcelink = this.ToString();
-            var assets = this.GetOutputs().Select(_ => new RunOutputAsset(_, platform, sourcelink)).ToList();
+            var assets = this.GetOutputs().Select(_ => new RunOutputAsset(_, platform, sourcelink) { RunInfo = this }).ToList();
             return assets;
         }
 
@@ -335,7 +335,7 @@ namespace PollinationSDK.Wrapper
         public List<RunInputAsset> GetInputAssets()
         {
             var sourcelink = this.ToString();
-            var assets = this.GetInputs().Select(_ => new RunInputAsset(_, sourcelink)).ToList();
+            var assets = this.GetInputs().Select(_ => new RunInputAsset(_, sourcelink) { RunInfo = this }).ToList();
             return assets;
 
         }
