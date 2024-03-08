@@ -218,6 +218,11 @@ namespace PollinationSDK.Wrapper
             }
             else
             {
+                // check cached RunInfo
+                if (this is RunAssetBase runAsset && runAsset.RunInfo != null)
+                    return runAsset.RunInfo;
+
+                // recreate RunInfo
                 var run = GetRun();
                 var proj = GetRoject();
 
