@@ -248,42 +248,57 @@ namespace PollinationSDK.Wrapper
 
         private async Task<ScheduledJobInfo> RunJobOnLocalAsync()
         {
-            if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
-                throw new ArgumentException($"Please call SetLocalJob() before running a job");
+            try
+            {
+                if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
+                    throw new ArgumentException($"Please call SetLocalJob() before running a job");
 
-            var workDir = this.LocalRunOutputFolder;
-            var cpuNum = this.LocalCPUNumber;
-            var isSilentMode = this.LocalSilentMode;
-            var runner = new JobRunner(this);
-            var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum, isSilentMode)).ConfigureAwait(false);
-            // check local job status
-            var status = JobRunner.CheckLocalJobStatus(runout);
-            this.LocalJobStatus = status.ToString();
+                var workDir = this.LocalRunOutputFolder;
+                var cpuNum = this.LocalCPUNumber;
+                var isSilentMode = this.LocalSilentMode;
+                var runner = new JobRunner(this);
+                var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum, isSilentMode)).ConfigureAwait(false);
+                // check local job status
+                var status = JobRunner.CheckLocalJobStatus(runout);
+                this.LocalJobStatus = status.ToString();
 
-            var jobInfo = new ScheduledJobInfo(this, workDir);
+                var jobInfo = new ScheduledJobInfo(this, workDir);
 
-            //save jobinfo to folder
-            var jobPath = Path.Combine(jobInfo.SavedLocalPath, "job.json");
-            File.WriteAllText(jobPath, jobInfo.ToJson());
+                //save jobinfo to folder
+                var jobPath = Path.Combine(jobInfo.SavedLocalPath, "job.json");
+                File.WriteAllText(jobPath, jobInfo.ToJson());
 
-            // add the record to local database
-            LocalDatabase.Instance.Add(jobInfo);
-            return jobInfo;
+                // add the record to local database
+                LocalDatabase.Instance.Add(jobInfo);
+                return jobInfo;
+            }
+            catch (Exception e)
+            {
+                throw LogHelper.LogReturnError(e);
+            }
+          
         }
 
         private async Task<ScheduledJobInfo> RunJobOnCloudAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
         {
-            if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
-                throw new ArgumentException($"Please call SetCloudJob() before running a job");
+            try
+            {
+                if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
+                    throw new ArgumentException($"Please call SetCloudJob() before running a job");
 
-            var proj = Helper.GetWritableProject(this.ProjectSlug);
-            var runner = new JobRunner(this);
-            var cloudJob =  await runner.RunOnCloudAsync(proj, progressReporting, token);
-            var jobInfo =  new ScheduledJobInfo(proj, cloudJob);
+                var proj = Helper.GetWritableProject(this.ProjectSlug);
+                var runner = new JobRunner(this);
+                var cloudJob = await runner.RunOnCloudAsync(proj, progressReporting, token);
+                var jobInfo = new ScheduledJobInfo(proj, cloudJob);
 
-            // add the record to local database
-            //LocalDatabase.Instance.Add(jobInfo);
-            return jobInfo;
+                // add the record to local database
+                //LocalDatabase.Instance.Add(jobInfo);
+                return jobInfo;
+            }
+            catch (Exception e)
+            {
+                throw LogHelper.LogReturnError(e);
+            }
         }
 
         public async Task<Job> UploadJobAssetsAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
