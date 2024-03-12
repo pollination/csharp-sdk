@@ -30,7 +30,7 @@ namespace PollinationSDK.Wrapper
             {
                 cloudJob = await ScheduleCloudJobAsync(project, this.Job, progressReporting, token);
                 progressReporting?.Invoke(cloudJob.Status.Status.ToString());
-                Helper.Logger.Information( $"RunOnCloudAsync: a new cloud job {cloudJob.Id} is started in project {project.Name}");
+                LogHelper.LogInfo( $"A new cloud job {cloudJob.Id} is started in project {project.Name}");
             }
             catch (Exception e)
             {
@@ -39,8 +39,8 @@ namespace PollinationSDK.Wrapper
                     // Rhino instance has been closed while there was a running simulation.
                     return null;
                 }
-                Helper.Logger.Error(e, $"RunOnCloudAsync: error.");
-                throw e;
+                LogHelper.LogThrowError(e);
+
                 //this.Message = null;
                 //Eto.Forms.MessageBox.Show(e.Message, Eto.Forms.MessageBoxType.Error);
 
@@ -86,7 +86,7 @@ namespace PollinationSDK.Wrapper
             if (cancellationToken.IsCancellationRequested)
             {
                 progressLogAction?.Invoke($"Canceled: {cancellationToken.IsCancellationRequested}");
-                Helper.Logger.Information($"ScheduleRunAsync: canceled by user");
+                LogHelper.LogInfo($"Canceled by user");
                 return null;
             }
             
@@ -127,16 +127,16 @@ namespace PollinationSDK.Wrapper
             // create a new Simulation
             var api = new JobsApi();
             progressLogAction?.Invoke($"Start running.");
-            Helper.Logger.Information($"ScheduleRunAsync: Start running.");
+            LogHelper.LogInfo($"Start running.");
             try
             {
                 // schedule a simulation on Pollination.Cloud
                 var jobForLog = newJob.DuplicateJob();
                 jobForLog.Arguments = jobForLog.Arguments.Take(3).ToList();
-                Helper.Logger.Information($"ScheduleRunAsync: Scheduling a job in {proj.Owner.Name}/{proj.Name}");
-                Helper.Logger.Information($"ONLY PRINTING OUT THE FIRST THREE ARGUMENTS \n{jobForLog.ToJson()}");
+                LogHelper.LogInfo($"Scheduling a job in {proj.Owner.Name}/{proj.Name}");
+                LogHelper.LogInfo($"ONLY PRINTING OUT THE FIRST THREE ARGUMENTS \n{jobForLog.ToJson()}");
                 var runJob = await api.CreateJobAsync(proj.Owner.Name, proj.Name, newJob);
-                Helper.Logger.Information($"ScheduleRunAsync: Job scheduled\n{runJob.ToJson()}");
+                LogHelper.LogInfo($"Job scheduled\n{runJob.ToJson()}");
                 progressLogAction?.Invoke($"Start running..");
 
                 // give server a moment to start the simulation after it's scheduled.
@@ -148,7 +148,7 @@ namespace PollinationSDK.Wrapper
                 // suspended by user
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    Helper.Logger.Information($"ScheduleRunAsync: canceled by user");
+                    LogHelper.LogInfo($"Canceled by user");
                     progressLogAction?.Invoke($"Canceled: {cancellationToken.IsCancellationRequested}");
                     return null;
                 }
@@ -160,8 +160,7 @@ namespace PollinationSDK.Wrapper
             catch (Exception ex)
             {
                 //Eto.Forms.MessageBox.Show(e.Message, Eto.Forms.MessageBoxType.Error);
-                Helper.Logger.Error(ex, $"ScheduleRunAsync: failed to run.");
-                throw ex;
+                throw LogHelper.LogReturnError(ex);
             }
 
         }
@@ -222,8 +221,7 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception ex)
             {
-                Helper.Logger.Error(ex, $"Failed to run simulations locally");
-                throw ex;
+                LogHelper.LogThrowError(ex);
             }
 
             return workDir;
@@ -289,9 +287,7 @@ namespace PollinationSDK.Wrapper
             var found = Helper.GetRecipeFromRecipeSourceURL(recipeSource, out var recOwner, out var recName, out var recVersion);
             if (!found) 
             {
-                var msg = $"CheckRecipeInProject: invalid recipe source {recipeSource}";
-                Helper.Logger.Error(msg);
-                throw new ArgumentException(msg);
+                LogHelper.LogThrowError($"CheckRecipeInProject: invalid recipe source {recipeSource}");
             }
 
             return CheckRecipeInProject(recOwner, recName, project, recVersion);

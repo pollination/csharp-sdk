@@ -442,8 +442,7 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                Helper.Logger.Error(e, "DownloadRunAssetsAsync");
-                throw e;
+                LogHelper.LogThrowError(e);
             }
 
             return downloadedAssets;
@@ -509,11 +508,11 @@ namespace PollinationSDK.Wrapper
                             else
                                 url = api.GetRunOutput(runInfo.ProjectOwner, runInfo.ProjectName, runInfo.RunID, assetName).ToString();
 
-                            Helper.Logger.Information($"DownloadAssets: downloading {assetName} from \n  -{url}\n");
+                            LogHelper.LogInfo($"Downloading {assetName} from \n  -{url}\n");
                             var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress, cancelToken);
                             await t.ConfigureAwait(false);
                             var savedFolderOrFilePath = t.Result;
-                            Helper.Logger.Information($"DownloadAssets: saved {assetName} to {savedFolderOrFilePath}");
+                            LogHelper.LogInfo($"Saved {assetName} to {savedFolderOrFilePath}");
 
                             // check folder with single file 
                             savedFolderOrFilePath = Helper.CheckPathForDir(savedFolderOrFilePath);
