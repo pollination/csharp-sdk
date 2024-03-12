@@ -72,7 +72,7 @@ namespace PollinationSDK
                     var res = api.CreateProject(userName, new ProjectCreate(projectName, _public: ifPublic));
                     return GetAProject(userName, projectName);
                 }
-                Helper.Logger.Error(e, $"GetAProject: failed to get the project {userName}/{projectName}");
+                LogHelper.LogError(e, $"Failed to get the project {userName}/{projectName}");
                 throw e;
             }
 
@@ -90,8 +90,8 @@ namespace PollinationSDK
 
         public static async Task<bool> UploadDirectoryAsync(Project project, string directory, Action<int> reportProgressAction = default, CancellationToken cancellationToken = default)
         {
-            Helper.Logger.Information($"Uploading a directory {directory}");
-            Helper.Logger.Information($"Timeout: {Configuration.Default.Timeout}");
+            LogHelper.LogInfo($"Uploading a directory {directory}");
+            LogHelper.LogInfo($"Timeout: {Configuration.Default.Timeout}");
 
             var files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
             var api = new ArtifactsApi();
@@ -100,7 +100,7 @@ namespace PollinationSDK
             var tasks = files.Select(_ => UploadArtifactAsync(api, project, _, _.Replace(directory, ""))).ToList();
             var total = files.Count();
 
-            Helper.Logger.Information($"UploadDirectoryAsync: Uploading {total} assets for project {project.Name}");
+            LogHelper.LogInfo($"Uploading {total} assets for project {project.Name}");
 
 
             var finishedPercent = 0;
@@ -111,7 +111,7 @@ namespace PollinationSDK
                 // canceled by user
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    Helper.Logger.Information($"Canceled uploading by user");
+                    LogHelper.LogInfo($"Canceled uploading by user");
                     break;
                 }
 
@@ -119,7 +119,7 @@ namespace PollinationSDK
 
                 if (finishedTask.IsFaulted || finishedTask.Exception != null)
                 {
-                    Helper.Logger.Error($"Upload exception: {finishedTask.Exception}");
+                    LogHelper.LogError($"Upload exception: {finishedTask.Exception}");
                     throw finishedTask.Exception;
                 }
 
@@ -130,7 +130,7 @@ namespace PollinationSDK
                 reportProgressAction?.Invoke(finishedPercent);
 
             }
-            Helper.Logger.Information($"UploadDirectoryAsync: Finished uploading assets for project {project.Name}");
+            LogHelper.LogInfo($"Finished uploading assets for project {project.Name}");
 
             // canceled by user
             if (cancellationToken.IsCancellationRequested) return false;
@@ -171,18 +171,18 @@ namespace PollinationSDK
 
             restRequest.AddFile("file", filePath);
 
-            Helper.Logger.Information($"Started upload of {relativePath}");
+            LogHelper.LogInfo($"Started upload of {relativePath}");
             var response = await restClient.ExecuteAsync(restRequest);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
             {
-                Helper.Logger.Information($"UploadArtifaceAsync: Done uploading {fileRelativePath}");
+                LogHelper.LogInfo($"Done uploading {fileRelativePath}");
                 return true;
             }
             else
             {
-                Helper.Logger.Information($"UploadArtifaceAsync: Received response code: {response.StatusCode}");
-                Helper.Logger.Information($"{response.Content}");
+                LogHelper.LogInfo($"Received response code: {response.StatusCode}");
+                LogHelper.LogInfo($"{response.Content}");
             }
             return false;
         }
@@ -504,13 +504,13 @@ namespace PollinationSDK
 
             var url = (await api.DownloadArtifactAsync(projOwner, projName, fileRelativePath))?.ToString();
 
-            Helper.Logger.Information($"DownloadArtifactAsync: downloading {fileRelativePath} from \n  -{url}\n");
+            LogHelper.LogInfo($"Downloading {fileRelativePath} from \n  -{url}\n");
             // get relative path correct
             saveAsDir = Path.GetDirectoryName(Path.Combine(saveAsDir, relativePath));
             saveAsDir = Path.GetFullPath(saveAsDir);
             var path = await Helper.DownloadUrlAsync(url.ToString(), saveAsDir, reportProgressAction, null, cancelToken);
 
-            Helper.Logger.Information($"DownloadArtifactAsync: saved {fileRelativePath} to {path}");
+            LogHelper.LogInfo($"Saved {fileRelativePath} to {path}");
             return path;
         }
 
@@ -522,13 +522,13 @@ namespace PollinationSDK
 
             var url = (await api.DownloadJobArtifactAsync(projOwner, projName, jobId, fileRelativePath, cancelToken))?.ToString();
 
-            Helper.Logger.Information($"DownloadJobArtifactAsync: downloading {fileRelativePath} from \n  -{url}\n");
+            LogHelper.LogInfo($"Downloading {fileRelativePath} from \n  -{url}\n");
             // get relative path correct
             saveAsDir = Path.GetDirectoryName(Path.Combine(saveAsDir, relativePath));
             saveAsDir = Path.GetFullPath(saveAsDir);
             var path = await Helper.DownloadUrlAsync(url.ToString(), saveAsDir, reportProgressAction, null, cancelToken);
 
-            Helper.Logger.Information($"DownloadJobArtifactAsync: saved {fileRelativePath} to {path}");
+            LogHelper.LogInfo($"Saved {fileRelativePath} to {path}");
             return path;
         }
 
@@ -617,7 +617,7 @@ namespace PollinationSDK
 
             Directory.CreateDirectory(saveAsDir);
             var file = Path.Combine(saveAsDir, fileName);
-            Helper.Logger.Information($"DownloadUrlAsync: downloading {url}");
+            LogHelper.LogInfo($"Downloading {url}");
             using (WebClient wc = new WebClient())
             {
                 var prog = 0;
@@ -640,7 +640,7 @@ namespace PollinationSDK
                     await t;
                     if (t.IsFaulted && t.Exception != null)
                         throw t.Exception;
-                    Helper.Logger.Information($"DownloadUrlAsync: saved {fileName} to {file}");
+                    LogHelper.LogInfo($"Saved {fileName} to {file}");
                 }
                 catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
                 {
@@ -660,9 +660,7 @@ namespace PollinationSDK
 
             if (!File.Exists(file))
             {
-                var e = new ArgumentException($"Failed to download {fileName}");
-                Helper.Logger.Error(e, $"DownloadFromUrlAsync: error");
-                throw e;
+                throw LogHelper.LogReturnError($"Failed to download {fileName}");
             }
             var outputDirOrFile = file;
 
@@ -673,8 +671,7 @@ namespace PollinationSDK
             }
             catch (Exception e)
             {
-                Helper.Logger.Error(e, $"DownloadFromUrlAsync: Unable to unzip file {Path.GetFileName(file)}");
-                throw new ArgumentException($"Failed to unzip file {Path.GetFileName(file)}.\n -{e.Message}");
+                throw LogHelper.LogReturnError(e, $"Unable to unzip file {Path.GetFileName(file)}");
             }
 
             return outputDirOrFile;

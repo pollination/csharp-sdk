@@ -25,7 +25,7 @@ namespace PollinationSDK.Client
 
         private void LogTokenExpiration()
         {
-            Helper.Logger.Information($"Token expires at: {ExpiresAt}");
+            LogHelper.LogInfo($"Token expires at: {ExpiresAt}");
         }
 
         private void DoTokenRefresh()
@@ -58,9 +58,9 @@ namespace PollinationSDK.Client
 
         private void DoTokenRefreshLogged()
         {
-            Helper.Logger.Information("Refreshing token");
+            LogHelper.LogInfo("Refreshing token");
             this.DoTokenRefresh();
-            Helper.Logger.Information("Token refresh finished");
+            LogHelper.LogInfo("Token refresh finished");
             this.LogTokenExpiration();
         }
         public string GetToken()

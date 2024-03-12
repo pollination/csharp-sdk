@@ -33,7 +33,7 @@ namespace PollinationSDK
                 }
                 catch (Exception e)
                 {
-                    Helper.Logger?.Error(e, $"PollinationSDK: error.");
+                    LogHelper.LogError(e);
                     errors.Add($"{e?.Message}{Environment.NewLine}From {item.Function}(Handler-{item.Language})");
                     break;
                     //throw;
@@ -158,8 +158,7 @@ namespace PollinationSDK
             }
             catch (Exception ex)
             {
-                Helper.Logger?.Error(ex, $"PollinationSDK: cannot find handler libraries.");
-                throw new System.IO.FileNotFoundException($"Cannot find handler libraries.\n{ex.Message}");
+                throw LogHelper.LogReturnError(ex, $"PollinationSDK: cannot find handler libraries.");
             }
         }
 

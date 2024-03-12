@@ -166,12 +166,12 @@ namespace PollinationSDK.Wrapper
                 //api.ListJobs
                 var proj = this.CloudProject;
                 var jobId = this.JobID;
-                Helper.Logger.Information($"WatchJobStatusAsync: checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
+                LogHelper.LogInfo($"Checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
 
                 var cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
                 var status = cloudJob.Status;
                 var startTime = status.StartedAt;
-                Helper.Logger.Information($"WatchJobStatusAsync: init status: {status.ToJson()}");
+                LogHelper.LogInfo($"Init status: {status.ToJson()}");
 
                 while (status.FinishedAt <= status.StartedAt)
                 {
@@ -205,26 +205,22 @@ namespace PollinationSDK.Wrapper
                     //_simulation = new Simulation(proj, simuId);
                 }
 
-                Helper.Logger.Information($"WatchJobStatusAsync: finished status: {status.ToJson()}");
+                LogHelper.LogInfo($"Finished status: {status.ToJson()}");
                 this.CloudJob = cloudJob;
                 // suspended by user
                 cancelToken.ThrowIfCancellationRequested();
 
                 var finishMessage = GetCloudJobDoneMessage(this.CloudJob);
                 progressAction?.Invoke(finishMessage);
-                Helper.Logger.Information($"WatchJobStatusAsync: finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
+                LogHelper.LogInfo($"Finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
 
                 return finishMessage;
             }
             catch (Exception e)
             {
-                Helper.Logger.Error(e, $"WatchJobStatusAsync: failed to watch job [{CloudProject.Owner.Name}/{CloudProject.Name}/{JobID}].");
-                throw e;
+                throw LogHelper.LogReturnError(e, $"Failed to watch job [{CloudProject.Owner.Name}/{CloudProject.Name}/{JobID}].");
             }
 
-           
-
-           
         }
 
         private static string GetUserFriendlyTimeCounter(TimeSpan timeDelta)
@@ -246,7 +242,7 @@ namespace PollinationSDK.Wrapper
             var proj = this.CloudProject;
             var api = new JobsApi();
             api.CancelJobAsync(proj.Owner.Name, proj.Name, this.JobID);
-            Helper.Logger.Information($"CancelJob: [{proj.Owner.Name}/{proj.Name}/{this.JobID}].");
+            LogHelper.LogInfo($"CancelJob: [{proj.Owner.Name}/{proj.Name}/{this.JobID}].");
 
         }
 
@@ -293,14 +289,14 @@ namespace PollinationSDK.Wrapper
                 if (totalRuns == 0)
                 {
                     var err = new ArgumentException($"[Error] Job status: [{jobStatus.Status}]. There is no run available in this job");
-                    Helper.Logger.Error(err, $"GetRunInfo: {jobStatus?.ToJson()}.");
+                    LogHelper.LogError(err, $"GetRunInfo: {jobStatus?.ToJson()}.");
                     throw err;
                 }
 
                 if (page > totalRuns)
                 {
                     var err = new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
-                    Helper.Logger.Error(err, $"GetRunInfo: {jobStatus.ToJson()}.");
+                    LogHelper.LogError(err, $"GetRunInfo: {jobStatus.ToJson()}.");
                     throw err;
                 }
 
@@ -312,7 +308,7 @@ namespace PollinationSDK.Wrapper
                 if (!isRunFinished)
                 {
                     var err = new ArgumentException($"[Warning] Run status: {firstRun.Status.Status}. If this run [{firstRun.Id.Substring(0, 5)}] is scheduled but not finished, please check it again in a few seconds;");
-                    Helper.Logger.Error(err, $"GetRunInfo: {firstRun?.Status?.ToJson()}.");
+                    LogHelper.LogError(err, $"GetRunInfo: {firstRun?.Status?.ToJson()}.");
                     throw err;
                 }
 

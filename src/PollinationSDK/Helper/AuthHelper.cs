@@ -62,18 +62,16 @@ namespace PollinationSDK
                 var task = PollinationSignInAsync(devEnv);
                 var authResult = await task;
                 if (string.IsNullOrEmpty(authResult.IDToken))
-                    throw new ArgumentException($"SignInAsync: Failed to get the Auth token");
+                    throw new ArgumentException($"Failed to get the Auth token");
 
                 if (Helper.CurrentUser == null)
-                    throw new ArgumentException($"SignInAsync: Failed to sign in to the Pollination");
+                    throw new ArgumentException($"Failed to sign in to the Pollination");
 
                 ActionWhenDone?.Invoke();
             }
             catch (Exception e)
             {
-                Helper.Logger?.Error(e, "Failed to sign in");
-                //Console.WriteLine(e.Message);
-                throw e;
+                LogHelper.LogThrowError(e);
             }
 
         }
@@ -89,20 +87,18 @@ namespace PollinationSDK
                     Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
                     Configuration.Default.AddApiKey("x-pollination-token", apiAuth);
                     Helper.CurrentUser = Helper.GetUser();
-                    Helper.Logger.Information($"SignInWithApiAuthAsync: logged in as {Helper.CurrentUser.Username}");
+                    LogHelper.LogInfo($"Logged in as {Helper.CurrentUser.Username}");
                 }
                 else
                 {
-                    Helper.Logger.Warning($"SignInWithApiAuthAsync: Invalid apiAuth");
+                    LogHelper.LogWarning($"Invalid apiAuth");
                 }
 
                 ActionWhenDone?.Invoke();
             }
             catch (Exception e)
             {
-                Helper.Logger?.Error(e, "Failed to sign in");
-                //Console.WriteLine(e.Message);
-                throw e;
+                LogHelper.LogThrowError(e);
             }
 
         }
@@ -110,17 +106,11 @@ namespace PollinationSDK
 
         private static async Task<AuthResult> PollinationSignInAsync(bool devEnv = false)
         {
-            if (!HttpListener.IsSupported)
-            {
-                Helper.Logger.Error($"PollinationSignInAsync: HttpListener is not supported on this system");
-                throw new ArgumentException("PollinationSignIn is not supported on this system");
-            }
+            if (!HttpListener.IsSupported) 
+                LogHelper.LogThrowError($"HttpListener is not supported on this system");
 
             if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-            {
-                Helper.Logger.Error($"PollinationSignInAsync: Network is not available, please double check with your connection or firewall!");
-                throw new ArgumentException("Network is not available, please double check with your connection or firewall!");
-            }
+                LogHelper.LogThrowError($"Network is not available, please double check with your connection or firewall!");
 
             var redirectUrl = "http://localhost:8645/";
             var loginUrl = devEnv ? LoginURL_Dev : LoginURL;
@@ -140,16 +130,10 @@ namespace PollinationSDK
                 catch (HttpListenerException e)
                 {
                     //it is already listening the port, but users didn't login
-                    if (e.ErrorCode == 183)
-                    {
-                        Console.WriteLine(e.Message);
-                        Helper.Logger.Warning($"PollinationSignInAsync: it is still waiting for users to login from last time.\n{e.Message}");
-                    }
-                    else
-                    {
-                        Helper.Logger.Error($"PollinationSignInAsync: Failed to start the listener.\n{e.Message}");
-                        throw e;
-                    }
+                    if (e.ErrorCode == 183) 
+                        LogHelper.LogWarning($"It is still waiting for users to login from last time.\n{e.Message}");
+                    else 
+                        LogHelper.LogThrowError($"Failed to start the listener.\n{e.Message}");
 
                 }
 
@@ -159,7 +143,7 @@ namespace PollinationSDK
                     UseShellExecute = true
                 };
                 System.Diagnostics.Process.Start(psi);
-                Helper.Logger.Information($"PollinationSignInAsync: login from {loginUrl}");
+                LogHelper.LogInfo($"Login from {loginUrl}");
 
                 // wait for the authorization response.
                 var context = await listener.GetContextAsync();
@@ -168,11 +152,8 @@ namespace PollinationSDK
                 var response = context.Response;
 
                 var returnUrl = request.RawUrl.Contains("?token=") ? request.RawUrl : request.UrlReferrer?.PathAndQuery;
-                if (string.IsNullOrEmpty(returnUrl))
-                {
-                    Helper.Logger.Error($"PollinationSignInAsync: Failed to authorize the login: \n{request.RawUrl}");
-                    throw new ArgumentException($"Failed to authorize the login: \n{request.RawUrl}");
-                }
+                if (string.IsNullOrEmpty(returnUrl)) 
+                    LogHelper.LogThrowError($"Failed to authorize the login: \n{request.RawUrl}");
 
                 var auth = AuthResult.From(request.QueryString);
                 var loggedIn = CheckGetUser(auth, out var error, devEnv);
@@ -195,7 +176,7 @@ namespace PollinationSDK
                 responseOutput.Flush();
                 responseOutput.Close();
 
-                Helper.Logger.Information($"PollinationSignInAsync: closing the listener");
+                LogHelper.LogInfo($"Closed listener");
 
                 return auth;
             }
@@ -221,7 +202,7 @@ namespace PollinationSDK
                     refreshToken: auth.RefreshToken
                 );
                 Helper.CurrentUser = Helper.GetUser();
-                Helper.Logger?.Information($"CheckGetUser: logged in as {Helper.CurrentUser.Username}");
+                LogHelper.LogInfo($"Logged in as {Helper.CurrentUser.Username}");
 
                 return true;
 
@@ -230,7 +211,7 @@ namespace PollinationSDK
             {
                 Configuration.Default.TokenRepo = null;
                 Helper.CurrentUser = null;
-                Helper.Logger?.Error(e, $"CheckGetUser()");
+                LogHelper.LogError(e);
                 errorMessage = e.Message;
                 return false;
                 //throw;
