@@ -45,8 +45,10 @@ namespace PollinationSDK.Wrapper
                 SqliteConnection con;
                 var file = GetDatabaseFile();
                 var fileExist = File.Exists(file);
+                SQLitePCL.Batteries.Init();
                 con = new SqliteConnection($"Data Source={file}");
                 con.Open();
+                LogHelper.LogInfo($"ServerVersion: {con.ServerVersion}");
                 if (!fileExist)
                     InitDatabase(con);
 
@@ -89,12 +91,18 @@ namespace PollinationSDK.Wrapper
 
         static void InitDatabase(SqliteConnection con)
         {
-            //var con = Instance.connection;
-            var cmd = con.CreateCommand();
+            try
+            {
+                var cmd = con.CreateCommand();
+                var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, JobInfo BLOB)";
+                cmd.CommandText = createTable;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                throw LogHelper.LogReturnError(e);
+            }
 
-            var createTable = "CREATE TABLE JobTable (ProjSlug BLOB(36), JobID BLOB(36), DateTime TEXT, JobInfo BLOB)";
-            cmd.CommandText = createTable;
-            cmd.ExecuteNonQuery();
         }
 
      
