@@ -12,7 +12,7 @@
     <PackageProjectUrl>https://github.com/pollination/csharp-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pollination/csharp-sdk</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Platforms>AnyCPU;x64</Platforms>
+    <Platforms>x64</Platforms>
     <NoWarn>0472;0108</NoWarn>
   </PropertyGroup>
 
