@@ -5,21 +5,20 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** |  | 
+**AppVersion** | **string** |  | [optional] 
 **CreatedAt** | **DateTime** |  | 
-**UpdatedAt** | **DateTime** |  | 
-**Offline** | **bool** |  | 
+**Hostname** | **string** |  | [optional] 
+**Id** | **string** |  | 
 **LastSyncedAt** | **DateTime** |  | 
+**LeaseExpiresAt** | **DateTime** |  | [optional] 
+**LicenseId** | **string** |  | [optional] 
 **Location** | [**Location**](Location.md) |  | 
+**Metadata** | [**List&lt;Metadata&gt;**](Metadata.md) |  | [optional] 
+**Offline** | **bool** |  | 
 **Os** | **string** |  | [optional] 
 **OsVersion** | **string** |  | [optional] 
-**Hostname** | **string** |  | [optional] 
-**AppVersion** | **string** |  | [optional] 
-**LeaseExpiresAt** | **DateTime** |  | [optional] 
-**Metadata** | [**List&lt;Metadata&gt;**](Metadata.md) |  | [optional] 
-**LicenseId** | **string** |  | [optional] 
+**UpdatedAt** | **DateTime** |  | 
 **User** | [**AccountPublic**](AccountPublic.md) | The user associated with the activation | [optional] 
-**Type** | **string** |  | [optional] [readonly] [default to "Activation"]
 
 [[Back to Model list]](../README.md#documentation-for-models)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)

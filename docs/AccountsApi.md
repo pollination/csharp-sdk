@@ -5,6 +5,7 @@ All URIs are relative to *http://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**CheckAccountName**](AccountsApi.md#checkaccountname) | **GET** /accounts/check/{name} | Check if an account with this name exists
+[**DeleteAccount**](AccountsApi.md#deleteaccount) | **DELETE** /accounts/{name} | Delete an account
 [**GetAccount**](AccountsApi.md#getaccount) | **GET** /accounts/{name} | Get an account by name
 [**ListAccounts**](AccountsApi.md#listaccounts) | **GET** /accounts | List Accounts on the Pollination platform
 [**ListQuotas**](AccountsApi.md#listquotas) | **GET** /accounts/{name}/quotas | List Quotas
@@ -79,6 +80,86 @@ No authorization required
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Successful Response |  -  |
+| **422** | Validation Error |  -  |
+
+[[Back to top]](#)
+[[Back to API list]](../README.md#documentation-for-api-endpoints)
+[[Back to Model list]](../README.md#documentation-for-models)
+[[Back to README]](../README.md)
+
+
+## DeleteAccount
+
+> void DeleteAccount (string name)
+
+Delete an account
+
+Delete an account
+
+### Example
+
+```csharp
+using System.Collections.Generic;
+using System.Diagnostics;
+using PollinationSDK.Api;
+using PollinationSDK.Client;
+using PollinationSDK.Model;
+
+namespace Example
+{
+    public class DeleteAccountExample
+    {
+        public static void Main()
+        {
+            Configuration.Default.BasePath = "http://localhost";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+
+            var apiInstance = new AccountsApi(Configuration.Default);
+            var name = name_example;  // string | 
+
+            try
+            {
+                // Delete an account
+                apiInstance.DeleteAccount(name);
+            }
+            catch (ApiException e)
+            {
+                Debug.Print("Exception when calling AccountsApi.DeleteAccount: " + e.Message );
+                Debug.Print("Status Code: "+ e.ErrorCode);
+                Debug.Print(e.StackTrace);
+            }
+        }
+    }
+}
+```
+
+### Parameters
+
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **name** | **string**|  | 
+
+### Return type
+
+void (empty response body)
+
+### Authorization
+
+[APIKeyAuth](../README.md#APIKeyAuth), [JWTAuth](../README.md#JWTAuth)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: application/json
+
+### HTTP response details
+| Status code | Description | Response headers |
+|-------------|-------------|------------------|
+| **204** | Deleted |  -  |
 | **422** | Validation Error |  -  |
 
 [[Back to top]](#)
@@ -187,12 +268,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new AccountsApi(Configuration.Default);
             var search = search_example;  // string | Search string to find accounts (optional) 
@@ -276,12 +355,10 @@ namespace Example
         public static void Main()
         {
             Configuration.Default.BasePath = "http://localhost";
-            // Configure API key authorization: APIKeyAuth
-            Configuration.Default.AddApiKey("x-pollination-token", "YOUR_API_KEY");
-            // Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
-            // Configuration.Default.AddApiKeyPrefix("x-pollination-token", "Bearer");
-            // Configure HTTP bearer authorization: JWTAuth
-            Configuration.Default.AccessToken = "YOUR_ACCESS_TOKEN";
+            // Configure OAuth2 access token for authorization: APIKeyAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
+            // Configure OAuth2 access token for authorization: JWTAuth
+            Configuration.Default.AccessToken = "YOUR_JWT_TOKEN";
 
             var apiInstance = new AccountsApi(Configuration.Default);
             var name = name_example;  // string | 
@@ -337,10 +414,10 @@ Name | Type | Description  | Notes
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | Retrieved |  -  |
-| **403** | Access forbidden |  -  |
-| **500** | Server error |  -  |
 | **400** | Invalid request |  -  |
+| **403** | Access forbidden |  -  |
 | **422** | Validation Error |  -  |
+| **500** | Server error |  -  |
 
 [[Back to top]](#)
 [[Back to API list]](../README.md#documentation-for-api-endpoints)
