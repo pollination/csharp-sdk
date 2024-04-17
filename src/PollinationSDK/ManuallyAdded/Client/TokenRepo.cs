@@ -18,7 +18,9 @@ namespace PollinationSDK.Client
         {
             RefreshURL = refreshURL;
             IDToken = idToken;
-            ExpiresAt = DateTime.Now.AddSeconds(expiresInSeconds);
+
+            // make it expire 1 mins early so that it refresh token before expiration.
+            ExpiresAt = DateTime.Now.AddSeconds(expiresInSeconds - 60);
             RefreshToken = refreshToken;
             this.LogTokenExpiration();
         }
@@ -52,7 +54,8 @@ namespace PollinationSDK.Client
             }
 
             this.IDToken = res.Data["id_token"];
-            this.ExpiresAt = DateTime.Now.AddSeconds(int.Parse(res.Data["expires_in"]));
+            var seconds = int.Parse(res.Data["expires_in"]);
+            this.ExpiresAt = DateTime.Now.AddSeconds(seconds);
             this.RefreshToken = res.Data["refresh_token"];
         }
 
@@ -63,13 +66,18 @@ namespace PollinationSDK.Client
             LogHelper.LogInfo("Token refresh finished");
             this.LogTokenExpiration();
         }
+
+        public void CheckToken()
+        {
+            if (DateTime.Now < this.ExpiresAt)
+                return;
+
+            this.DoTokenRefreshLogged();
+        }
+
         public string GetToken()
         {
-            if (DateTime.Now >= this.ExpiresAt)
-            {
-                this.DoTokenRefreshLogged();
-            }
-
+            CheckToken();
             return this.IDToken;
         }
     }

@@ -199,6 +199,7 @@ namespace PollinationSDK
                     refreshURL: devEnv ? RefreshURL_Dev : RefreshURL,
                     idToken: auth.IDToken,
                     expiresInSeconds: auth.ExpiresInSeconds,
+                    //expiresInSeconds: 62, // for testing. expires in 1 minute, but it should be refreshed in 2 seconds.
                     refreshToken: auth.RefreshToken
                 );
                 Helper.CurrentUser = Helper.GetUser();

@@ -301,11 +301,7 @@ namespace PollinationSDK.Client
         {
             get
             {
-                if (TokenRepo != null)
-                {
-                    return TokenRepo.GetToken();
-                }
-                return "";
+                return TokenRepo?.GetToken();
             }
         }
 

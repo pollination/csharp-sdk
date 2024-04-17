@@ -95,17 +95,49 @@ namespace PollinationSDK
 
             var files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
             var api = new ArtifactsApi();
-            
 
-            var tasks = files.Select(_ => UploadArtifactAsync(api, project, _, _.Replace(directory, ""))).ToList();
             var total = files.Count();
-
             LogHelper.LogInfo($"Uploading {total} assets for project {project.Name}");
 
-
+            var finished = 0;
             var finishedPercent = 0;
             reportProgressAction?.Invoke(finishedPercent);
 
+            var chunkSize = 20;
+            var subLists = files.Select((x, i) => new { Index = i, Value = x })
+            .GroupBy(x => x.Index / chunkSize)
+            .Select(x => x.Select(v => v.Value).ToList())
+            .ToList();
+
+            Action<int> reportPercent = (c) =>
+            {
+                var p = finished + c;
+                finishedPercent = (int)(p * 100 / total);
+                reportProgressAction?.Invoke(finishedPercent);
+            };
+
+            foreach (var chunk in subLists)
+            {
+                var chunkFiles = chunk.Select(_ => (_, _.Replace(directory, ""))).ToList();
+                await BatchExecute(api, project, chunkFiles, reportPercent, cancellationToken);
+                // auto refresh token between each chunk run
+                api.Configuration.TokenRepo?.CheckToken();
+                finished += chunk.Count;
+            }
+
+            LogHelper.LogInfo($"Finished uploading assets for project {project.Name}");
+
+            // canceled by user
+            if (cancellationToken.IsCancellationRequested) return false;
+
+            return true;
+        }
+        
+        private static async Task<bool> BatchExecute(ArtifactsApi api, Project project, List<(string path, string relativePath)> files , Action<int> finishedCountProgressAction = default, CancellationToken cancellationToken = default)
+        {
+            var tasks = files.Select(_=> UploadArtifactAsync(api, project, _.path, _.relativePath)).ToList();
+
+            var finished = 0;
             while (tasks.Count() > 0)
             {
                 // canceled by user
@@ -116,6 +148,7 @@ namespace PollinationSDK
                 }
 
                 var finishedTask = await Task.WhenAny(tasks);
+                tasks.Remove(finishedTask);
 
                 if (finishedTask.IsFaulted || finishedTask.Exception != null)
                 {
@@ -123,18 +156,13 @@ namespace PollinationSDK
                     throw finishedTask.Exception;
                 }
 
-                tasks.Remove(finishedTask);
-
-                var unfinishedUploadTasksCount = tasks.Count();
-                finishedPercent = (int)((total - unfinishedUploadTasksCount) / (double)total * 100);
-                reportProgressAction?.Invoke(finishedPercent);
+                finished++;
+                finishedCountProgressAction?.Invoke(finished);
 
             }
-            LogHelper.LogInfo($"Finished uploading assets for project {project.Name}");
 
             // canceled by user
             if (cancellationToken.IsCancellationRequested) return false;
-
             return true;
         }
 
@@ -151,6 +179,7 @@ namespace PollinationSDK
             if (fileRelativePath.StartsWith("/"))
                 fileRelativePath = fileRelativePath.Substring(1);
 
+            
             var artf = await api.CreateArtifactAsync(project.Owner.Name, project.Name, new KeyRequest(fileRelativePath));
 
             //Use RestSharp
@@ -171,7 +200,7 @@ namespace PollinationSDK
 
             restRequest.AddFile("file", filePath);
 
-            LogHelper.LogInfo($"Started upload of {relativePath}");
+            LogHelper.LogInfo($"Started upload of {fileRelativePath}");
             var response = await restClient.ExecuteAsync(restRequest);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
