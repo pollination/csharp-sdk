@@ -1,6 +1,6 @@
 ﻿
-
-using Newtonsoft.Json;
+extern alias LBTNewtonsoft;
+using LBTNewtonsoft::Newtonsoft.Json;
 
 namespace PollinationSDK.Wrapper
 {
@@ -36,8 +36,8 @@ namespace PollinationSDK.Wrapper
 
         public override AssetBase Duplicate()
         {
-            var json = Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.None);
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<RunInputAsset>(json);
+            var json = JsonConvert.SerializeObject(this, Formatting.None);
+            return JsonConvert.DeserializeObject<RunInputAsset>(json);
         }
 
 

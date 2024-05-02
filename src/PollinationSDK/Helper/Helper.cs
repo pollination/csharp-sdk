@@ -1,8 +1,8 @@
-﻿using PollinationSDK.Api;
+﻿extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+using PollinationSDK.Api;
 using PollinationSDK.Client;
 using PollinationSDK.Wrapper;
-using RestSharp;
-using System;
+using LBTRestSharp::RestSharp;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;

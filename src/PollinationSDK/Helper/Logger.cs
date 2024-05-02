@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿extern alias LBTNewtonsoft; extern alias LBTRestSharp;
+using System.Runtime.CompilerServices;
 using System;
 
 namespace PollinationSDK

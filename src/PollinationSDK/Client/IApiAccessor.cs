@@ -8,11 +8,11 @@
  */
 
 
-using System;
+extern alias LBTNewtonsoft;  extern alias LBTRestSharp; using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using RestSharp;
+using LBTRestSharp::RestSharp;
 
 namespace PollinationSDK.Client
 {

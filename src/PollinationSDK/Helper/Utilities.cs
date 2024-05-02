@@ -1,6 +1,7 @@
-﻿using PollinationSDK.Client;
-using RestSharp;
-using System;
+﻿
+extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+using PollinationSDK.Client;
+using LBTRestSharp::RestSharp;
 using System.IO;
 using System.Linq;
 
@@ -12,9 +13,9 @@ namespace PollinationSDK
         {
             var apiUrl = $"https://utilities.pollination.cloud/latest-version/{product}";
 
-            var request = new RestSharp.RestRequest(RestSharp.Method.GET);
+            var request = new RestRequest(Method.GET);
             request.Timeout = 3000;
-            var client = new RestSharp.RestClient(apiUrl);
+            var client = new RestClient(apiUrl);
             var response = client.Execute(request);
             var version = response.Content?.Replace("\"", ""); //"1.2.9"
             var isValid = System.Version.TryParse(version, out var newVersion);

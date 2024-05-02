@@ -1,5 +1,6 @@
-﻿using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Schema;
+﻿extern alias LBTNewtonsoft;
+using LBTNewtonsoft::Newtonsoft.Json.Linq;
+using LBTNewtonsoft::Newtonsoft.Json.Schema;
 using System.Collections.Generic;
 using System.Linq;
 

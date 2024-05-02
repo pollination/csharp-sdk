@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿extern alias LBTNewtonsoft;
+using LBTNewtonsoft::Newtonsoft.Json;
 using System.Runtime.Serialization;
 
 namespace PollinationSDK
