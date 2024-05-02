@@ -169,7 +169,18 @@ namespace PollinationSDK.Wrapper
                 var jobId = this.JobID;
                 LogHelper.LogInfo($"Checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
 
-                var cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
+                // retrieve a slim CloudJob via ListJobs api
+                var jobIds = new List<string>() { jobId };
+                var owner = proj.Owner.Name;
+                var projName = proj.Name;
+                var getAJobFromJobList = new Func<CloudJob>(() =>
+                {
+                    var jobList = api.ListJobs(owner, projName, jobIds, page: 1, perPage: 1);
+                    var j = jobList.Resources.FirstOrDefault();
+                    return j;
+                });
+
+                var cloudJob = getAJobFromJobList();
                 var status = cloudJob.Status;
                 var startTime = status.StartedAt;
                 LogHelper.LogInfo($"Init status: {status.ToJson()}");
@@ -201,7 +212,7 @@ namespace PollinationSDK.Wrapper
 
                     // update status
                     await Task.Delay(1000);
-                    cloudJob = api.GetJob(proj.Owner.Name, proj.Name, jobId);
+                    cloudJob = getAJobFromJobList();
                     status = cloudJob.Status;
                     //_simulation = new Simulation(proj, simuId);
                 }
@@ -213,7 +224,7 @@ namespace PollinationSDK.Wrapper
 
                 var finishMessage = GetCloudJobDoneMessage(this.CloudJob);
                 progressAction?.Invoke(finishMessage);
-                LogHelper.LogInfo($"Finished checking job [{proj.Owner.Name}/{proj.Name}/{jobId}]: [{finishMessage}].");
+                LogHelper.LogInfo($"Finished checking job [{owner}/{projName}/{jobId}]: [{finishMessage}].");
 
                 return finishMessage;
             }
