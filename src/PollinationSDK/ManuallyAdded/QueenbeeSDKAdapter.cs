@@ -1,6 +1,4 @@
 
-using Newtonsoft.Json;
-
 namespace PollinationSDK.Client
 {
     /// <summary>

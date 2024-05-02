@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Bson;
-using System;
+﻿
+extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+using LBTNewtonsoft::Newtonsoft.Json;
+using LBTNewtonsoft::Newtonsoft.Json.Bson;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -76,12 +77,12 @@ namespace PollinationSDK.Wrapper
 
         public string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, Newtonsoft.Json.Formatting.None);
+            return JsonConvert.SerializeObject(this, Formatting.None);
         }
 
         public static JobResultPackage FromJson(string json)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<JobResultPackage>(json);
+            return JsonConvert.DeserializeObject<JobResultPackage>(json);
         }
 
         

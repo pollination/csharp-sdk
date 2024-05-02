@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿
+extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+using LBTNewtonsoft::Newtonsoft.Json;
 using PollinationSDK.Api;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
@@ -324,16 +325,16 @@ namespace PollinationSDK.Wrapper
 
         public string ToJson()
         {
-            return Newtonsoft.Json.JsonConvert.SerializeObject(this, JsonSetting.AnyOfConvertSetting);
+            return JsonConvert.SerializeObject(this, JsonSetting.AnyOfConvertSetting);
         }
         public static ScheduledJobInfo FromJson(string json)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<ScheduledJobInfo>(json, JsonSetting.AnyOfConvertSetting);
+            return JsonConvert.DeserializeObject<ScheduledJobInfo>(json, JsonSetting.AnyOfConvertSetting);
         }
 
         public static List<ScheduledJobInfo> FromJsonArray(string json)
         {
-            return Newtonsoft.Json.JsonConvert.DeserializeObject<List<ScheduledJobInfo>>(json, JsonSetting.AnyOfConvertSetting);
+            return JsonConvert.DeserializeObject<List<ScheduledJobInfo>>(json, JsonSetting.AnyOfConvertSetting);
         }
 
         public byte[] Serialize_Binary()

@@ -1,4 +1,4 @@
-using System;
+extern alias LBTNewtonsoft;  extern alias LBTRestSharp; using System;
 
 namespace PollinationSDK
 {

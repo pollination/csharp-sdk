@@ -1,6 +1,7 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+using LBTNewtonsoft::Newtonsoft.Json;
+using LBTNewtonsoft::Newtonsoft.Json.Linq;
+
 using System.Linq;
 
 namespace PollinationSDK

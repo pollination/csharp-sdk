@@ -1,5 +1,4 @@
-using Newtonsoft.Json;
-using System.Runtime.Serialization;
+
 namespace PollinationSDK.Api
 {
     //public partial class JobsApi
