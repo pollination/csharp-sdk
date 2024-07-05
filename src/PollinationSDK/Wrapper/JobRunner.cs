@@ -22,16 +22,16 @@ namespace PollinationSDK.Wrapper
         {
             this.JobInfo = job;
         }
-       
+
         public async Task<CloudJob> RunOnCloudAsync(Project project, Action<string> progressReporting, System.Threading.CancellationToken token)
         {
-            
+
             CloudJob cloudJob = null;
             try
             {
                 cloudJob = await ScheduleCloudJobAsync(project, this.Job, progressReporting, token);
                 progressReporting?.Invoke(cloudJob.Status.Status.ToString());
-                LogHelper.LogInfo( $"A new cloud job {cloudJob.Id} is started in project {project.Name}");
+                LogHelper.LogInfo($"A new cloud job {cloudJob.Id} is started in project {project.Name}");
             }
             catch (Exception e)
             {
@@ -61,7 +61,7 @@ namespace PollinationSDK.Wrapper
         {
 
             // check if all cloud path artifacts are within the same project
-            var invalidCloudAssets = job.Arguments.SelectMany(_ => _.OfType<JobPathArgument>()).Where(_ => _.IsAssetUploaded() && _.CloudProjectSlug() != project.Slug).Select(_=> $"{_.ToUserFriendlyString(true)}").Distinct();
+            var invalidCloudAssets = job.Arguments.SelectMany(_ => _.OfType<JobPathArgument>()).Where(_ => _.IsAssetUploaded() && _.CloudProjectSlug() != project.Slug).Select(_ => $"{_.ToUserFriendlyString(true)}").Distinct();
             if (invalidCloudAssets.Any())
             {
                 var error = $"Following cloud assets cannot be uploaded to project {project.Slug}:\n\n{string.Join(Environment.NewLine, invalidCloudAssets)}";
@@ -76,7 +76,8 @@ namespace PollinationSDK.Wrapper
             // upload artifacts
             if (!string.IsNullOrEmpty(tempProjectDir))
             {
-                Action<int> updateMessageProgress = (int p) => {
+                Action<int> updateMessageProgress = (int p) =>
+                {
                     progressLogAction?.Invoke($"Preparing: [{p}%]");
                 };
                 await Helper.UploadDirectoryAsync(project, tempProjectDir, updateMessageProgress, cancellationToken);
@@ -90,7 +91,7 @@ namespace PollinationSDK.Wrapper
                 LogHelper.LogInfo($"Canceled by user");
                 return null;
             }
-            
+
             // update Artifact to cloud's relative path after uploaded.
             var newJob = UpdateArtifactPath(project.Slug, job, subfolderPath);
 
@@ -124,7 +125,7 @@ namespace PollinationSDK.Wrapper
 
             // Upload artifacts
             var newJob = await UploadJobAssetsAsync(project, job, this.JobInfo.SubFolderPath, progressLogAction, cancellationToken);
-            
+
             // create a new Simulation
             var api = new JobsApi();
             progressLogAction?.Invoke($"Start running.");
@@ -174,13 +175,23 @@ namespace PollinationSDK.Wrapper
 
             var workName = this.Job.Name ?? "Unnamed";
             workName = new String(workName.Where(c => char.IsLetterOrDigit(c)).ToArray());
-         
+
             var workDir = workFolder;
-            if (!string.IsNullOrEmpty( this.JobInfo.SubFolderPath))
+            if (!string.IsNullOrEmpty(this.JobInfo.SubFolderPath))
                 workDir = Path.Combine(workDir, this.JobInfo.SubFolderPath);
             workDir = Path.GetFullPath(workDir);
             if (Directory.Exists(workDir))
-                System.IO.Directory.Delete(workDir, true);
+            {
+                try
+                {
+                    System.IO.Directory.Delete(workDir, true);
+                }
+                catch (Exception e)
+                {
+                    throw new ArgumentException($"Failed to clean up the working folder: {workDir}. Please remove it manually!\n{e}");
+                }
+            }
+
             Directory.CreateDirectory(workDir);
 
             var recipeOwner = this.JobInfo.RecipeOwner;
@@ -189,7 +200,7 @@ namespace PollinationSDK.Wrapper
 
             var localArgs = this.Job.Arguments;
             var localArg = new LocalRunArguments(localArgs.FirstOrDefault()); //TODO: ignore parametric runs for now
-        
+
             //localArg.Validate(userRecipe);
             var inputJson = localArg.SaveToFolder(workDir); //save args to input.json file
 
@@ -236,7 +247,7 @@ namespace PollinationSDK.Wrapper
             {
                 //"C:\Users\mingo\simulation\Unnamed\Unnamed\__logs__\status.json"
                 var logDir = Directory.GetDirectories(workDir, "*__logs__*", SearchOption.AllDirectories).FirstOrDefault();
-                
+
                 var statusFile = Path.Combine(logDir, "status.json");
                 if (!File.Exists(statusFile))
                     return RunStatusEnum.Unknown;
@@ -249,7 +260,7 @@ namespace PollinationSDK.Wrapper
                     return RunStatusEnum.Unknown;
 
                 var st = statusToken.ToObject<RunStatusEnum>();
-                
+
                 if (st == RunStatusEnum.Succeeded || st == RunStatusEnum.Failed)
                     return st;
                 else
@@ -286,7 +297,7 @@ namespace PollinationSDK.Wrapper
         private static string CheckRecipeInProject(string recipeSource, Project project)
         {
             var found = Helper.GetRecipeFromRecipeSourceURL(recipeSource, out var recOwner, out var recName, out var recVersion);
-            if (!found) 
+            if (!found)
             {
                 LogHelper.LogThrowError($"CheckRecipeInProject: invalid recipe source {recipeSource}");
             }
@@ -448,14 +459,14 @@ namespace PollinationSDK.Wrapper
                     }
                 }
 
-               
+
 
             }
 
             return newJob;
         }
 
-      
+
 
 
 
