@@ -32,7 +32,7 @@ namespace PollinationSDK.Wrapper
         public JobInfo(RecipeInterface recpie)
         {
             this.Recipe = recpie;
-            //recpie.Source: https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4
+            //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
           
             this.RecipeOwner = GetRecipeOwnerFromSourceURL(recpie.Source);
             this.Job = new Job(recpie.Source);
@@ -41,7 +41,7 @@ namespace PollinationSDK.Wrapper
 
         public JobInfo(Job job)
         {
-           //recpie.Source: https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4
+           //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
            var reciptSource = job.Source;
            this.RecipeOwner = GetRecipeOwnerFromSourceURL(reciptSource);
            this.Recipe = GetRecipe(reciptSource);
@@ -87,7 +87,7 @@ namespace PollinationSDK.Wrapper
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentException("Failed to find the source of recipe!");
-            //recpie.Source: https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4
+            //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
             var recipeOwner = url.Split('/')?.Reverse()?.Take(4)?.LastOrDefault();
             return recipeOwner;
         }
@@ -343,7 +343,7 @@ namespace PollinationSDK.Wrapper
         {
             if (string.IsNullOrEmpty(url))
                 throw new ArgumentException("Failed to find the source of recipe!");
-            //recpie.Source: https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4
+            //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
             var args = url.Split('/')?.Reverse()?.Take(4);
             var recipeOwner = args?.LastOrDefault();
             var version = args?.FirstOrDefault();

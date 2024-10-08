@@ -11,7 +11,7 @@ namespace PollinationSDK
     {
         public static Version GetLatestVersion(string product)
         {
-            var apiUrl = $"https://utilities.pollination.cloud/latest-version/{product}";
+            var apiUrl = $"https://utilities.pollination.solutions/latest-version/{product}";
 
             var request = new RestRequest(Method.GET);
             request.Timeout = 3000;
@@ -24,7 +24,7 @@ namespace PollinationSDK
 
         public static string GetDownloadTheLatestVersionUrl(string product)
         {
-            var apiUrl = $"https://utilities.pollination.cloud/download-plugin/{product}";
+            var apiUrl = $"https://utilities.pollination.solutions/download-plugin/{product}";
             return apiUrl;
         }
 
@@ -38,7 +38,7 @@ namespace PollinationSDK
         public static string GetCompiledRecipe(string owner, string recipeName, string tag = "latest")
         {
             var request = new RestRequest(Method.GET);
-            //https://utilities.staging.pollination.cloud/luigi-archive
+            //https://utilities.staging.pollination.solutions/luigi-archive
             var url = $"{Configuration.Default.BasePath}/luigi-archive".Replace("https://api.", "https://utilities.");
 
 

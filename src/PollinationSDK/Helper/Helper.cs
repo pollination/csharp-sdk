@@ -287,7 +287,7 @@ namespace PollinationSDK
             recipeName = null;
             recipeVersion = null;
 
-            //https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.2.0
+            //https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.2.0
             // /registries/ladybug-tools/recipes/daylight-factor/567bbf4cb9e82dd4e266ab131160df8f85596272c6db6913b7cada187db017a5
 
             //var recipeSource = job.Source;
