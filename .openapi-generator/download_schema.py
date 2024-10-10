@@ -19,7 +19,7 @@ def download(url, dir):
 
 args = sys.argv[1:]
 if args == []:
-    base_url = "https://api.staging.pollination.cloud/"
+    base_url = "https://api.staging.pollination.solutions/"
 else:
     base_url = f"https://github.com/ladybug-tools/honeybee-schema/releases/download/{args[0]}"  # v1.17.0
 
