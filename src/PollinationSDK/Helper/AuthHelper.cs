@@ -39,7 +39,7 @@ namespace PollinationSDK
         }
 
         private static readonly string DevDomain = "staging.";
-        private static readonly string AuthURL_Base = "https://auth.{0}pollination.cloud{1}";
+        private static readonly string AuthURL_Base = "https://auth.{0}pollination.solutions{1}";
 
         private static readonly string AuthSignInPath = "/sdk-login";
 
