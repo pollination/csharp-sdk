@@ -25,17 +25,17 @@ namespace PollinationSDK.Test
             using (WebClient wc = new WebClient())
             {
                 // Annual daylight
-                var url = @"https://api.staging.pollination.cloud/recipes/ladybug-tools/annual-daylight/tags/latest";
+                var url = @"https://api.staging.pollination.solutions/recipes/ladybug-tools/annual-daylight/tags/latest";
                 var json = wc.DownloadString(url);
                 this.annualDaylight = RecipePackage.FromJson(json).Manifest;
 
                 // Daylight factor
-                url = @"https://api.staging.pollination.cloud/recipes/ladybug-tools/daylight-factor/tags/latest";
+                url = @"https://api.staging.pollination.solutions/recipes/ladybug-tools/daylight-factor/tags/latest";
                 json = wc.DownloadString(url);
                 this.daylightFactor = RecipePackage.FromJson(json).Manifest;
 
                 // Daylight factor
-                url = @"https://api.staging.pollination.cloud/recipes/ladybug-tools/annual-energy-use/tags/latest";
+                url = @"https://api.staging.pollination.solutions/recipes/ladybug-tools/annual-energy-use/tags/latest";
                 json = wc.DownloadString(url);
                 this.annualEnergyUse = RecipePackage.FromJson(json).Manifest;
             }

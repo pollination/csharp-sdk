@@ -332,8 +332,8 @@ namespace PollinationSDK.Test
 
         private JobInfo CreateTestJobInfo()
         {
-            //var recipe = @"https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/annual-daylight/0.6.4";
-            var recipe = @"https://api.staging.pollination.cloud/registries/ladybug-tools/recipe/daylight-factor/0.7.14-viz";
+            //var recipe = @"https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4";
+            var recipe = @"https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/daylight-factor/0.7.14-viz";
 
             var job = new Job(recipe);
 

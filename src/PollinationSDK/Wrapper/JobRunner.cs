@@ -132,7 +132,7 @@ namespace PollinationSDK.Wrapper
             LogHelper.LogInfo($"Start running.");
             try
             {
-                // schedule a simulation on Pollination.Cloud
+                // schedule a simulation on pollination.solutions
                 var jobForLog = newJob.DuplicateJob();
                 jobForLog.Arguments = jobForLog.Arguments.Take(3).ToList();
                 LogHelper.LogInfo($"Scheduling a job in {proj.Owner.Name}/{proj.Name}");
