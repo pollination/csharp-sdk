@@ -7,7 +7,7 @@
     <Version>1.1.0.0-dev</Version>
     <Authors>Ladybug Tools</Authors>
     <Description>This is the .Net version of PollinationSDK</Description>
-    <Copyright>Copyright © 2024 Ladybug Tools LLC</Copyright>
+    <Copyright>Copyright © 2025 Ladybug Tools LLC</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/pollination/csharp-sdk</PackageProjectUrl>
     <RepositoryUrl>https://github.com/pollination/csharp-sdk</RepositoryUrl>
