@@ -8,13 +8,14 @@ using System.Threading.Tasks;
 using PollinationSDK;
 using PollinationSDK.Wrapper;
 using System.Threading;
-using Serilog;
+using Pollination;
 
 namespace ConsoleAppDemo
 {
     class Program
     {
 
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<Program>();
         static void Main(string[] args)
         {
 
@@ -158,11 +159,10 @@ namespace ConsoleAppDemo
             {
                 if (string.IsNullOrEmpty(jobString))
                     throw new ArgumentException("Invalid Job ID");
-                LogHelper.SetupLogger("logs.DemoApp.txt");
-                Helper.Logger = LogHelper.Log;
+                LogSetup.OneTimeSetup("logs.DemoApp.txt");
 
                 var me = Helper.CurrentUser;
-                PollinationSDK.Helper.Logger.Information($"You are: {me.Username}");
+                Logger.Info($"You are: {me.Username}");
 
                 var texts = jobString.Split('/').Select(_ => _.Trim()).Where(_ => !string.IsNullOrEmpty(_)).ToList();
 
@@ -172,37 +172,37 @@ namespace ConsoleAppDemo
                 Console.WriteLine($"=> Project Owner: {projOwner}");
                 Console.WriteLine($"=> Project Name: {projName}");
                 Console.WriteLine($"=> Job ID: {jobID}");
-                Console.WriteLine($"Log path: {LogHelper.GetTheLatestLog()}");
+                Console.WriteLine($"Log path: {LogSetup.GetTheLatestLog()}");
 
-                PollinationSDK.Helper.Logger.Information($"DemoApp: getting project [{projOwner}/{projName}].");
+                Logger.Info($"DemoApp: getting project [{projOwner}/{projName}].");
                 var projApi = new PollinationSDK.Api.ProjectsApi();
                 var proj = projApi.GetProject(projOwner, projName);
-                PollinationSDK.Helper.Logger.Information($"DemoApp: got the project [{proj.Owner.Name}/{proj.Name}].");
-                PollinationSDK.Helper.Logger.Information($"DemoApp: Got the Project: {Environment.NewLine}{proj.ToJson()}");
+                Logger.Info($"DemoApp: got the project [{proj.Owner.Name}/{proj.Name}].");
+                Logger.Info($"DemoApp: Got the Project: {Environment.NewLine}{proj.ToJson()}");
                 Console.WriteLine($"DemoApp: got the project [{proj.Owner.Name}/{proj.Name}].");
 
-                PollinationSDK.Helper.Logger.Information($"DemoApp: getting job [{proj.Owner.Name}/{proj.Name}/{jobID}].");
+                Logger.Info($"DemoApp: getting job [{proj.Owner.Name}/{proj.Name}/{jobID}].");
                 var api = new PollinationSDK.Api.JobsApi();
                 var jobHttp = api.GetJobWithHttpInfo(proj.Owner.Name, proj.Name, jobID.ToString());
-                PollinationSDK.Helper.Logger.Information($"DemoApp: got job with HTTP info:");
+                Logger.Info($"DemoApp: got job with HTTP info:");
 
-                PollinationSDK.Helper.Logger.Information($"API Response StatusCode: {jobHttp?.StatusCode}.");
+                Logger.Info($"API Response StatusCode: {jobHttp?.StatusCode}.");
                 Console.WriteLine($"API Response StatusCode: {jobHttp?.StatusCode}.");
                 var headers = jobHttp.Headers.Select(_ => $"{_.Key}:{_.Value}");
                 foreach (var item in headers)
                 {
                     var msg = $"API Response Header: {item}.";
-                    PollinationSDK.Helper.Logger.Information(msg);
+                    Logger.Info(msg);
                     Console.WriteLine(msg);
                 }
 
-                PollinationSDK.Helper.Logger.Information($"API Response Data: {jobHttp?.Data?.ToJson()}.");
+                Logger.Info($"API Response Data: {jobHttp?.Data?.ToJson()}.");
                 Console.WriteLine($"API Response Data: {jobHttp?.Data?.ToJson()}.");
 
             }
             catch (Exception e)
             {
-                PollinationSDK.Helper.Logger.Error(e, $"DemoApp");
+                Logger.Error(e);
                 Console.WriteLine($"Check the log file for the error.");
             }
 

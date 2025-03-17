@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30225.117
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.34916.146
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PollinationSDK", "src\PollinationSDK\PollinationSDK.csproj", "{B5D437C0-A194-443B-A9A1-A94594F3D150}"
 EndProject
@@ -11,21 +11,35 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
 		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Debug|x64.ActiveCfg = Debug|x64
+		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Debug|x64.Build.0 = Debug|x64
 		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Release|x64.ActiveCfg = Release|x64
+		{B5D437C0-A194-443B-A9A1-A94594F3D150}.Release|x64.Build.0 = Release|x64
 		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Debug|x64.ActiveCfg = Debug|x64
+		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Debug|x64.Build.0 = Debug|x64
 		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Release|x64.ActiveCfg = Release|x64
+		{9B368D0E-9965-4FFF-A2EF-1C828558C960}.Release|x64.Build.0 = Release|x64
 		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Debug|x64.ActiveCfg = Debug|x64
+		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Debug|x64.Build.0 = Debug|x64
 		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Release|x64.ActiveCfg = Release|x64
+		{397E3A60-40B0-4718-B3D6-44566E49DB6A}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
