@@ -10,12 +10,14 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Pollination;
 
 namespace PollinationSDK
 {
     public static class Helper
     {
-        public static Serilog.ILogger Logger { get; set; } = Serilog.Log.Logger;
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger(nameof(Helper));
+
         public static UserPrivate CurrentUser { get; set; }
 
         public static UserPrivate GetUser()
@@ -67,13 +69,13 @@ namespace PollinationSDK
                 // Project not found and person account, create a default demo project.
                 if (e.ErrorCode == 404 && userName == Helper.CurrentUser.Username)
                 {
-                    Logger.Information($"Project {projectName} is not found in account {userName}. Now creating this project.");
+                    Logger.Info($"Project {projectName} is not found in account {userName}. Now creating this project.");
                     var ifPublic = projectName == "demo";
                     var res = api.CreateProject(userName, new ProjectCreate(projectName, _public: ifPublic));
                     return GetAProject(userName, projectName);
                 }
-                LogHelper.LogError(e, $"Failed to get the project {userName}/{projectName}");
-                throw e;
+                Logger.Error($"Failed to get the project {userName}/{projectName}" + "{e}", new[] { e });
+                throw;
             }
 
 
@@ -90,14 +92,14 @@ namespace PollinationSDK
 
         public static async Task<bool> UploadDirectoryAsync(Project project, string directory, Action<int> reportProgressAction = default, CancellationToken cancellationToken = default)
         {
-            LogHelper.LogInfo($"Uploading a directory {directory}");
-            LogHelper.LogInfo($"Timeout: {Configuration.Default.Timeout}");
+            Logger.Info($"Uploading a directory {directory}");
+            Logger.Info($"Timeout: {Configuration.Default.Timeout}");
 
             var files = Directory.GetFiles(directory, "*", SearchOption.AllDirectories);
             var api = new ArtifactsApi();
 
             var total = files.Count();
-            LogHelper.LogInfo($"Uploading {total} assets for project {project.Name}");
+            Logger.Info($"Uploading {total} assets for project {project.Name}");
 
             var finished = 0;
             var finishedPercent = 0;
@@ -125,7 +127,7 @@ namespace PollinationSDK
                 finished += chunk.Count;
             }
 
-            LogHelper.LogInfo($"Finished uploading assets for project {project.Name}");
+            Logger.Info($"Finished uploading assets for project {project.Name}");
 
             // canceled by user
             if (cancellationToken.IsCancellationRequested) return false;
@@ -143,7 +145,7 @@ namespace PollinationSDK
                 // canceled by user
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    LogHelper.LogInfo($"Canceled uploading by user");
+                    Logger.Info($"Canceled uploading by user");
                     break;
                 }
 
@@ -152,7 +154,7 @@ namespace PollinationSDK
 
                 if (finishedTask.IsFaulted || finishedTask.Exception != null)
                 {
-                    LogHelper.LogError($"Upload exception: {finishedTask.Exception}");
+                    Logger.Error($"Upload exception: {finishedTask.Exception}");
                     throw finishedTask.Exception;
                 }
 
@@ -200,18 +202,18 @@ namespace PollinationSDK
 
             restRequest.AddFile("file", filePath);
 
-            LogHelper.LogInfo($"Started upload of {fileRelativePath}");
+            Logger.Info($"Started upload of {fileRelativePath}");
             var response = await restClient.ExecuteAsync(restRequest);
 
             if (response.StatusCode == HttpStatusCode.NoContent)
             {
-                LogHelper.LogInfo($"Done uploading {fileRelativePath}");
+                Logger.Info($"Done uploading {fileRelativePath}");
                 return true;
             }
             else
             {
-                LogHelper.LogInfo($"Received response code: {response.StatusCode}");
-                LogHelper.LogInfo($"{response.Content}");
+                Logger.Info($"Received response code: {response.StatusCode}");
+                Logger.Info($"{response.Content}");
             }
             return false;
         }
@@ -533,13 +535,13 @@ namespace PollinationSDK
 
             var url = (await api.DownloadArtifactAsync(projOwner, projName, fileRelativePath))?.ToString();
 
-            LogHelper.LogInfo($"Downloading {fileRelativePath} from \n  -{url}\n");
+            Logger.Info($"Downloading {fileRelativePath} from \n  -{url}\n");
             // get relative path correct
             saveAsDir = Path.GetDirectoryName(Path.Combine(saveAsDir, relativePath));
             saveAsDir = Path.GetFullPath(saveAsDir);
             var path = await Helper.DownloadUrlAsync(url.ToString(), saveAsDir, reportProgressAction, null, cancelToken);
 
-            LogHelper.LogInfo($"Saved {fileRelativePath} to {path}");
+            Logger.Info($"Saved {fileRelativePath} to {path}");
             return path;
         }
 
@@ -551,13 +553,13 @@ namespace PollinationSDK
 
             var url = (await api.DownloadJobArtifactAsync(projOwner, projName, jobId, fileRelativePath, cancelToken))?.ToString();
 
-            LogHelper.LogInfo($"Downloading {fileRelativePath} from \n  -{url}\n");
+            Logger.Info($"Downloading {fileRelativePath} from \n  -{url}\n");
             // get relative path correct
             saveAsDir = Path.GetDirectoryName(Path.Combine(saveAsDir, relativePath));
             saveAsDir = Path.GetFullPath(saveAsDir);
             var path = await Helper.DownloadUrlAsync(url.ToString(), saveAsDir, reportProgressAction, null, cancelToken);
 
-            LogHelper.LogInfo($"Saved {fileRelativePath} to {path}");
+            Logger.Info($"Saved {fileRelativePath} to {path}");
             return path;
         }
 
@@ -646,7 +648,7 @@ namespace PollinationSDK
 
             Directory.CreateDirectory(saveAsDir);
             var file = Path.Combine(saveAsDir, fileName);
-            LogHelper.LogInfo($"Downloading {url}");
+            Logger.Info($"Downloading {url}");
             using (WebClient wc = new WebClient())
             {
                 var prog = 0;
@@ -669,7 +671,7 @@ namespace PollinationSDK
                     await t;
                     if (t.IsFaulted && t.Exception != null)
                         throw t.Exception;
-                    LogHelper.LogInfo($"Saved {fileName} to {file}");
+                    Logger.Info($"Saved {fileName} to {file}");
                 }
                 catch (WebException ex) when (ex.Status == WebExceptionStatus.RequestCanceled)
                 {
@@ -689,7 +691,7 @@ namespace PollinationSDK
 
             if (!File.Exists(file))
             {
-                throw LogHelper.LogReturnError($"Failed to download {fileName}");
+                throw Logger.ReturnError($"Failed to download {fileName}");
             }
             var outputDirOrFile = file;
 
@@ -700,7 +702,7 @@ namespace PollinationSDK
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e, $"Unable to unzip file {Path.GetFileName(file)}");
+                throw Logger.ReturnError($"Unable to unzip file {Path.GetFileName(file)}\n {e}");
             }
 
             return outputDirOrFile;

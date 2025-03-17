@@ -1,6 +1,7 @@
 ﻿extern alias LBTNewtonsoft;  extern alias LBTRestSharp; using System;
 using System.Collections.Generic;
 using LBTRestSharp::RestSharp;
+using Pollination;
 
 namespace PollinationSDK.Client
 {
@@ -9,6 +10,7 @@ namespace PollinationSDK.Client
     /// </summary>
     public class TokenRepo
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<TokenRepo>();
         public string RefreshURL;
         private string IDToken;
         public DateTime ExpiresAt;
@@ -27,7 +29,7 @@ namespace PollinationSDK.Client
 
         private void LogTokenExpiration()
         {
-            LogHelper.LogInfo($"Token expires at: {ExpiresAt}");
+            Logger.Info($"Token expires at: {ExpiresAt}");
         }
 
         private void DoTokenRefresh()
@@ -61,9 +63,9 @@ namespace PollinationSDK.Client
 
         private void DoTokenRefreshLogged()
         {
-            LogHelper.LogInfo("Refreshing token");
+            Logger.Info("Refreshing token");
             this.DoTokenRefresh();
-            LogHelper.LogInfo("Token refresh finished");
+            Logger.Info("Token refresh finished");
             this.LogTokenExpiration();
         }
 

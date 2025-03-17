@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Pollination;
 
 namespace PollinationSDK
 {
@@ -15,6 +16,8 @@ namespace PollinationSDK
     /// </summary>
     public abstract class HandlerChecker
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<HandlerChecker>();
+
         public object CheckWithHandlers(object inputData, List<IOAliasHandler> handlers)
         {
             if (inputData == null) return inputData;
@@ -34,7 +37,7 @@ namespace PollinationSDK
                 }
                 catch (Exception e)
                 {
-                    LogHelper.LogError(e);
+                    Logger.Error(e);
                     errors.Add($"{e?.Message}{Environment.NewLine}From {item.Function}(Handler-{item.Language})");
                     break;
                     //throw;
@@ -159,7 +162,7 @@ namespace PollinationSDK
             }
             catch (Exception ex)
             {
-                throw LogHelper.LogReturnError(ex, $"PollinationSDK: cannot find handler libraries.");
+                throw Logger.ReturnError($"Cannot find handler libraries.\n{ex}");
             }
         }
 

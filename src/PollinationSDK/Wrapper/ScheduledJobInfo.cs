@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Pollination;
 
 namespace PollinationSDK.Wrapper
 {
@@ -16,6 +17,8 @@ namespace PollinationSDK.Wrapper
     /// </summary>
     public class ScheduledJobInfo
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<LocalDatabase>();
+
         public string JobID { get; set; }
         public CloudJob CloudJob { get; set; }
         public Project CloudProject { get; set; }
@@ -167,7 +170,7 @@ namespace PollinationSDK.Wrapper
                 //api.ListJobs
                 var proj = this.CloudProject;
                 var jobId = this.JobID;
-                LogHelper.LogInfo($"Checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
+                Logger.Info($"Checking job [{proj.Owner.Name}/{proj.Name}/{jobId}].");
 
                 // retrieve a slim CloudJob via ListJobs api
                 var jobIds = new List<string>() { jobId };
@@ -183,7 +186,7 @@ namespace PollinationSDK.Wrapper
                 var cloudJob = getAJobFromJobList();
                 var status = cloudJob.Status;
                 var startTime = status.StartedAt;
-                LogHelper.LogInfo($"Init status: {status.ToJson()}");
+                Logger.Info($"Init status: {status.ToJson()}");
 
                 while (status.FinishedAt <= status.StartedAt)
                 {
@@ -217,20 +220,20 @@ namespace PollinationSDK.Wrapper
                     //_simulation = new Simulation(proj, simuId);
                 }
 
-                LogHelper.LogInfo($"Finished status: {status.ToJson()}");
+                Logger.Info($"Finished status: {status.ToJson()}");
                 this.CloudJob = cloudJob;
                 // suspended by user
                 cancelToken.ThrowIfCancellationRequested();
 
                 var finishMessage = GetCloudJobDoneMessage(this.CloudJob);
                 progressAction?.Invoke(finishMessage);
-                LogHelper.LogInfo($"Finished checking job [{owner}/{projName}/{jobId}]: [{finishMessage}].");
+                Logger.Info($"Finished checking job [{owner}/{projName}/{jobId}]: [{finishMessage}].");
 
                 return finishMessage;
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e, $"Failed to watch job [{CloudProject.Owner.Name}/{CloudProject.Name}/{JobID}].");
+                throw Logger.ReturnError(e, $"Failed to watch job [{CloudProject.Owner.Name}/{CloudProject.Name}/{JobID}].");
             }
 
         }
@@ -254,7 +257,7 @@ namespace PollinationSDK.Wrapper
             var proj = this.CloudProject;
             var api = new JobsApi();
             api.CancelJobAsync(proj.Owner.Name, proj.Name, this.JobID);
-            LogHelper.LogInfo($"CancelJob: [{proj.Owner.Name}/{proj.Name}/{this.JobID}].");
+            Logger.Info($"CancelJob: [{proj.Owner.Name}/{proj.Name}/{this.JobID}].");
 
         }
 
@@ -301,14 +304,14 @@ namespace PollinationSDK.Wrapper
                 if (totalRuns == 0)
                 {
                     var err = new ArgumentException($"[Error] Job status: [{jobStatus.Status}]. There is no run available in this job");
-                    LogHelper.LogError(err, $"GetRunInfo: {jobStatus?.ToJson()}.");
+                    Logger.Error("{err}" + jobStatus?.ToJson(), new[] { err });
                     throw err;
                 }
 
                 if (page > totalRuns)
                 {
                     var err = new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
-                    LogHelper.LogError(err, $"GetRunInfo: {jobStatus.ToJson()}.");
+                    Logger.Error("{err}" + jobStatus?.ToJson(), new[] { err });
                     throw err;
                 }
 
@@ -320,7 +323,7 @@ namespace PollinationSDK.Wrapper
                 if (!isRunFinished)
                 {
                     var err = new ArgumentException($"[Warning] Run status: {firstRun.Status.Status}. If this run [{firstRun.Id.Substring(0, 5)}] is scheduled but not finished, please check it again in a few seconds;");
-                    LogHelper.LogError(err, $"GetRunInfo: {firstRun?.Status?.ToJson()}.");
+                    Logger.Error("{err}" + firstRun?.Status?.ToJson(), new[] { err });
                     throw err;
                 }
 

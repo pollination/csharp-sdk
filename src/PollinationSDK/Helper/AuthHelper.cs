@@ -4,11 +4,13 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Specialized;
 using PollinationSDK.Client;
+using Pollination;
 
 namespace PollinationSDK
 {
     public static class AuthHelper
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger(nameof(AuthHelper));
         public struct AuthResult
         {
             public string IDToken;
@@ -71,7 +73,7 @@ namespace PollinationSDK
             }
             catch (Exception e)
             {
-                LogHelper.LogThrowError(e);
+                Logger.ThrowError(e);
             }
 
         }
@@ -87,18 +89,18 @@ namespace PollinationSDK
                     Configuration.Default.BasePath = devEnv ? ApiURL_Dev : ApiURL;
                     Configuration.Default.AddApiKey("x-pollination-token", apiAuth);
                     Helper.CurrentUser = Helper.GetUser();
-                    LogHelper.LogInfo($"Logged in as {Helper.CurrentUser.Username}");
+                    Logger.Info($"Logged in as {Helper.CurrentUser.Username}");
                 }
                 else
                 {
-                    LogHelper.LogWarning($"Invalid apiAuth");
+                    Logger.Warning($"Invalid apiAuth");
                 }
 
                 ActionWhenDone?.Invoke();
             }
             catch (Exception e)
             {
-                LogHelper.LogThrowError(e);
+                Logger.ThrowError(e);
             }
 
         }
@@ -107,10 +109,10 @@ namespace PollinationSDK
         private static async Task<AuthResult> PollinationSignInAsync(bool devEnv = false)
         {
             if (!HttpListener.IsSupported) 
-                LogHelper.LogThrowError($"HttpListener is not supported on this system");
+                Logger.ThrowError($"HttpListener is not supported on this system");
 
             if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-                LogHelper.LogThrowError($"Network is not available, please double check with your connection or firewall!");
+                Logger.ThrowError($"Network is not available, please double check with your connection or firewall!");
 
             var redirectUrl = "http://localhost:8645/";
             var loginUrl = devEnv ? LoginURL_Dev : LoginURL;
@@ -131,9 +133,9 @@ namespace PollinationSDK
                 {
                     //it is already listening the port, but users didn't login
                     if (e.ErrorCode == 183) 
-                        LogHelper.LogWarning($"It is still waiting for users to login from last time.\n{e.Message}");
+                        Logger.Warning($"It is still waiting for users to login from last time.\n{e.Message}");
                     else 
-                        LogHelper.LogThrowError($"Failed to start the listener.\n{e.Message}");
+                        Logger.ThrowError($"Failed to start the listener.\n{e.Message}");
 
                 }
 
@@ -143,7 +145,7 @@ namespace PollinationSDK
                     UseShellExecute = true
                 };
                 System.Diagnostics.Process.Start(psi);
-                LogHelper.LogInfo($"Login from {loginUrl}");
+                Logger.Info($"Login from {loginUrl}");
 
                 // wait for the authorization response.
                 var context = await listener.GetContextAsync();
@@ -153,7 +155,7 @@ namespace PollinationSDK
 
                 var returnUrl = request.RawUrl.Contains("?token=") ? request.RawUrl : request.UrlReferrer?.PathAndQuery;
                 if (string.IsNullOrEmpty(returnUrl)) 
-                    LogHelper.LogThrowError($"Failed to authorize the login: \n{request.RawUrl}");
+                    Logger.ThrowError($"Failed to authorize the login: \n{request.RawUrl}");
 
                 var auth = AuthResult.From(request.QueryString);
                 var loggedIn = CheckGetUser(auth, out var error, devEnv);
@@ -176,7 +178,7 @@ namespace PollinationSDK
                 responseOutput.Flush();
                 responseOutput.Close();
 
-                LogHelper.LogInfo($"Closed listener");
+                Logger.Info($"Closed listener");
 
                 return auth;
             }
@@ -203,7 +205,7 @@ namespace PollinationSDK
                     refreshToken: auth.RefreshToken
                 );
                 Helper.CurrentUser = Helper.GetUser();
-                LogHelper.LogInfo($"Logged in as {Helper.CurrentUser.Username}");
+                Logger.Info($"Logged in as {Helper.CurrentUser.Username}");
 
                 return true;
 
@@ -212,7 +214,7 @@ namespace PollinationSDK
             {
                 Configuration.Default.TokenRepo = null;
                 Helper.CurrentUser = null;
-                LogHelper.LogError(e);
+                Logger.Error(e);
                 errorMessage = e.Message;
                 return false;
                 //throw;

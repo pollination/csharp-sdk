@@ -3,15 +3,15 @@ using PollinationSDK.Api;
 using PollinationSDK;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using Pollination;
 
 namespace PollinationSDK.Wrapper
 {
     public class RunInfo
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<RunInfo>();
         public bool IsLocalRun => !Guid.TryParse(this.RunID, out var res);
         public bool IsCloudRunDone => this.Run.Status.FinishedAt >= this.Run.Status.StartedAt;
         public string CloudRunStatus => this.Run.Status.Status.ToString();
@@ -442,7 +442,7 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                LogHelper.LogThrowError(e);
+                Logger.ThrowError(e);
             }
 
             return downloadedAssets;
@@ -508,11 +508,11 @@ namespace PollinationSDK.Wrapper
                             else
                                 url = api.GetRunOutput(runInfo.ProjectOwner, runInfo.ProjectName, runInfo.RunID, assetName).ToString();
 
-                            LogHelper.LogInfo($"Downloading {assetName} from \n  -{url}\n");
+                            Logger.Info($"Downloading {assetName} from \n  -{url}\n");
                             var t = Helper.DownloadUrlAsync(url, dir, individualProgress, overAllProgress, cancelToken);
                             await t.ConfigureAwait(false);
                             var savedFolderOrFilePath = t.Result;
-                            LogHelper.LogInfo($"Saved {assetName} to {savedFolderOrFilePath}");
+                            Logger.Info($"Saved {assetName} to {savedFolderOrFilePath}");
 
                             // check folder with single file 
                             savedFolderOrFilePath = Helper.CheckPathForDir(savedFolderOrFilePath);
