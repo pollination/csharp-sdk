@@ -4,11 +4,14 @@ using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Pollination;
 
 namespace PollinationSDK.Wrapper
 {
     public class LocalDatabase
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<LocalDatabase>();
+
         public string DatabaseFile { get; set; } = "pollination.db";
         private SqliteConnection _connection;
         private SqliteConnection connection => GetConnection();
@@ -34,7 +37,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e);
+                Logger.Error(e);
+                throw;
             }
 
         }
@@ -49,7 +53,7 @@ namespace PollinationSDK.Wrapper
                 SQLitePCL.Batteries.Init();
                 con = new SqliteConnection($"Data Source={file}");
                 con.Open();
-                LogHelper.LogInfo($"ServerVersion: {con.ServerVersion}");
+                Logger.Info($"ServerVersion: {con.ServerVersion}");
                 if (!fileExist)
                     InitDatabase(con);
 
@@ -57,7 +61,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e);
+                Logger.Error(e);
+                throw;
             }
            
         }
@@ -80,12 +85,13 @@ namespace PollinationSDK.Wrapper
                 var dir = Path.Combine(userDir, ".pollination");
                 Directory.CreateDirectory(dir);
                 var filePath = Path.Combine(dir, file);
-                LogHelper.LogInfo(filePath);
+                Logger.Info(filePath);
                 return filePath;
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e);
+                Logger.Error(e);
+                throw;
             }
       
         }
@@ -101,7 +107,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e);
+                Logger.Error(e);
+                throw;
             }
 
         }
@@ -177,7 +184,7 @@ namespace PollinationSDK.Wrapper
                     cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = schJob.JobID;
                     cmd.Parameters.AddWithValue("$DateTime", SqliteType.Text).Value = DateTime.Now;
                     cmd.Parameters.AddWithValue("$JobInfo", SqliteType.Blob).Value = schJob.Serialize_Binary();
-                    LogHelper.LogInfo($"Adding {schJob.ProjectSlug}/{schJob.JobID}");
+                    Logger.Info($"Adding {schJob.ProjectSlug}/{schJob.JobID}");
                     var done = cmd.ExecuteNonQuery();
                     con.Close();
                     return done == 1;
@@ -186,7 +193,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e, $"Failed to add job to local database:\n{schJob}");
+                Logger.Error($"Failed to add job to local database:\n{schJob}" + "{e}", new[] { e });
+                throw;
             }
            
         }
@@ -207,7 +215,7 @@ namespace PollinationSDK.Wrapper
     FROM JobTable
     WHERE {condition}
 ";
-                    LogHelper.LogInfo($"Getting a job {condition}");
+                    Logger.Info($"Getting a job {condition}");
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
@@ -223,7 +231,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e, $"Failed to get a job from local database:\n{condition}");
+                Logger.Error($"Failed to get a job from local database:\n{condition}" + "{e}", new[] { e });
+                throw;
             }
 
         }
@@ -243,7 +252,7 @@ namespace PollinationSDK.Wrapper
 ";
                     cmd.Parameters.AddWithValue("$ProjSlug", SqliteType.Blob).Value = projID;
                     cmd.Parameters.AddWithValue("$JobID", SqliteType.Text).Value = jobId;
-                    LogHelper.LogInfo($"Deleting a job:\nProjSlug={projID} AND JobID={jobId}");
+                    Logger.Info($"Deleting a job:\nProjSlug={projID} AND JobID={jobId}");
                     var done = cmd.ExecuteNonQuery();
                     con.Close();
                     return done >= 1;
@@ -251,7 +260,9 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e, $"Failed to delete a job from local database:\nProjSlug={projID} AND JobID={jobId}");
+
+                Logger.Error($"Failed to delete a job from local database:\nProjSlug={projID} AND JobID={jobId}" + "{e}", new[] { e });
+                throw;
             }
         
         }

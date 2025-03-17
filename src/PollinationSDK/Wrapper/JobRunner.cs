@@ -7,12 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Pollination;
 
 namespace PollinationSDK.Wrapper
 {
 
     public class JobRunner
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<JobRunner>();
 
         private JobInfo JobInfo { get; set; }
         private RecipeInterface Recipe => JobInfo.Recipe;
@@ -31,7 +33,7 @@ namespace PollinationSDK.Wrapper
             {
                 cloudJob = await ScheduleCloudJobAsync(project, this.Job, progressReporting, token);
                 progressReporting?.Invoke(cloudJob.Status.Status.ToString());
-                LogHelper.LogInfo($"A new cloud job {cloudJob.Id} is started in project {project.Name}");
+                Logger.Info($"A new cloud job {cloudJob.Id} is started in project {project.Name}");
             }
             catch (Exception e)
             {
@@ -40,7 +42,8 @@ namespace PollinationSDK.Wrapper
                     // Rhino instance has been closed while there was a running simulation.
                     return null;
                 }
-                LogHelper.LogThrowError(e);
+                Logger.Error(e);
+                throw;
 
                 //this.Message = null;
                 //Eto.Forms.MessageBox.Show(e.Message, Eto.Forms.MessageBoxType.Error);
@@ -88,7 +91,7 @@ namespace PollinationSDK.Wrapper
             if (cancellationToken.IsCancellationRequested)
             {
                 progressLogAction?.Invoke($"Canceled: {cancellationToken.IsCancellationRequested}");
-                LogHelper.LogInfo($"Canceled by user");
+                Logger.Info($"Canceled by user");
                 return null;
             }
 
@@ -129,16 +132,16 @@ namespace PollinationSDK.Wrapper
             // create a new Simulation
             var api = new JobsApi();
             progressLogAction?.Invoke($"Start running.");
-            LogHelper.LogInfo($"Start running.");
+            Logger.Info($"Start running.");
             try
             {
                 // schedule a simulation on pollination.solutions
                 var jobForLog = newJob.DuplicateJob();
                 jobForLog.Arguments = jobForLog.Arguments.Take(3).ToList();
-                LogHelper.LogInfo($"Scheduling a job in {proj.Owner.Name}/{proj.Name}");
-                LogHelper.LogInfo($"ONLY PRINTING OUT THE FIRST THREE ARGUMENTS \n{jobForLog.ToJson()}");
+                Logger.Info($"Scheduling a job in {proj.Owner.Name}/{proj.Name}");
+                Logger.Info($"ONLY PRINTING OUT THE FIRST THREE ARGUMENTS \n{jobForLog.ToJson()}");
                 var runJob = await api.CreateJobAsync(proj.Owner.Name, proj.Name, newJob);
-                LogHelper.LogInfo($"Job scheduled\n{runJob.ToJson()}");
+                Logger.Info($"Job scheduled\n{runJob.ToJson()}");
                 progressLogAction?.Invoke($"Start running..");
 
                 // give server a moment to start the simulation after it's scheduled.
@@ -150,7 +153,7 @@ namespace PollinationSDK.Wrapper
                 // suspended by user
                 if (cancellationToken.IsCancellationRequested)
                 {
-                    LogHelper.LogInfo($"Canceled by user");
+                    Logger.Info($"Canceled by user");
                     progressLogAction?.Invoke($"Canceled: {cancellationToken.IsCancellationRequested}");
                     return null;
                 }
@@ -162,7 +165,8 @@ namespace PollinationSDK.Wrapper
             catch (Exception ex)
             {
                 //Eto.Forms.MessageBox.Show(e.Message, Eto.Forms.MessageBoxType.Error);
-                throw LogHelper.LogReturnError(ex);
+                Logger.Error(ex);
+                throw;
             }
 
         }
@@ -233,7 +237,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception ex)
             {
-                LogHelper.LogThrowError(ex);
+                Logger.Error(ex);
+                throw;
             }
 
             return workDir;
@@ -299,7 +304,7 @@ namespace PollinationSDK.Wrapper
             var found = Helper.GetRecipeFromRecipeSourceURL(recipeSource, out var recOwner, out var recName, out var recVersion);
             if (!found)
             {
-                LogHelper.LogThrowError($"CheckRecipeInProject: invalid recipe source {recipeSource}");
+                Logger.ThrowError($"Invalid recipe source {recipeSource}");
             }
 
             return CheckRecipeInProject(recOwner, recName, project, recVersion);

@@ -4,11 +4,13 @@ using PollinationSDK.Client;
 using LBTRestSharp::RestSharp;
 using System.IO;
 using System.Linq;
+using Pollination;
 
 namespace PollinationSDK
 {
     public static class Utilities
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger(typeof(Utilities));
         public static Version GetLatestVersion(string product)
         {
             var apiUrl = $"https://utilities.pollination.solutions/latest-version/{product}";
@@ -59,7 +61,7 @@ namespace PollinationSDK
 
             if (!request.Parameters.Any())
             {
-                LogHelper.LogThrowError("Please login first for downloading recipes!");
+                Logger.ThrowError("Please login first for downloading recipes!");
              
             }
 
@@ -71,7 +73,7 @@ namespace PollinationSDK
             var response = client.Execute(request);
             if (response.StatusCode != System.Net.HttpStatusCode.OK)
             {
-                LogHelper.LogThrowError($"HttpCode {(int)response.StatusCode}: Failed to download {recipeName}");
+                Logger.ThrowError($"HttpCode {(int)response.StatusCode}: Failed to download {recipeName}");
             }
 
             //{Content-Disposition=attachment; filename=annual-daylight-0.6.4.zip}
@@ -90,7 +92,7 @@ namespace PollinationSDK
             System.IO.File.WriteAllBytes(file, b);
             if (!System.IO.File.Exists(file))
             {
-                LogHelper.LogThrowError($"Failed to save {fileName} to {file}");
+                Logger.ThrowError($"Failed to save {fileName} to {file}");
             }
             return file;
         }
@@ -116,13 +118,13 @@ namespace PollinationSDK
             var days = (System.DateTime.UtcNow - localRecipe.CreationTimeUtc).Days;
             if (days > 14) // re-download the recipe
             {
-                LogHelper.LogInfo("Re-downloading the recipe from server as the local cache has been expired");
+                Logger.Info("Re-downloading the recipe from server as the local cache has been expired");
                 zipPath = GetCompiledRecipe(owner, recipeName, tag);
             }
 
             if (!File.Exists(zipPath))
             {
-                LogHelper.LogThrowError($"Failed to find {zipPath}");
+                Logger.ThrowError($"Failed to find {zipPath}");
             }
             var unzipTo = Path.Combine(dir, Path.GetFileNameWithoutExtension(zipPath));
             var outputDir = Helper.Unzip(zipPath, unzipTo, false);
@@ -187,7 +189,7 @@ namespace PollinationSDK
             if (pool == null)
                 throw new ArgumentException($"Failed to find any available license pool for product: {product}");
             var id = pool.Id;
-            LogHelper.LogInfo($"Pool ID: {id}");
+            Logger.Info($"Pool ID: {id}");
             var license = api.GetPoolLicense(id);
             if (license.Revoked)
                 throw new ArgumentException($"License is revoked. ID: {pool.LicenseId}");

@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using System.Linq;
 using System.IO;
 using System.Runtime.Serialization;
+using Pollination;
 
 namespace PollinationSDK.Wrapper
 {
     public class JobInfo
     {
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<JobInfo>();
+
         public AccountPublic JobAuthor { get; set; }
         public string RecipeOwner { get; set; }
         public RecipeInterface Recipe { get; set; }
@@ -274,7 +277,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e);
+                Logger.Error(e);
+                throw;
             }
           
         }
@@ -297,7 +301,8 @@ namespace PollinationSDK.Wrapper
             }
             catch (Exception e)
             {
-                throw LogHelper.LogReturnError(e);
+                Logger.Error(e);
+                throw;
             }
         }
 
