@@ -17,7 +17,7 @@ namespace PollinationSDK.Wrapper
     /// </summary>
     public class ScheduledJobInfo
     {
-        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<LocalDatabase>();
+        private static Microsoft.Extensions.Logging.ILogger Logger => LogUtils.GetLogger<ScheduledJobInfo>();
 
         public string JobID { get; set; }
         public CloudJob CloudJob { get; set; }
