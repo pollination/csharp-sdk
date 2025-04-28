@@ -46,7 +46,7 @@ namespace PollinationSDK
                     //"account_type": "user",
                     data = jObject.ToObject(typeof(AccountPublic), serializer);
                 }
-                else if (jObject["memberCount"] != null) //TODO: temporary solution for Team
+                else if (jObject["member_count"] != null) //TODO: temporary solution for Team
                 {
                     //Accessor's subjuect
                     data = jObject.ToObject(typeof(Team), serializer);
