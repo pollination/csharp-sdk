@@ -44,7 +44,7 @@ namespace ConsoleAppDemo
                 ).CreateLogger();
 
             var loggerFactory = new SerilogLoggerFactory(Serilog.Log.Logger);
-            Pollination.LogHelper.OneTimeSetup(loggerFactory);
+            PollinationLogger.LogHelper.OneTimeSetup(loggerFactory);
         }
 
         public static string GetTheLatestLog()
