@@ -138,9 +138,14 @@ namespace PollinationSDK.Wrapper
             return Get(connection, string.Empty);
         }
       
-        public List<ScheduledJobInfo> Get(string projSlug)
+        public List<ScheduledJobInfo> Get(string projSlug, bool reversedOrder = false, int count = 10)
         {
             var condition = $"ProjSlug = '{projSlug}'";
+            if (reversedOrder)
+                condition += " ORDER BY DateTime DESC";
+            if (count > 0)
+                condition += $" LIMIT {count}";
+
             return Get(connection, condition);
         }
         public ScheduledJobInfo Get(string projSlug, string jobID)
