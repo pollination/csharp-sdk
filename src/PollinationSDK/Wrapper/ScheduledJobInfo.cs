@@ -22,7 +22,7 @@ namespace PollinationSDK.Wrapper
         public string JobID { get; set; }
         public CloudJob CloudJob { get; set; }
         public Project CloudProject { get; set; }
-        
+
         public JobInfo LocalJob { get; set; }
         public string SavedLocalPath { get; set; }
 
@@ -45,7 +45,7 @@ namespace PollinationSDK.Wrapper
 
         public ScheduledJobInfo(Project proj, CloudJob cloudJob)
         {
-            this.CloudJob = cloudJob; 
+            this.CloudJob = cloudJob;
             this.LocalJob = null;
 
             this.CloudProject = proj;
@@ -61,8 +61,8 @@ namespace PollinationSDK.Wrapper
             //this.LocalProject = localJob.Project;
             //this.Recipe = localJob.Recipe;
             this.JobID = Guid.NewGuid().ToString();
-            this.SavedLocalPath = string.IsNullOrEmpty(localDir) 
-                ? Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8)) 
+            this.SavedLocalPath = string.IsNullOrEmpty(localDir)
+                ? Path.Combine(Path.GetTempPath(), "Pollination", this.JobID.Substring(0, 8))
                 : localDir;
 
             this.Platform = localJob.Platform;
@@ -125,9 +125,9 @@ namespace PollinationSDK.Wrapper
 
         public override string ToString()
         {
-            return  this.IsLocalJob ? $"LOCAL:{this.JobSlug}@{this.SavedLocalPath}" : $"CLOUD:{this.JobSlug}";
+            return this.IsLocalJob ? $"LOCAL:{this.JobSlug}@{this.SavedLocalPath}" : $"CLOUD:{this.JobSlug}";
         }
-        
+
         public bool IsCloudJobDone(out string completeMessage)
         {
             completeMessage = null;
@@ -280,7 +280,7 @@ namespace PollinationSDK.Wrapper
 
                     throw new ArgumentException($"Failed to load a local job [{schJobInfo.SavedLocalPath}]. Job status is [{schJobInfo.LocalJob.LocalJobStatus}]");
                 }
-                
+
                 var runInfo = new RunInfo(schJobInfo);
                 return runInfo;
             }
@@ -299,7 +299,7 @@ namespace PollinationSDK.Wrapper
                     job = schJobInfo.CloudJob;
                     jobStatus = job.Status;
                 }
-                        
+
                 var totalRuns = jobStatus.RunsCompleted + jobStatus.RunsFailed + jobStatus.RunsPending + jobStatus.RunsRunning + jobStatus.RunsCancelled;
                 if (totalRuns == 0)
                 {
@@ -310,7 +310,7 @@ namespace PollinationSDK.Wrapper
 
                 if (page > totalRuns)
                 {
-                    var err = new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to { totalRuns - 1};");
+                    var err = new ArgumentException($"[Error] This job has {totalRuns} runs in total, a valid run index could from 0 to {totalRuns - 1};");
                     Logger.Error("{err}" + jobStatus?.ToJson(), new[] { err });
                     throw err;
                 }
@@ -333,7 +333,7 @@ namespace PollinationSDK.Wrapper
                 _runInfoCache.Add(runIndex, runInfo);
                 return runInfo;
             }
-           
+
         }
 
 
@@ -400,7 +400,7 @@ namespace PollinationSDK.Wrapper
             return res;
         }
 
-    
+
 
         private static byte[] Compress(byte[] data)
         {
@@ -420,7 +420,7 @@ namespace PollinationSDK.Wrapper
             memoryStream.Close();
             return memoryStream.ToArray();
         }
-    
+
         public DateTime GetExecutionDateTime()
         {
             var date = DateTime.MinValue;
@@ -438,6 +438,22 @@ namespace PollinationSDK.Wrapper
             }
 
             return date;
+        }
+
+        public async Task<bool> DeleteAsync()
+        {
+            if (this.IsLocalJob)
+            {
+                return PollinationSDK.Wrapper.LocalDatabase.Instance.Delete(this);
+            }
+            else
+            {
+                var proj = this.CloudProject;
+                var job = this.CloudJob;
+                var api = new PollinationSDK.Api.JobsApi();
+                var done = await api.DeleteJobAsync(proj.Owner.Name, proj.Name, job.Id);
+                return true;
+            }
         }
     }
 }
