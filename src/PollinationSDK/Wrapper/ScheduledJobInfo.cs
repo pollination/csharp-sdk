@@ -420,5 +420,24 @@ namespace PollinationSDK.Wrapper
             memoryStream.Close();
             return memoryStream.ToArray();
         }
+    
+        public DateTime GetExecutionDateTime()
+        {
+            var date = DateTime.MinValue;
+            if (this.IsLocalJob)
+            {
+                var _date = string.Empty;
+                if ((this.LocalJob?.Job?.Labels?.TryGetValue("Date", out _date)).GetValueOrDefault() && !string.IsNullOrEmpty(_date))
+                {
+                    DateTime.TryParse(_date, out date);
+                }
+            }
+            else
+            {
+                date = this.CloudJob.Status.FinishedAt;
+            }
+
+            return date;
+        }
     }
 }
