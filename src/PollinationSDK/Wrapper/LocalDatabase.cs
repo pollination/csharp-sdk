@@ -216,7 +216,7 @@ namespace PollinationSDK.Wrapper
                     var cmd = con.CreateCommand();
                     cmd.CommandText =
     $@"
-    SELECT JobInfo
+    SELECT JobInfo, DateTime
     FROM JobTable
     WHERE {condition}
 ";
@@ -227,6 +227,14 @@ namespace PollinationSDK.Wrapper
                         {
                             var package = (byte[])reader.GetValue(0);
                             var re = ScheduledJobInfo.Deserialize_Binary(package);
+                            var date = reader.GetValue(1);
+                            if (re != null && re.LocalJob != null && re.LocalJob.Job != null)
+                            {
+                                var labels = re.LocalJob.Job.Labels;
+                                labels = labels ?? new Dictionary<string, string>();
+                                labels.Add("Date", date.ToString());
+                            }
+                      
                             res.Add(re);
                         }
                     }
