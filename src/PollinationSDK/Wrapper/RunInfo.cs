@@ -18,7 +18,7 @@ namespace PollinationSDK.Wrapper
         public string RunID => this.Run.Id;
         public Run Run { get; private set; }
         //public Project Project { get; private set; }
-        public UserPermission ProjectCloudPermission { get; private set; } 
+        public UserPermission ProjectCloudPermission { get; private set; }
         public string ProjectOwner { get; private set; }
         public string ProjectName { get; private set; }
         public string ProjectSlug => $"{ProjectOwner}/{ProjectName}";
@@ -28,7 +28,7 @@ namespace PollinationSDK.Wrapper
 
         //[IgnoreDataMember]
         //public string Logs { get; set; }
-        public RunInfo(Project proj, string runID): this(proj, GetRun(proj, runID))
+        public RunInfo(Project proj, string runID) : this(proj, GetRun(proj, runID))
         {
         }
 
@@ -63,6 +63,7 @@ namespace PollinationSDK.Wrapper
             this.ProjectOwner = proj[0];
             this.ProjectName = proj[1];
             this.Recipe = localJob.Recipe;
+
         }
 
         public RunInfo(string localRunFolder)
@@ -286,28 +287,43 @@ namespace PollinationSDK.Wrapper
             var json = File.ReadAllText(file);
             var args = LBTNewtonsoft.Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 
-            var recipeInputs = this.Recipe.InputList;
-            var stepInputs = new List<Interface.Io.Inputs.IStep>();
-            foreach (var input in recipeInputs)
+            var recipeInputs = this.Recipe.InputList.ToList();
+            var stepInputs = new Interface.Io.Inputs.IStep[recipeInputs.Count];
+            var userInputs = new List<Interface.Io.Inputs.IStep>();
+            foreach (var arg in args)
             {
-                if (!args.TryGetValue(input.Name, out var value))
-                    value = input.GetDefaultValue();
+                var argName = arg.Key;
+                var reciptInputIndex = recipeInputs.FindIndex(_ => _.Name == argName);
+                if (reciptInputIndex >= 0)
+                {
+                    var reciptInput = recipeInputs[reciptInputIndex];
+                    var value = arg.Value;
+                    if (value == null)
+                        value = reciptInput.GetDefaultValue();
+                    if (reciptInput.Required == false && value == null)
+                        continue;
+                    var sinput = reciptInput.ToStepInput(value);
+                    stepInputs[reciptInputIndex] = sinput;
+                }
+                else
+                {
+                    // users string input
+                    var value = arg.Value;
+                    var sinput = new StepStringInput(argName, value?.ToString());
+                    userInputs.Add(sinput);
 
-                if (input.Required == false && value == null)
-                    continue;
+                }
 
-                var sinput =  input.ToStepInput(value);
-                stepInputs.Add(sinput);
             }
-
-            return stepInputs;
+            var allInputs = stepInputs.Concat(userInputs).Where(_ => _ != null).ToList();
+            return allInputs;
         }
 
         public List<Interface.Io.Inputs.IStep> GetInputs()
         {
-            var inputs = 
-                this.IsLocalRun ? 
-                GetLocalInputs(): 
+            var inputs =
+                this.IsLocalRun ?
+                GetLocalInputs() :
                 this.Run.Status.Inputs
                   .OfType<Interface.Io.Inputs.IStep>().ToList();
 
@@ -355,7 +371,7 @@ namespace PollinationSDK.Wrapper
                     updatedAssets.Add(dup);
                     continue;
                 }
-                 
+
                 var relativePath = dup.RelativePath;
                 if (dup is RunInputAsset input)
                 {
@@ -376,20 +392,20 @@ namespace PollinationSDK.Wrapper
                         var dir = Directory.GetDirectories(root, "*", SearchOption.AllDirectories).OrderBy(_ => _.Length).FirstOrDefault(_ => _.EndsWith(relativeOutPath));
                         dup.LocalPath = dir;
                     }
-                  
+
                 }
 
 
                 if (!dup.IsSaved())
                     throw new ArgumentException($"Failed to find asset: {relativePath} in {root}");
-               
+
 
                 dup.LocalPath = Path.GetFullPath(dup.LocalPath);
                 // copy to saveAsDir
                 if (!string.IsNullOrEmpty(saveAsDir))
                 {
                     var jobName = Path.GetFileName(root);
-                    var newPath = Path.Combine(saveAsDir, jobName,  relativePath);
+                    var newPath = Path.Combine(saveAsDir, jobName, relativePath);
                     newPath = Path.GetFullPath(newPath);
                     var newRoot = Path.GetDirectoryName(newPath);
                     Directory.CreateDirectory(newRoot);
@@ -423,7 +439,7 @@ namespace PollinationSDK.Wrapper
                 var dir = string.IsNullOrEmpty(saveAsDir) ? Helper.GenTempFolder() : saveAsDir;
                 var simuID = this.RunID.Substring(0, 8);
                 dir = Path.Combine(dir, simuID);
-                
+
                 var allAssets = runAssets;
 
                 // check if cached
@@ -462,7 +478,7 @@ namespace PollinationSDK.Wrapper
             public bool IsValid => Total > 0;
         }
 
-       
+
 
 
         /// <summary>
@@ -492,15 +508,18 @@ namespace PollinationSDK.Wrapper
                         var dir = isInputAsset ? inputDir : outputDir;
                         dir = Path.Combine(dir, assetName);
 
-                        Action<int> individualProgress = (percent) => {
+                        Action<int> individualProgress = (percent) =>
+                        {
                             reportProgressAction?.Invoke($"{assetName}: {percent}%");
                         };
-                        Action overAllProgress = () => {
+                        Action overAllProgress = () =>
+                        {
                             completed++;
                             reportProgressAction?.Invoke($"OVERALL: {completed}/{total}");
                         };
 
-                        var task =Task.Run(async ()=> {
+                        var task = Task.Run(async () =>
+                        {
                             var url = string.Empty;
 
                             if (isInputAsset)
@@ -543,6 +562,6 @@ namespace PollinationSDK.Wrapper
             return tasks;
 
         }
-       
+
     }
 }
