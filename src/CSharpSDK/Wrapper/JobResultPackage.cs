@@ -1,7 +1,7 @@
 ﻿
-extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
-using LBTNewtonsoft::Newtonsoft.Json;
-using LBTNewtonsoft::Newtonsoft.Json.Bson;
+ extern alias LBTRestSharp; using System;
+using LBT.Newtonsoft.Json;
+using LBT.Newtonsoft.Json.Bson;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;

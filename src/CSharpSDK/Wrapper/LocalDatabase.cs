@@ -1,5 +1,5 @@
 ﻿
-extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+ extern alias LBTRestSharp; using System;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
 using System.IO;

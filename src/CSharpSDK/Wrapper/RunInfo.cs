@@ -1,4 +1,4 @@
-﻿extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+﻿ extern alias LBTRestSharp; using System;
 using PollinationSDK.Api;
 using PollinationSDK;
 using System.IO;
@@ -285,7 +285,7 @@ namespace PollinationSDK.Wrapper
             var folder = this.RunID;
             var file = Path.Combine(folder, "inputs.json");
             var json = File.ReadAllText(file);
-            var args = LBTNewtonsoft.Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
+            var args = LBT.Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<string, object>>(json);
 
             var recipeInputs = this.Recipe.InputList.ToList();
             var stepInputs = new Interface.Io.Inputs.IStep[recipeInputs.Count];
