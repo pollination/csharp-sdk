@@ -8,7 +8,7 @@
  */
 
 
-extern alias LBTNewtonsoft;  extern alias LBTRestSharp; using System;
+extern alias LBTRestSharp; using System;
 using LBTRestSharp::RestSharp;
 
 namespace PollinationSDK.Client

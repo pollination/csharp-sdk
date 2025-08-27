@@ -1,6 +1,6 @@
-﻿extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
-using LBTNewtonsoft::Newtonsoft.Json;
-using LBTNewtonsoft::Newtonsoft.Json.Linq;
+﻿ extern alias LBTRestSharp; using System;
+using LBT.Newtonsoft.Json;
+using LBT.Newtonsoft.Json.Linq;
 
 using System.Linq;
 

@@ -1,4 +1,4 @@
-﻿extern alias LBTNewtonsoft;  extern alias LBTRestSharp; using System;
+﻿extern alias LBTRestSharp; using System;
 using System.Collections.Generic;
 using LBTRestSharp::RestSharp;
 using Pollination;

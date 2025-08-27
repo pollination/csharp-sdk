@@ -1,4 +1,4 @@
-﻿extern alias LBTNewtonsoft; extern alias LBTRestSharp; using System;
+﻿ extern alias LBTRestSharp; using System;
 using PollinationSDK.Api;
 using PollinationSDK.Client;
 using PollinationSDK.Wrapper;

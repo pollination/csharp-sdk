@@ -1,5 +1,5 @@
-﻿extern alias LBTNewtonsoft;
-using LBTNewtonsoft::Newtonsoft.Json;
+﻿
+using LBT.Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Linq;
 
