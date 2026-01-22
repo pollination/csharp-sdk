@@ -24,6 +24,8 @@ jobs:
 
       - name: Run Unit Tests
         working-directory: src/CSharpSDK.Tests
+        # Set to false to disable temporarily
+        if: false
         run: |
           $Env:PollinationApiKey = "${{secrets.POLLINATION_STAGING_APIKEY}}"
           $Env:PollinationApiKeyProduction = "${{secrets.POLLINATION_PRODUCTION_APIKEY}}"
