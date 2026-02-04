@@ -4,7 +4,7 @@
 		<TargetFrameworks>netstandard2.0</TargetFrameworks>
 		<LangVersion>8</LangVersion>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<Version>1.1.0.0-dev</Version>
+		<Version>1.10.0.0</Version>
 		<Authors>Ladybug Tools</Authors>
 		<Description>This is the .Net version of PollinationSDK</Description>
 		<Copyright>Copyright © 2026 Ladybug Tools LLC</Copyright>

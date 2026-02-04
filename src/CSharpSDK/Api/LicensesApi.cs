@@ -34,7 +34,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="activationId"></param>
         /// <returns></returns>
-        void DeleteActivation (string poolId, string activationId);
+        void DeleteActivation(string poolId, string activationId);
 
         /// <summary>
         /// Delete the activation
@@ -46,7 +46,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="activationId"></param>
         /// <returns>ApiResponse of Object(void)</returns>
-        ApiResponse<Object> DeleteActivationWithHttpInfo (string poolId, string activationId);
+        ApiResponse<Object> DeleteActivationWithHttpInfo(string poolId, string activationId);
         /// <summary>
         /// Get license pools available to authenticated user
         /// </summary>
@@ -56,7 +56,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
         /// <returns>LicensePoolList</returns>
-        LicensePoolList GetAvailablePools (List<string> owner = default);
+        LicensePoolList GetAvailablePools(List<string> owner = default);
 
         /// <summary>
         /// Get license pools available to authenticated user
@@ -67,7 +67,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
         /// <returns>ApiResponse of LicensePoolList</returns>
-        ApiResponse<LicensePoolList> GetAvailablePoolsWithHttpInfo (List<string> owner = default);
+        ApiResponse<LicensePoolList> GetAvailablePoolsWithHttpInfo(List<string> owner = default);
         /// <summary>
         /// Get the activations for the license
         /// </summary>
@@ -77,7 +77,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ActivationList</returns>
-        ActivationList GetLicenseActivations (string poolId);
+        ActivationList GetLicenseActivations(string poolId);
 
         /// <summary>
         /// Get the activations for the license
@@ -88,7 +88,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of ActivationList</returns>
-        ApiResponse<ActivationList> GetLicenseActivationsWithHttpInfo (string poolId);
+        ApiResponse<ActivationList> GetLicenseActivationsWithHttpInfo(string poolId);
         /// <summary>
         /// Get the license associated with a pool
         /// </summary>
@@ -98,7 +98,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>LicensePublic</returns>
-        LicensePublic GetPoolLicense (Guid poolId);
+        LicensePublic GetPoolLicense(Guid poolId);
 
         /// <summary>
         /// Get the license associated with a pool
@@ -109,7 +109,31 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of LicensePublic</returns>
-        ApiResponse<LicensePublic> GetPoolLicenseWithHttpInfo (Guid poolId);
+        ApiResponse<LicensePublic> GetPoolLicenseWithHttpInfo(Guid poolId);
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product
+        /// </summary>
+        /// <remarks>
+        /// Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </remarks>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <returns>TrialStatusResponse</returns>
+        TrialStatusResponse GetTrialStatus(string account, Product product);
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product
+        /// </summary>
+        /// <remarks>
+        /// Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </remarks>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <returns>ApiResponse of TrialStatusResponse</returns>
+        ApiResponse<TrialStatusResponse> GetTrialStatusWithHttpInfo(string account, Product product);
         /// <summary>
         /// Grant access to the license pool
         /// </summary>
@@ -120,7 +144,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <returns>LicensePoolPublic</returns>
-        LicensePoolPublic GrantAccessToPool (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList);
+        LicensePoolPublic GrantAccessToPool(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList);
 
         /// <summary>
         /// Grant access to the license pool
@@ -132,7 +156,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <returns>ApiResponse of LicensePoolPublic</returns>
-        ApiResponse<LicensePoolPublic> GrantAccessToPoolWithHttpInfo (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList);
+        ApiResponse<LicensePoolPublic> GrantAccessToPoolWithHttpInfo(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList);
         /// <summary>
         /// Regenerate the license associated with the pool
         /// </summary>
@@ -142,7 +166,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>object</returns>
-        object RegenerateLicensePool (Guid poolId);
+        object RegenerateLicensePool(Guid poolId);
 
         /// <summary>
         /// Regenerate the license associated with the pool
@@ -153,7 +177,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of object</returns>
-        ApiResponse<object> RegenerateLicensePoolWithHttpInfo (Guid poolId);
+        ApiResponse<object> RegenerateLicensePoolWithHttpInfo(Guid poolId);
         /// <summary>
         /// Revoke access to the license pool
         /// </summary>
@@ -164,7 +188,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <returns>LicensePoolPublic</returns>
-        LicensePoolPublic RevokeAccessToPool (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList);
+        LicensePoolPublic RevokeAccessToPool(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList);
 
         /// <summary>
         /// Revoke access to the license pool
@@ -176,7 +200,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <returns>ApiResponse of LicensePoolPublic</returns>
-        ApiResponse<LicensePoolPublic> RevokeAccessToPoolWithHttpInfo (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList);
+        ApiResponse<LicensePoolPublic> RevokeAccessToPoolWithHttpInfo(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList);
         /// <summary>
         /// Update the license pool
         /// </summary>
@@ -187,7 +211,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolUpdate"></param>
         /// <returns>object</returns>
-        object UpdateLicensePool (Guid poolId, LicensePoolUpdate licensePoolUpdate);
+        object UpdateLicensePool(Guid poolId, LicensePoolUpdate licensePoolUpdate);
 
         /// <summary>
         /// Update the license pool
@@ -199,7 +223,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolUpdate"></param>
         /// <returns>ApiResponse of object</returns>
-        ApiResponse<object> UpdateLicensePoolWithHttpInfo (Guid poolId, LicensePoolUpdate licensePoolUpdate);
+        ApiResponse<object> UpdateLicensePoolWithHttpInfo(Guid poolId, LicensePoolUpdate licensePoolUpdate);
         #endregion Synchronous Operations
         #region Asynchronous Operations
         /// <summary>
@@ -213,7 +237,7 @@ namespace PollinationSDK.Api
         /// <param name="activationId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of void</returns>
-        System.Threading.Tasks.Task DeleteActivationAsync (string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task DeleteActivationAsync(string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Delete the activation
@@ -226,7 +250,7 @@ namespace PollinationSDK.Api
         /// <param name="activationId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        System.Threading.Tasks.Task<ApiResponse<Object>> DeleteActivationWithHttpInfoAsync (string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<Object>> DeleteActivationWithHttpInfoAsync(string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get license pools available to authenticated user
         /// </summary>
@@ -237,7 +261,7 @@ namespace PollinationSDK.Api
         /// <param name="owner">Owner of the project (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePoolList</returns>
-        System.Threading.Tasks.Task<LicensePoolList> GetAvailablePoolsAsync (List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<LicensePoolList> GetAvailablePoolsAsync(List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get license pools available to authenticated user
@@ -249,7 +273,7 @@ namespace PollinationSDK.Api
         /// <param name="owner">Owner of the project (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePoolList)</returns>
-        System.Threading.Tasks.Task<ApiResponse<LicensePoolList>> GetAvailablePoolsWithHttpInfoAsync (List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<LicensePoolList>> GetAvailablePoolsWithHttpInfoAsync(List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get the activations for the license
         /// </summary>
@@ -260,7 +284,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ActivationList</returns>
-        System.Threading.Tasks.Task<ActivationList> GetLicenseActivationsAsync (string poolId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ActivationList> GetLicenseActivationsAsync(string poolId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get the activations for the license
@@ -272,7 +296,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (ActivationList)</returns>
-        System.Threading.Tasks.Task<ApiResponse<ActivationList>> GetLicenseActivationsWithHttpInfoAsync (string poolId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<ActivationList>> GetLicenseActivationsWithHttpInfoAsync(string poolId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Get the license associated with a pool
         /// </summary>
@@ -283,7 +307,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePublic</returns>
-        System.Threading.Tasks.Task<LicensePublic> GetPoolLicenseAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<LicensePublic> GetPoolLicenseAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Get the license associated with a pool
@@ -295,7 +319,33 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePublic)</returns>
-        System.Threading.Tasks.Task<ApiResponse<LicensePublic>> GetPoolLicenseWithHttpInfoAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<LicensePublic>> GetPoolLicenseWithHttpInfoAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product
+        /// </summary>
+        /// <remarks>
+        /// Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </remarks>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of TrialStatusResponse</returns>
+        System.Threading.Tasks.Task<TrialStatusResponse> GetTrialStatusAsync(string account, Product product, CancellationToken cancellationToken = default(CancellationToken));
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product
+        /// </summary>
+        /// <remarks>
+        /// Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </remarks>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (TrialStatusResponse)</returns>
+        System.Threading.Tasks.Task<ApiResponse<TrialStatusResponse>> GetTrialStatusWithHttpInfoAsync(string account, Product product, CancellationToken cancellationToken = default(CancellationToken));
+
         /// <summary>
         /// Grant access to the license pool
         /// </summary>
@@ -307,7 +357,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePoolPublic</returns>
-        System.Threading.Tasks.Task<LicensePoolPublic> GrantAccessToPoolAsync (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<LicensePoolPublic> GrantAccessToPoolAsync(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Grant access to the license pool
@@ -320,7 +370,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePoolPublic)</returns>
-        System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> GrantAccessToPoolWithHttpInfoAsync (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> GrantAccessToPoolWithHttpInfoAsync(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Regenerate the license associated with the pool
         /// </summary>
@@ -331,7 +381,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of object</returns>
-        System.Threading.Tasks.Task<object> RegenerateLicensePoolAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<object> RegenerateLicensePoolAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Regenerate the license associated with the pool
@@ -343,7 +393,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (object)</returns>
-        System.Threading.Tasks.Task<ApiResponse<object>> RegenerateLicensePoolWithHttpInfoAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<object>> RegenerateLicensePoolWithHttpInfoAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Revoke access to the license pool
         /// </summary>
@@ -355,7 +405,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePoolPublic</returns>
-        System.Threading.Tasks.Task<LicensePoolPublic> RevokeAccessToPoolAsync (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<LicensePoolPublic> RevokeAccessToPoolAsync(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Revoke access to the license pool
@@ -368,7 +418,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePoolPublic)</returns>
-        System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> RevokeAccessToPoolWithHttpInfoAsync (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> RevokeAccessToPoolWithHttpInfoAsync(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken));
         /// <summary>
         /// Update the license pool
         /// </summary>
@@ -380,7 +430,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolUpdate"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of object</returns>
-        System.Threading.Tasks.Task<object> UpdateLicensePoolAsync (Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<object> UpdateLicensePoolAsync(Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken));
 
         /// <summary>
         /// Update the license pool
@@ -393,7 +443,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolUpdate"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (object)</returns>
-        System.Threading.Tasks.Task<ApiResponse<object>> UpdateLicensePoolWithHttpInfoAsync (Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken));
+        System.Threading.Tasks.Task<ApiResponse<object>> UpdateLicensePoolWithHttpInfoAsync(Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken));
         #endregion Asynchronous Operations
     }
 
@@ -455,7 +505,7 @@ namespace PollinationSDK.Api
         /// Gets or sets the configuration object
         /// </summary>
         /// <value>An instance of the Configuration</value>
-        public PollinationSDK.Client.Configuration Configuration {get; set;}
+        public PollinationSDK.Client.Configuration Configuration { get; set; }
 
         /// <summary>
         /// Provides a factory method hook for the creation of exceptions.
@@ -480,9 +530,9 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="activationId"></param>
         /// <returns></returns>
-        public void DeleteActivation (string poolId, string activationId)
+        public void DeleteActivation(string poolId, string activationId)
         {
-             DeleteActivationWithHttpInfo(poolId, activationId);
+            DeleteActivationWithHttpInfo(poolId, activationId);
         }
 
         /// <summary>
@@ -492,7 +542,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="activationId"></param>
         /// <returns>ApiResponse of Object(void)</returns>
-        public ApiResponse<Object> DeleteActivationWithHttpInfo (string poolId, string activationId)
+        public ApiResponse<Object> DeleteActivationWithHttpInfo(string poolId, string activationId)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -538,11 +588,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -563,9 +613,9 @@ namespace PollinationSDK.Api
         /// <param name="activationId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of void</returns>
-        public async System.Threading.Tasks.Task DeleteActivationAsync (string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task DeleteActivationAsync(string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             await DeleteActivationWithHttpInfoAsync(poolId, activationId, cancellationToken);
+            await DeleteActivationWithHttpInfoAsync(poolId, activationId, cancellationToken);
 
         }
 
@@ -577,7 +627,7 @@ namespace PollinationSDK.Api
         /// <param name="activationId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeleteActivationWithHttpInfoAsync (string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<Object>> DeleteActivationWithHttpInfoAsync(string poolId, string activationId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -623,11 +673,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -646,10 +696,10 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
         /// <returns>LicensePoolList</returns>
-        public LicensePoolList GetAvailablePools (List<string> owner = default)
+        public LicensePoolList GetAvailablePools(List<string> owner = default)
         {
-             ApiResponse<LicensePoolList> localVarResponse = GetAvailablePoolsWithHttpInfo(owner);
-             return localVarResponse.Data;
+            ApiResponse<LicensePoolList> localVarResponse = GetAvailablePoolsWithHttpInfo(owner);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -658,7 +708,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="owner">Owner of the project (optional)</param>
         /// <returns>ApiResponse of LicensePoolList</returns>
-        public ApiResponse<LicensePoolList> GetAvailablePoolsWithHttpInfo (List<string> owner = default)
+        public ApiResponse<LicensePoolList> GetAvailablePoolsWithHttpInfo(List<string> owner = default)
         {
 
             var localVarPath = "/licenses/pools";
@@ -697,11 +747,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -711,7 +761,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePoolList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePoolList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolList)));
+                (LicensePoolList)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolList)));
         }
 
         /// <summary>
@@ -721,10 +771,10 @@ namespace PollinationSDK.Api
         /// <param name="owner">Owner of the project (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePoolList</returns>
-        public async System.Threading.Tasks.Task<LicensePoolList> GetAvailablePoolsAsync (List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<LicensePoolList> GetAvailablePoolsAsync(List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<LicensePoolList> localVarResponse = await GetAvailablePoolsWithHttpInfoAsync(owner, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<LicensePoolList> localVarResponse = await GetAvailablePoolsWithHttpInfoAsync(owner, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -735,7 +785,7 @@ namespace PollinationSDK.Api
         /// <param name="owner">Owner of the project (optional)</param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePoolList)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<LicensePoolList>> GetAvailablePoolsWithHttpInfoAsync (List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<LicensePoolList>> GetAvailablePoolsWithHttpInfoAsync(List<string> owner = default, CancellationToken cancellationToken = default(CancellationToken))
         {
 
             var localVarPath = "/licenses/pools";
@@ -774,11 +824,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -788,7 +838,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePoolList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePoolList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolList)));
+                (LicensePoolList)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolList)));
         }
 
         /// <summary>
@@ -797,10 +847,10 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ActivationList</returns>
-        public ActivationList GetLicenseActivations (string poolId)
+        public ActivationList GetLicenseActivations(string poolId)
         {
-             ApiResponse<ActivationList> localVarResponse = GetLicenseActivationsWithHttpInfo(poolId);
-             return localVarResponse.Data;
+            ApiResponse<ActivationList> localVarResponse = GetLicenseActivationsWithHttpInfo(poolId);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -809,7 +859,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of ActivationList</returns>
-        public ApiResponse<ActivationList> GetLicenseActivationsWithHttpInfo (string poolId)
+        public ApiResponse<ActivationList> GetLicenseActivationsWithHttpInfo(string poolId)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -851,11 +901,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -865,7 +915,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<ActivationList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (ActivationList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ActivationList)));
+                (ActivationList)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ActivationList)));
         }
 
         /// <summary>
@@ -875,10 +925,10 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ActivationList</returns>
-        public async System.Threading.Tasks.Task<ActivationList> GetLicenseActivationsAsync (string poolId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ActivationList> GetLicenseActivationsAsync(string poolId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<ActivationList> localVarResponse = await GetLicenseActivationsWithHttpInfoAsync(poolId, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<ActivationList> localVarResponse = await GetLicenseActivationsWithHttpInfoAsync(poolId, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -889,7 +939,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (ActivationList)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<ActivationList>> GetLicenseActivationsWithHttpInfoAsync (string poolId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<ActivationList>> GetLicenseActivationsWithHttpInfoAsync(string poolId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -931,11 +981,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -945,7 +995,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<ActivationList>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (ActivationList) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ActivationList)));
+                (ActivationList)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(ActivationList)));
         }
 
         /// <summary>
@@ -954,10 +1004,10 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>LicensePublic</returns>
-        public LicensePublic GetPoolLicense (Guid poolId)
+        public LicensePublic GetPoolLicense(Guid poolId)
         {
-             ApiResponse<LicensePublic> localVarResponse = GetPoolLicenseWithHttpInfo(poolId);
-             return localVarResponse.Data;
+            ApiResponse<LicensePublic> localVarResponse = GetPoolLicenseWithHttpInfo(poolId);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -966,7 +1016,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of LicensePublic</returns>
-        public ApiResponse<LicensePublic> GetPoolLicenseWithHttpInfo (Guid poolId)
+        public ApiResponse<LicensePublic> GetPoolLicenseWithHttpInfo(Guid poolId)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1008,11 +1058,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1022,7 +1072,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePublic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePublic) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePublic)));
+                (LicensePublic)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePublic)));
         }
 
         /// <summary>
@@ -1032,10 +1082,10 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePublic</returns>
-        public async System.Threading.Tasks.Task<LicensePublic> GetPoolLicenseAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<LicensePublic> GetPoolLicenseAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<LicensePublic> localVarResponse = await GetPoolLicenseWithHttpInfoAsync(poolId, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<LicensePublic> localVarResponse = await GetPoolLicenseWithHttpInfoAsync(poolId, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -1046,7 +1096,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePublic)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<LicensePublic>> GetPoolLicenseWithHttpInfoAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<LicensePublic>> GetPoolLicenseWithHttpInfoAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1088,11 +1138,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1102,7 +1152,176 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePublic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePublic) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePublic)));
+                (LicensePublic)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePublic)));
+        }
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </summary>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <returns>TrialStatusResponse</returns>
+        public TrialStatusResponse GetTrialStatus(string account, Product product)
+        {
+            ApiResponse<TrialStatusResponse> localVarResponse = GetTrialStatusWithHttpInfo(account, product);
+            return localVarResponse.Data;
+        }
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </summary>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <returns>ApiResponse of TrialStatusResponse</returns>
+        public ApiResponse<TrialStatusResponse> GetTrialStatusWithHttpInfo(string account, Product product)
+        {
+            // verify the required parameter 'account' is set
+            if (account == null)
+                throw new ApiException(400, "Missing required parameter 'account' when calling LicensesApi->GetTrialStatus");
+            // verify the required parameter 'product' is set
+            if (product == null)
+                throw new ApiException(400, "Missing required parameter 'product' when calling LicensesApi->GetTrialStatus");
+
+            var localVarPath = "/licenses/trial-status";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (account != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "account", account)); // query parameter
+            if (product != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "product", product)); // query parameter
+
+            // authentication (JWTAuth) required
+            // http beerer authentication required
+            if (!String.IsNullOrEmpty(this.Configuration.AccessToken))
+            {
+                localVarHeaderParams["Authorization"] = "Bearer " + this.Configuration.AccessToken;
+            }
+            // authentication (APIKeyAuth) required
+            if (!String.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("x-pollination-token")))
+            {
+                localVarHeaderParams["x-pollination-token"] = this.Configuration.GetApiKeyWithPrefix("x-pollination-token");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("GetTrialStatus", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<TrialStatusResponse>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (TrialStatusResponse)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(TrialStatusResponse)));
+        }
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </summary>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of TrialStatusResponse</returns>
+        public async System.Threading.Tasks.Task<TrialStatusResponse> GetTrialStatusAsync(string account, Product product, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            ApiResponse<TrialStatusResponse> localVarResponse = await GetTrialStatusWithHttpInfoAsync(account, product, cancellationToken);
+            return localVarResponse.Data;
+
+        }
+
+        /// <summary>
+        /// Check if an account has activated a trial for a specific product Check whether a Pollination account has previously activated a trial license for a given product (Rhino or Revit plugin).
+        /// </summary>
+        /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
+        /// <param name="account">The username of the account to check</param>
+        /// <param name="product">The product to check (rhino_plugin or revit_plugin)</param>
+        /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
+        /// <returns>Task of ApiResponse (TrialStatusResponse)</returns>
+        public async System.Threading.Tasks.Task<ApiResponse<TrialStatusResponse>> GetTrialStatusWithHttpInfoAsync(string account, Product product, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            // verify the required parameter 'account' is set
+            if (account == null)
+                throw new ApiException(400, "Missing required parameter 'account' when calling LicensesApi->GetTrialStatus");
+            // verify the required parameter 'product' is set
+            if (product == null)
+                throw new ApiException(400, "Missing required parameter 'product' when calling LicensesApi->GetTrialStatus");
+
+            var localVarPath = "/licenses/trial-status";
+            var localVarPathParams = new Dictionary<String, String>();
+            var localVarQueryParams = new List<KeyValuePair<String, String>>();
+            var localVarHeaderParams = new Dictionary<String, String>(this.Configuration.DefaultHeader);
+            var localVarFormParams = new Dictionary<String, String>();
+            var localVarFileParams = new Dictionary<String, FileParameter>();
+            Object localVarPostBody = null;
+
+            // to determine the Content-Type header
+            String[] localVarHttpContentTypes = new String[] {
+            };
+            String localVarHttpContentType = this.Configuration.ApiClient.SelectHeaderContentType(localVarHttpContentTypes);
+
+            // to determine the Accept header
+            String[] localVarHttpHeaderAccepts = new String[] {
+                "application/json"
+            };
+            String localVarHttpHeaderAccept = this.Configuration.ApiClient.SelectHeaderAccept(localVarHttpHeaderAccepts);
+            if (localVarHttpHeaderAccept != null)
+                localVarHeaderParams.Add("Accept", localVarHttpHeaderAccept);
+
+            if (account != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "account", account)); // query parameter
+            if (product != null) localVarQueryParams.AddRange(this.Configuration.ApiClient.ParameterToKeyValuePairs("", "product", product)); // query parameter
+
+            // authentication (JWTAuth) required
+            // http bearer authentication required
+            if (!String.IsNullOrEmpty(this.Configuration.AccessToken))
+            {
+                localVarHeaderParams["Authorization"] = "Bearer " + this.Configuration.AccessToken;
+            }
+            // authentication (APIKeyAuth) required
+            if (!String.IsNullOrEmpty(this.Configuration.GetApiKeyWithPrefix("x-pollination-token")))
+            {
+                localVarHeaderParams["x-pollination-token"] = this.Configuration.GetApiKeyWithPrefix("x-pollination-token");
+            }
+
+            // make the HTTP request
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+                Method.GET, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
+                localVarPathParams, localVarHttpContentType, cancellationToken);
+
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
+
+            if (ExceptionFactory != null)
+            {
+                Exception exception = ExceptionFactory("GetTrialStatus", localVarResponse);
+                if (exception != null) throw exception;
+            }
+
+            return new ApiResponse<TrialStatusResponse>(localVarStatusCode,
+                localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
+                (TrialStatusResponse)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(TrialStatusResponse)));
         }
 
         /// <summary>
@@ -1112,10 +1331,10 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <returns>LicensePoolPublic</returns>
-        public LicensePoolPublic GrantAccessToPool (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList)
+        public LicensePoolPublic GrantAccessToPool(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList)
         {
-             ApiResponse<LicensePoolPublic> localVarResponse = GrantAccessToPoolWithHttpInfo(poolId, licensePoolAccessPolicyList);
-             return localVarResponse.Data;
+            ApiResponse<LicensePoolPublic> localVarResponse = GrantAccessToPoolWithHttpInfo(poolId, licensePoolAccessPolicyList);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -1125,7 +1344,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <returns>ApiResponse of LicensePoolPublic</returns>
-        public ApiResponse<LicensePoolPublic> GrantAccessToPoolWithHttpInfo (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList)
+        public ApiResponse<LicensePoolPublic> GrantAccessToPoolWithHttpInfo(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1179,11 +1398,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.PATCH, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1193,7 +1412,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePoolPublic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePoolPublic) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
+                (LicensePoolPublic)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
         }
 
         /// <summary>
@@ -1204,10 +1423,10 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePoolPublic</returns>
-        public async System.Threading.Tasks.Task<LicensePoolPublic> GrantAccessToPoolAsync (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<LicensePoolPublic> GrantAccessToPoolAsync(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<LicensePoolPublic> localVarResponse = await GrantAccessToPoolWithHttpInfoAsync(poolId, licensePoolAccessPolicyList, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<LicensePoolPublic> localVarResponse = await GrantAccessToPoolWithHttpInfoAsync(poolId, licensePoolAccessPolicyList, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -1219,7 +1438,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolAccessPolicyList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePoolPublic)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> GrantAccessToPoolWithHttpInfoAsync (Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> GrantAccessToPoolWithHttpInfoAsync(Guid poolId, LicensePoolAccessPolicyList licensePoolAccessPolicyList, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1273,11 +1492,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.PATCH, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1287,7 +1506,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePoolPublic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePoolPublic) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
+                (LicensePoolPublic)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
         }
 
         /// <summary>
@@ -1296,10 +1515,10 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>object</returns>
-        public object RegenerateLicensePool (Guid poolId)
+        public object RegenerateLicensePool(Guid poolId)
         {
-             ApiResponse<object> localVarResponse = RegenerateLicensePoolWithHttpInfo(poolId);
-             return localVarResponse.Data;
+            ApiResponse<object> localVarResponse = RegenerateLicensePoolWithHttpInfo(poolId);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -1308,7 +1527,7 @@ namespace PollinationSDK.Api
         /// <exception cref="PollinationSDK.Client.ApiException">Thrown when fails to make API call</exception>
         /// <param name="poolId"></param>
         /// <returns>ApiResponse of object</returns>
-        public ApiResponse<object> RegenerateLicensePoolWithHttpInfo (Guid poolId)
+        public ApiResponse<object> RegenerateLicensePoolWithHttpInfo(Guid poolId)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1350,11 +1569,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1364,7 +1583,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (object) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
+                (object)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
         }
 
         /// <summary>
@@ -1374,10 +1593,10 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of object</returns>
-        public async System.Threading.Tasks.Task<object> RegenerateLicensePoolAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<object> RegenerateLicensePoolAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<object> localVarResponse = await RegenerateLicensePoolWithHttpInfoAsync(poolId, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<object> localVarResponse = await RegenerateLicensePoolWithHttpInfoAsync(poolId, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -1388,7 +1607,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (object)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<object>> RegenerateLicensePoolWithHttpInfoAsync (Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<object>> RegenerateLicensePoolWithHttpInfoAsync(Guid poolId, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1430,11 +1649,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.POST, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1444,7 +1663,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (object) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
+                (object)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
         }
 
         /// <summary>
@@ -1454,10 +1673,10 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <returns>LicensePoolPublic</returns>
-        public LicensePoolPublic RevokeAccessToPool (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList)
+        public LicensePoolPublic RevokeAccessToPool(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList)
         {
-             ApiResponse<LicensePoolPublic> localVarResponse = RevokeAccessToPoolWithHttpInfo(poolId, licensePoolPolicySubjectList);
-             return localVarResponse.Data;
+            ApiResponse<LicensePoolPublic> localVarResponse = RevokeAccessToPoolWithHttpInfo(poolId, licensePoolPolicySubjectList);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -1467,7 +1686,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <returns>ApiResponse of LicensePoolPublic</returns>
-        public ApiResponse<LicensePoolPublic> RevokeAccessToPoolWithHttpInfo (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList)
+        public ApiResponse<LicensePoolPublic> RevokeAccessToPoolWithHttpInfo(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1521,11 +1740,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1535,7 +1754,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePoolPublic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePoolPublic) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
+                (LicensePoolPublic)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
         }
 
         /// <summary>
@@ -1546,10 +1765,10 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of LicensePoolPublic</returns>
-        public async System.Threading.Tasks.Task<LicensePoolPublic> RevokeAccessToPoolAsync (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<LicensePoolPublic> RevokeAccessToPoolAsync(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<LicensePoolPublic> localVarResponse = await RevokeAccessToPoolWithHttpInfoAsync(poolId, licensePoolPolicySubjectList, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<LicensePoolPublic> localVarResponse = await RevokeAccessToPoolWithHttpInfoAsync(poolId, licensePoolPolicySubjectList, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -1561,7 +1780,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolPolicySubjectList"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (LicensePoolPublic)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> RevokeAccessToPoolWithHttpInfoAsync (Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<LicensePoolPublic>> RevokeAccessToPoolWithHttpInfoAsync(Guid poolId, LicensePoolPolicySubjectList licensePoolPolicySubjectList, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1615,11 +1834,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.DELETE, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1629,7 +1848,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<LicensePoolPublic>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (LicensePoolPublic) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
+                (LicensePoolPublic)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(LicensePoolPublic)));
         }
 
         /// <summary>
@@ -1639,10 +1858,10 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolUpdate"></param>
         /// <returns>object</returns>
-        public object UpdateLicensePool (Guid poolId, LicensePoolUpdate licensePoolUpdate)
+        public object UpdateLicensePool(Guid poolId, LicensePoolUpdate licensePoolUpdate)
         {
-             ApiResponse<object> localVarResponse = UpdateLicensePoolWithHttpInfo(poolId, licensePoolUpdate);
-             return localVarResponse.Data;
+            ApiResponse<object> localVarResponse = UpdateLicensePoolWithHttpInfo(poolId, licensePoolUpdate);
+            return localVarResponse.Data;
         }
 
         /// <summary>
@@ -1652,7 +1871,7 @@ namespace PollinationSDK.Api
         /// <param name="poolId"></param>
         /// <param name="licensePoolUpdate"></param>
         /// <returns>ApiResponse of object</returns>
-        public ApiResponse<object> UpdateLicensePoolWithHttpInfo (Guid poolId, LicensePoolUpdate licensePoolUpdate)
+        public ApiResponse<object> UpdateLicensePoolWithHttpInfo(Guid poolId, LicensePoolUpdate licensePoolUpdate)
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1706,11 +1925,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) this.Configuration.ApiClient.CallApi(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)this.Configuration.ApiClient.CallApi(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1720,7 +1939,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (object) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
+                (object)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
         }
 
         /// <summary>
@@ -1731,10 +1950,10 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolUpdate"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of object</returns>
-        public async System.Threading.Tasks.Task<object> UpdateLicensePoolAsync (Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<object> UpdateLicensePoolAsync(Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken))
         {
-             ApiResponse<object> localVarResponse = await UpdateLicensePoolWithHttpInfoAsync(poolId, licensePoolUpdate, cancellationToken);
-             return localVarResponse.Data;
+            ApiResponse<object> localVarResponse = await UpdateLicensePoolWithHttpInfoAsync(poolId, licensePoolUpdate, cancellationToken);
+            return localVarResponse.Data;
 
         }
 
@@ -1746,7 +1965,7 @@ namespace PollinationSDK.Api
         /// <param name="licensePoolUpdate"></param>
         /// <param name="cancellationToken">Cancellation Token to cancel request (optional) </param>
         /// <returns>Task of ApiResponse (object)</returns>
-        public async System.Threading.Tasks.Task<ApiResponse<object>> UpdateLicensePoolWithHttpInfoAsync (Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken))
+        public async System.Threading.Tasks.Task<ApiResponse<object>> UpdateLicensePoolWithHttpInfoAsync(Guid poolId, LicensePoolUpdate licensePoolUpdate, CancellationToken cancellationToken = default(CancellationToken))
         {
             // verify the required parameter 'poolId' is set
             if (poolId == null)
@@ -1800,11 +2019,11 @@ namespace PollinationSDK.Api
             }
 
             // make the HTTP request
-            IRestResponse localVarResponse = (IRestResponse) await this.Configuration.ApiClient.CallApiAsync(localVarPath,
+            IRestResponse localVarResponse = (IRestResponse)await this.Configuration.ApiClient.CallApiAsync(localVarPath,
                 Method.PUT, localVarQueryParams, localVarPostBody, localVarHeaderParams, localVarFormParams, localVarFileParams,
                 localVarPathParams, localVarHttpContentType, cancellationToken);
 
-            int localVarStatusCode = (int) localVarResponse.StatusCode;
+            int localVarStatusCode = (int)localVarResponse.StatusCode;
 
             if (ExceptionFactory != null)
             {
@@ -1814,7 +2033,7 @@ namespace PollinationSDK.Api
 
             return new ApiResponse<object>(localVarStatusCode,
                 localVarResponse.Headers.ToDictionary(x => x.Name, x => string.Join(",", x.Value)),
-                (object) this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
+                (object)this.Configuration.ApiClient.Deserialize(localVarResponse, typeof(object)));
         }
 
     }
