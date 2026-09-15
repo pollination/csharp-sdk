@@ -36,7 +36,7 @@ namespace PollinationSDK.Wrapper
         {
             this.Recipe = recpie;
             //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
-          
+
             this.RecipeOwner = GetRecipeOwnerFromSourceURL(recpie.Source);
             this.Job = new Job(recpie.Source);
             this.Job.Arguments = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
@@ -44,12 +44,12 @@ namespace PollinationSDK.Wrapper
 
         public JobInfo(Job job)
         {
-           //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
-           var reciptSource = job.Source;
-           this.RecipeOwner = GetRecipeOwnerFromSourceURL(reciptSource);
-           this.Recipe = GetRecipe(reciptSource);
-           this.Job = job;
-           this.Job.Arguments = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
+            //recpie.Source: https://api.staging.pollination.solutions/registries/ladybug-tools/recipe/annual-daylight/0.6.4
+            var reciptSource = job.Source;
+            this.RecipeOwner = GetRecipeOwnerFromSourceURL(reciptSource);
+            this.Recipe = GetRecipe(reciptSource);
+            this.Job = job;
+            this.Job.Arguments = new List<List<AnyOf<JobArgument, JobPathArgument>>>();
         }
 
 
@@ -63,7 +63,7 @@ namespace PollinationSDK.Wrapper
 
         public void SetLocalSilentMode(bool enableSilent)
         {
-            if (this.IsLocalJob) 
+            if (this.IsLocalJob)
                 this.LocalSilentMode = enableSilent;
             else
                 throw new ArgumentException("Silent mode only works with local job! Call SetLocalJob() to set local job settings first!");
@@ -78,7 +78,7 @@ namespace PollinationSDK.Wrapper
         public void SetCloudJob(string projectOwner, string projectName)
         {
             this.IsLocalJob = false;
-            this.ProjectSlug =   $"{projectOwner}/{projectName}".ToLower();
+            this.ProjectSlug = $"{projectOwner}/{projectName}".ToLower();
         }
 
         public void SetPlatform(string platform)
@@ -102,7 +102,7 @@ namespace PollinationSDK.Wrapper
 
         public static JobInfo FromJson(string json)
         {
-            var obj =  JsonConvert.DeserializeObject<JobInfo>(json, JsonSetting.AnyOfConvertSetting);
+            var obj = JsonConvert.DeserializeObject<JobInfo>(json, JsonSetting.AnyOfConvertSetting);
             return obj;
         }
 
@@ -115,7 +115,7 @@ namespace PollinationSDK.Wrapper
         {
             //Deal with single run
             var inputs = this.Recipe.InputList;
-           
+
             // create a placeholder
             var job = new Job("invalid");
 
@@ -127,7 +127,7 @@ namespace PollinationSDK.Wrapper
                 if (isPath)
                 {
                     var pathArg = args.OfType<JobPathArgument>().FirstOrDefault(_ => _.Name == item.Name);
-                    
+
                     // only validate if a path is ProjectFolder type, there is no way to validate HTTPS or S3 link
                     if (pathArg?.Source?.Obj is ProjectFolder pf)
                     {
@@ -152,7 +152,7 @@ namespace PollinationSDK.Wrapper
                     job.AddArgument(currentArg);
                 }
                 else
-                { 
+                {
                     // override the existing argument
                     if (isPath)
                         job.AddArgument(new JobPathArgument(item.Name, new ProjectFolder(path: processedData?.ToString())));
@@ -175,13 +175,13 @@ namespace PollinationSDK.Wrapper
 
         public void CheckArgumentsWithHandlers(string platform, HandlerChecker handlerChecker)
         {
-            if(this.Recipe == null)
+            if (this.Recipe == null)
             {
                 this.RecipeOwner = GetRecipeOwnerFromSourceURL(this.Job.Source);
                 this.Recipe = GetRecipe(this.Job.Source);
             }
 
-            if(this.Job == null)
+            if (this.Job == null)
             {
                 this.Job = new Job(this.Recipe.Source);
             }
@@ -247,24 +247,33 @@ namespace PollinationSDK.Wrapper
             return jobInfo;
         }
 
-      
+
 
         private async Task<ScheduledJobInfo> RunJobOnLocalAsync()
         {
+            if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
+                throw new ArgumentException($"Please call SetLocalJob() before running a job");
+
+            var workDir = this.LocalRunOutputFolder;
             try
             {
-                if (string.IsNullOrEmpty(this.LocalRunFolder) || !this.IsLocalJob)
-                    throw new ArgumentException($"Please call SetLocalJob() before running a job");
-
-                var workDir = this.LocalRunOutputFolder;
                 var cpuNum = this.LocalCPUNumber;
                 var isSilentMode = this.LocalSilentMode;
                 var runner = new JobRunner(this);
                 var runout = await Task.Run(() => runner.RunOnLocalMachine(workDir, cpuNum, isSilentMode)).ConfigureAwait(false);
+
                 // check local job status
                 var status = JobRunner.CheckLocalJobStatus(runout);
                 this.LocalJobStatus = status.ToString();
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e);
+                this.LocalJobStatus = RunStatusEnum.Failed.ToString();
+            }
 
+            try
+            {
                 var jobInfo = new ScheduledJobInfo(this, workDir);
 
                 //save jobinfo to folder
@@ -275,12 +284,12 @@ namespace PollinationSDK.Wrapper
                 LocalDatabase.Instance.Add(jobInfo);
                 return jobInfo;
             }
-            catch (Exception e)
+            catch (System.Exception e)
             {
-                Logger.Error(e);
+                Logger.Error(e, "Failed to save local job.json or database!");
                 throw;
             }
-          
+
         }
 
         private async Task<ScheduledJobInfo> RunJobOnCloudAsync(Action<string> progressReporting = default, System.Threading.CancellationToken token = default)
@@ -311,9 +320,9 @@ namespace PollinationSDK.Wrapper
             if (string.IsNullOrEmpty(this.ProjectSlug) || this.IsLocalJob)
                 throw new ArgumentException($"Please call SetCloudJob() before running a job");
 
-            var proj = Helper.GetWritableProject(this.ProjectSlug); 
+            var proj = Helper.GetWritableProject(this.ProjectSlug);
             var newJob = await JobRunner.UploadJobAssetsAsync(proj, this.Job, this.SubFolderPath, progressReporting, token);
-  
+
             return newJob;
         }
 
@@ -370,6 +379,6 @@ namespace PollinationSDK.Wrapper
             return rec.Manifest;
         }
 
-       
+
     }
 }
